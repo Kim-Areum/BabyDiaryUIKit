@@ -43,10 +43,12 @@ class TodayViewController: UIViewController {
     private let dayCountLabel = UILabel()
     private let diaryTextLabel = UILabel()
     private let audioCountButton = UIButton(type: .system)
+    private let moreButton = UIButton(type: .system)
 
     // Voice record button
     private let voiceButton = UIButton(type: .custom)
     private var isRecording = false
+    private let speechManager = SpeechManager()
 
     // Card dimensions
     private var cardWidth: CGFloat {
@@ -84,7 +86,7 @@ class TodayViewController: UIViewController {
         scrollView.showsVerticalScrollIndicator = false
         scrollView.alwaysBounceVertical = true
         view.addSubview(scrollView)
-
+커밋
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -133,10 +135,10 @@ class TodayViewController: UIViewController {
         cardView.clipsToBounds = false
         cardWrapper.addSubview(cardView)
 
-        // Card button overlay for taps
-        cardButton.translatesAutoresizingMaskIntoConstraints = false
-        cardButton.addTarget(self, action: #selector(cardTapped), for: .touchUpInside)
-        cardWrapper.addSubview(cardButton)
+        // Card tap gesture (below subviews so audioCountButton gets priority)
+        cardView.isUserInteractionEnabled = true
+        let cardTap = UITapGestureRecognizer(target: self, action: #selector(cardTapped))
+        cardView.addGestureRecognizer(cardTap)
 
         // Grass overlay on top of card
         grassContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -155,10 +157,6 @@ class TodayViewController: UIViewController {
             cardView.trailingAnchor.constraint(equalTo: cardWrapper.trailingAnchor),
             cardView.bottomAnchor.constraint(equalTo: cardWrapper.bottomAnchor),
 
-            cardButton.topAnchor.constraint(equalTo: cardWrapper.topAnchor),
-            cardButton.leadingAnchor.constraint(equalTo: cardWrapper.leadingAnchor),
-            cardButton.trailingAnchor.constraint(equalTo: cardWrapper.trailingAnchor),
-            cardButton.bottomAnchor.constraint(equalTo: cardWrapper.bottomAnchor),
 
             grassContainer.topAnchor.constraint(equalTo: cardWrapper.topAnchor, constant: -20),
             grassContainer.leadingAnchor.constraint(equalTo: cardWrapper.leadingAnchor),
@@ -377,6 +375,7 @@ class TodayViewController: UIViewController {
         dayCountLabel.translatesAutoresizingMaskIntoConstraints = false
         topRow.addArrangedSubview(dayCountLabel)
 
+
         NSLayoutConstraint.activate([
             topRow.topAnchor.constraint(equalTo: bodyView.topAnchor, constant: 14),
             topRow.leadingAnchor.constraint(equalTo: bodyView.leadingAnchor),
@@ -418,6 +417,7 @@ class TodayViewController: UIViewController {
         audioCountButton.layer.cornerRadius = 12
         audioCountButton.contentEdgeInsets = UIEdgeInsets(top: 6, left: 10, bottom: 6, right: 10)
         audioCountButton.isHidden = true
+        audioCountButton.addTarget(self, action: #selector(audioCountTapped), for: .touchUpInside)
         bodyView.addSubview(audioCountButton)
 
         NSLayoutConstraint.activate([
@@ -555,21 +555,257 @@ class TodayViewController: UIViewController {
     // MARK: - Actions
 
     @objc private func cardTapped() {
-        if let entry = selectedEntry {
-            presentDetail(entry: entry)
-        } else {
-            presentEditor()
+        presentEditor()
+    }
+
+    @objc private func moreTapped() {
+        guard let entry = selectedEntry else { return }
+
+        let overlay = UIView()
+        overlay.frame = view.window?.bounds ?? view.bounds
+        overlay.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        overlay.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        overlay.tag = 9100
+
+        let dismissTap = UITapGestureRecognizer(target: self, action: #selector(dismissMoreMenu))
+        overlay.addGestureRecognizer(dismissTap)
+
+        let menu = UIView()
+        menu.backgroundColor = DS.bgBase
+        menu.layer.cornerRadius = 16
+        menu.layer.shadowColor = UIColor.black.cgColor
+        menu.layer.shadowOpacity = 0.15
+        menu.layer.shadowRadius = 12
+        menu.layer.shadowOffset = CGSize(width: 0, height: 4)
+        menu.translatesAutoresizingMaskIntoConstraints = false
+        overlay.addSubview(menu)
+
+        let editBtn = UIButton(type: .system)
+        editBtn.setTitle("  수정", for: .normal)
+        editBtn.setImage(UIImage(systemName: "pencil"), for: .normal)
+        editBtn.titleLabel?.font = DS.font(15)
+        editBtn.tintColor = DS.fgStrong
+        editBtn.setTitleColor(DS.fgStrong, for: .normal)
+        editBtn.contentHorizontalAlignment = .left
+        editBtn.addTarget(self, action: #selector(editFromMenu), for: .touchUpInside)
+        editBtn.translatesAutoresizingMaskIntoConstraints = false
+
+        let divider = UIView()
+        divider.backgroundColor = DS.line
+        divider.translatesAutoresizingMaskIntoConstraints = false
+
+        let deleteBtn = UIButton(type: .system)
+        deleteBtn.setTitle("  삭제", for: .normal)
+        deleteBtn.setImage(UIImage(systemName: "trash"), for: .normal)
+        deleteBtn.titleLabel?.font = DS.font(15)
+        deleteBtn.tintColor = UIColor(hex: "D05050")
+        deleteBtn.setTitleColor(UIColor(hex: "D05050"), for: .normal)
+        deleteBtn.contentHorizontalAlignment = .left
+        deleteBtn.addTarget(self, action: #selector(deleteFromMenu), for: .touchUpInside)
+        deleteBtn.translatesAutoresizingMaskIntoConstraints = false
+
+        menu.addSubview(editBtn)
+        menu.addSubview(divider)
+        menu.addSubview(deleteBtn)
+
+        NSLayoutConstraint.activate([
+            menu.centerXAnchor.constraint(equalTo: overlay.centerXAnchor),
+            menu.centerYAnchor.constraint(equalTo: overlay.centerYAnchor),
+            menu.widthAnchor.constraint(equalTo: overlay.widthAnchor, multiplier: 0.75),
+
+            editBtn.topAnchor.constraint(equalTo: menu.topAnchor),
+            editBtn.leadingAnchor.constraint(equalTo: menu.leadingAnchor, constant: 20),
+            editBtn.trailingAnchor.constraint(equalTo: menu.trailingAnchor, constant: -20),
+            editBtn.heightAnchor.constraint(equalToConstant: 48),
+
+            divider.topAnchor.constraint(equalTo: editBtn.bottomAnchor),
+            divider.leadingAnchor.constraint(equalTo: menu.leadingAnchor),
+            divider.trailingAnchor.constraint(equalTo: menu.trailingAnchor),
+            divider.heightAnchor.constraint(equalToConstant: 0.5),
+
+            deleteBtn.topAnchor.constraint(equalTo: divider.bottomAnchor),
+            deleteBtn.leadingAnchor.constraint(equalTo: menu.leadingAnchor, constant: 20),
+            deleteBtn.trailingAnchor.constraint(equalTo: menu.trailingAnchor, constant: -20),
+            deleteBtn.heightAnchor.constraint(equalToConstant: 48),
+            deleteBtn.bottomAnchor.constraint(equalTo: menu.bottomAnchor),
+        ])
+
+        view.window?.addSubview(overlay)
+        overlay.alpha = 0
+        UIView.animate(withDuration: 0.2) { overlay.alpha = 1 }
+    }
+
+    @objc private func dismissMoreMenu() {
+        if let overlay = view.window?.viewWithTag(9100) {
+            UIView.animate(withDuration: 0.2, animations: { overlay.alpha = 0 }) { _ in
+                overlay.removeFromSuperview()
+            }
         }
     }
 
+    @objc private func editFromMenu() {
+        dismissMoreMenu()
+        presentEditor()
+    }
+
+    @objc private func deleteFromMenu() {
+        dismissMoreMenu()
+        guard let entry = selectedEntry else { return }
+
+        // 삭제 확인 팝업
+        let overlay = UIView()
+        overlay.frame = view.window?.bounds ?? view.bounds
+        overlay.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        overlay.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        overlay.tag = 9200
+
+        let popup = UIView()
+        popup.backgroundColor = DS.bgBase
+        popup.layer.cornerRadius = 20
+        popup.layer.shadowColor = UIColor.black.cgColor
+        popup.layer.shadowOpacity = 0.15
+        popup.layer.shadowRadius = 12
+        popup.layer.shadowOffset = CGSize(width: 0, height: 4)
+        popup.translatesAutoresizingMaskIntoConstraints = false
+        overlay.addSubview(popup)
+
+        let titleLabel = UILabel()
+        titleLabel.text = "이 기록을 삭제할까요?"
+        titleLabel.font = DS.font(15)
+        titleLabel.textColor = DS.fgStrong
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        let cancelBtn = UIButton(type: .system)
+        cancelBtn.setTitle("취소", for: .normal)
+        cancelBtn.titleLabel?.font = DS.font(14)
+        cancelBtn.setTitleColor(DS.fgMuted, for: .normal)
+        cancelBtn.backgroundColor = DS.bgSubtle
+        cancelBtn.layer.cornerRadius = 10
+        cancelBtn.tag = 9200
+        cancelBtn.addTarget(self, action: #selector(dismissDeletePopup), for: .touchUpInside)
+        cancelBtn.translatesAutoresizingMaskIntoConstraints = false
+
+        let confirmBtn = UIButton(type: .system)
+        confirmBtn.setTitle("삭제", for: .normal)
+        confirmBtn.titleLabel?.font = DS.font(14)
+        confirmBtn.setTitleColor(.white, for: .normal)
+        confirmBtn.backgroundColor = UIColor(hex: "E8A0A0")
+        confirmBtn.layer.cornerRadius = 10
+        confirmBtn.addTarget(self, action: #selector(confirmDelete), for: .touchUpInside)
+        confirmBtn.translatesAutoresizingMaskIntoConstraints = false
+
+        let btnStack = UIStackView(arrangedSubviews: [cancelBtn, confirmBtn])
+        btnStack.axis = .horizontal
+        btnStack.spacing = 12
+        btnStack.distribution = .fillEqually
+        btnStack.translatesAutoresizingMaskIntoConstraints = false
+
+        popup.addSubview(titleLabel)
+        popup.addSubview(btnStack)
+
+        NSLayoutConstraint.activate([
+            popup.centerXAnchor.constraint(equalTo: overlay.centerXAnchor),
+            popup.centerYAnchor.constraint(equalTo: overlay.centerYAnchor),
+            popup.widthAnchor.constraint(equalTo: overlay.widthAnchor, multiplier: 0.75),
+
+            titleLabel.topAnchor.constraint(equalTo: popup.topAnchor, constant: 24),
+            titleLabel.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 24),
+            titleLabel.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: -24),
+
+            btnStack.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
+            btnStack.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 24),
+            btnStack.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: -24),
+            btnStack.heightAnchor.constraint(equalToConstant: 40),
+            btnStack.bottomAnchor.constraint(equalTo: popup.bottomAnchor, constant: -24),
+        ])
+
+        view.window?.addSubview(overlay)
+    }
+
+    @objc private func dismissDeletePopup() {
+        if let overlay = view.window?.viewWithTag(9200) {
+            overlay.removeFromSuperview()
+        }
+    }
+
+    @objc private func confirmDelete() {
+        dismissDeletePopup()
+        guard let entry = selectedEntry else { return }
+        for fileName in entry.audioFileNamesArray {
+            let url = SpeechManager.recordingsDirectory().appendingPathComponent(fileName)
+            try? FileManager.default.removeItem(at: url)
+        }
+        CoreDataStack.shared.deleteEntry(entry)
+        reloadData()
+    }
+
+    @objc private func audioCountTapped() {
+        guard let entry = selectedEntry, !entry.audioFileNamesArray.isEmpty else { return }
+        showPlaybackPopup(fileNames: entry.audioFileNamesArray, timestamps: entry.audioTimestampsArray)
+    }
+
+    private func showPlaybackPopup(fileNames: [String], timestamps: [Date]) {
+        guard let window = view.window else { return }
+        let popup = PlaybackPopupView(fileNames: fileNames, timestamps: timestamps)
+        popup.delegate = self
+        popup.show(in: window)
+    }
+
     @objc private func voiceButtonTapped() {
-        // Voice recording toggle - notify parent or handle via delegate
-        // For now, post a notification that can be handled by a SpeechManager coordinator
-        NotificationCenter.default.post(
-            name: NSNotification.Name("TodayVoiceRecordToggle"),
-            object: nil,
-            userInfo: ["date": selectedDate]
-        )
+        if isRecording {
+            speechManager.stopRecording { [weak self] text, fileName in
+                guard let self = self else { return }
+                if let text = text, !text.isEmpty {
+                    self.appendVoiceResult(text)
+                } else {
+                    let alert = CustomAlertView(title: "음성이 인식되지 않았어요", message: "조금 더 가까이에서 말해보세요.", buttonText: "확인")
+                    alert.show(in: self.view)
+                }
+                if let fileName = fileName {
+                    self.saveAudioFile(fileName: fileName)
+                }
+                self.isRecording = false
+                self.updateVoiceButtonAppearance()
+                self.reloadData()
+            }
+        } else {
+            speechManager.startRecording()
+            isRecording = true
+            updateVoiceButtonAppearance()
+        }
+    }
+
+    private func appendVoiceResult(_ voiceText: String) {
+        guard !voiceText.isEmpty else { return }
+        let tf = DateFormatter()
+        tf.locale = Locale(identifier: "en_US")
+        tf.dateFormat = "h:mm a"
+        let timestamp = tf.string(from: Date())
+        let newEntry = "\(voiceText) \(timestamp)"
+
+        let stack = CoreDataStack.shared
+        if let entry = stack.fetchEntry(for: selectedDate) {
+            entry.text = entry.text.isEmpty ? newEntry : entry.text + "\n\(newEntry)"
+            stack.save()
+        } else {
+            let _ = stack.createEntry(date: selectedDate, text: newEntry, photoData: nil, audioFileNames: [], audioTimestamps: [])
+        }
+    }
+
+    private func saveAudioFile(fileName: String) {
+        let stack = CoreDataStack.shared
+        if let entry = stack.fetchEntry(for: selectedDate) {
+            var names = entry.audioFileNamesArray
+            var stamps = entry.audioTimestampsArray
+            names.append(fileName)
+            stamps.append(Date())
+            entry.audioFileNamesArray = names
+            entry.audioTimestampsArray = stamps
+            stack.save()
+        } else {
+            let _ = stack.createEntry(date: selectedDate, text: "", photoData: nil, audioFileNames: [fileName], audioTimestamps: [Date()])
+        }
     }
 
     private func presentDetail(entry: CDDiaryEntry) {
@@ -603,5 +839,33 @@ class TodayViewController: UIViewController {
 
     deinit {
         stopElephantAnimation()
+    }
+}
+
+// MARK: - PlaybackPopupDelegate
+
+extension TodayViewController: PlaybackPopupDelegate {
+    func playbackPopupDidDelete(at index: Int) {
+        guard let entry = selectedEntry else { return }
+        var names = entry.audioFileNamesArray
+        var stamps = entry.audioTimestampsArray
+
+        if index < names.count {
+            let fileName = names[index]
+            let url = SpeechManager.recordingsDirectory().appendingPathComponent(fileName)
+            try? FileManager.default.removeItem(at: url)
+            names.remove(at: index)
+        }
+        if index < stamps.count {
+            stamps.remove(at: index)
+        }
+        entry.audioFileNamesArray = names
+        entry.audioTimestampsArray = stamps
+        CoreDataStack.shared.save()
+        reloadData()
+    }
+
+    func playbackPopupDidDismiss() {
+        // no-op
     }
 }

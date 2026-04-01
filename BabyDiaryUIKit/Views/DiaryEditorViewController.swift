@@ -53,6 +53,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
 
     // Voice record button
     private let recordButton = UIButton(type: .system)
+    private let deleteEntryButton = UIButton(type: .system)
 
     // Overlay views (popups)
     private var dimView: UIView?
@@ -335,6 +336,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
 
     private func setupCardBody() {
         cardBodyView.translatesAutoresizingMaskIntoConstraints = false
+        cardBodyView.isUserInteractionEnabled = true
         cardView.addSubview(cardBodyView)
 
         NSLayoutConstraint.activate([
@@ -382,7 +384,10 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         textView.font = DS.font(15)
         textView.textColor = DS.fgStrong
         textView.backgroundColor = .clear
-        textView.isScrollEnabled = false
+        textView.isScrollEnabled = true
+        textView.isEditable = true
+        textView.isSelectable = true
+        textView.isUserInteractionEnabled = true
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 1, bottom: 8, right: 1)
         textView.delegate = self
         textView.translatesAutoresizingMaskIntoConstraints = false
@@ -455,6 +460,34 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         ])
 
         updateRecordButton()
+
+        // 삭제 버튼 (화면 하단 고정, 컨텐츠 있을 때만)
+        setupDeleteButton()
+    }
+
+    private func setupDeleteButton() {
+        let trashConfig = UIImage.SymbolConfiguration(pointSize: 13)
+        deleteEntryButton.setImage(UIImage(systemName: "trash", withConfiguration: trashConfig), for: .normal)
+        deleteEntryButton.tintColor = DS.fgPale
+        deleteEntryButton.addTarget(self, action: #selector(deleteEntryTapped), for: .touchUpInside)
+        deleteEntryButton.isHidden = true
+        deleteEntryButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(deleteEntryButton)
+
+        NSLayoutConstraint.activate([
+            deleteEntryButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            deleteEntryButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            deleteEntryButton.widthAnchor.constraint(equalToConstant: 32),
+            deleteEntryButton.heightAnchor.constraint(equalToConstant: 32),
+        ])
+
+        updateDeleteButtonVisibility()
+    }
+
+    private func updateDeleteButtonVisibility() {
+        let entry = CoreDataStack.shared.fetchEntry(for: date)
+        let hasContent = entry != nil && (!entry!.text.isEmpty || entry!.photoData != nil)
+        deleteEntryButton.isHidden = !hasContent
     }
 
     // MARK: - UI Updates
@@ -590,6 +623,94 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
 
     @objc private func saveTapped() {
         save()
+        dismiss(animated: true) { [weak self] in
+            self?.onDismiss?()
+        }
+    }
+
+    @objc private func deleteEntryTapped() {
+        let overlay = UIView()
+        overlay.frame = view.bounds
+        overlay.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        overlay.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        overlay.tag = 9300
+
+        let popup = UIView()
+        popup.backgroundColor = DS.bgBase
+        popup.layer.cornerRadius = 20
+        popup.layer.shadowColor = UIColor.black.cgColor
+        popup.layer.shadowOpacity = 0.15
+        popup.layer.shadowRadius = 12
+        popup.layer.shadowOffset = CGSize(width: 0, height: 4)
+        popup.translatesAutoresizingMaskIntoConstraints = false
+        overlay.addSubview(popup)
+
+        let titleLabel = UILabel()
+        titleLabel.text = "이 기록을 삭제할까요?"
+        titleLabel.font = DS.font(15)
+        titleLabel.textColor = DS.fgStrong
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        let cancelBtn = UIButton(type: .system)
+        cancelBtn.setTitle("취소", for: .normal)
+        cancelBtn.titleLabel?.font = DS.font(14)
+        cancelBtn.setTitleColor(DS.fgMuted, for: .normal)
+        cancelBtn.backgroundColor = DS.bgSubtle
+        cancelBtn.layer.cornerRadius = 10
+        cancelBtn.addTarget(self, action: #selector(dismissDeleteEntryPopup), for: .touchUpInside)
+        cancelBtn.translatesAutoresizingMaskIntoConstraints = false
+
+        let confirmBtn = UIButton(type: .system)
+        confirmBtn.setTitle("삭제", for: .normal)
+        confirmBtn.titleLabel?.font = DS.font(14)
+        confirmBtn.setTitleColor(.white, for: .normal)
+        confirmBtn.backgroundColor = UIColor(hex: "E8A0A0")
+        confirmBtn.layer.cornerRadius = 10
+        confirmBtn.addTarget(self, action: #selector(confirmDeleteEntry), for: .touchUpInside)
+        confirmBtn.translatesAutoresizingMaskIntoConstraints = false
+
+        let btnStack = UIStackView(arrangedSubviews: [cancelBtn, confirmBtn])
+        btnStack.axis = .horizontal
+        btnStack.spacing = 12
+        btnStack.distribution = .fillEqually
+        btnStack.translatesAutoresizingMaskIntoConstraints = false
+
+        popup.addSubview(titleLabel)
+        popup.addSubview(btnStack)
+
+        NSLayoutConstraint.activate([
+            popup.centerXAnchor.constraint(equalTo: overlay.centerXAnchor),
+            popup.centerYAnchor.constraint(equalTo: overlay.centerYAnchor),
+            popup.widthAnchor.constraint(equalTo: overlay.widthAnchor, multiplier: 0.75),
+
+            titleLabel.topAnchor.constraint(equalTo: popup.topAnchor, constant: 24),
+            titleLabel.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 24),
+            titleLabel.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: -24),
+
+            btnStack.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
+            btnStack.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 24),
+            btnStack.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: -24),
+            btnStack.heightAnchor.constraint(equalToConstant: 40),
+            btnStack.bottomAnchor.constraint(equalTo: popup.bottomAnchor, constant: -24),
+        ])
+
+        view.addSubview(overlay)
+    }
+
+    @objc private func dismissDeleteEntryPopup() {
+        view.viewWithTag(9300)?.removeFromSuperview()
+    }
+
+    @objc private func confirmDeleteEntry() {
+        view.viewWithTag(9300)?.removeFromSuperview()
+        if let entry = CoreDataStack.shared.fetchEntry(for: date) {
+            for fileName in entry.audioFileNamesArray {
+                let url = SpeechManager.recordingsDirectory().appendingPathComponent(fileName)
+                try? FileManager.default.removeItem(at: url)
+            }
+            CoreDataStack.shared.deleteEntry(entry)
+        }
         dismiss(animated: true) { [weak self] in
             self?.onDismiss?()
         }
@@ -1053,7 +1174,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
             listScroll.topAnchor.constraint(equalTo: topSep.bottomAnchor),
             listScroll.leadingAnchor.constraint(equalTo: popup.leadingAnchor),
             listScroll.trailingAnchor.constraint(equalTo: popup.trailingAnchor),
-            listScroll.heightAnchor.constraint(lessThanOrEqualToConstant: 300),
+            listScroll.heightAnchor.constraint(equalToConstant: min(CGFloat(audioFileNames.count) * 52 + CGFloat(max(0, audioFileNames.count - 1)) * 0.5, 300)),
 
             bottomSep.topAnchor.constraint(equalTo: listScroll.bottomAnchor),
             bottomSep.leadingAnchor.constraint(equalTo: popup.leadingAnchor),

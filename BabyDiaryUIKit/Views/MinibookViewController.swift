@@ -230,6 +230,8 @@ class MinibookViewController: UIViewController {
         let pageView = UIView()
         pageView.backgroundColor = DS.bgBase
         pageView.layer.cornerRadius = 8
+        pageView.layer.borderWidth = 0.5
+        pageView.layer.borderColor = DS.line.cgColor
         pageView.layer.shadowColor = UIColor.black.cgColor
         pageView.layer.shadowOpacity = 0.15
         pageView.layer.shadowRadius = 8

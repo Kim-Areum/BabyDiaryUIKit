@@ -1,0 +1,452 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0BD03DAE66DAB0D9102E1826 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753F17541EFC24C972B9E18F /* SceneDelegate.swift */; };
+		0CF1996852B6F0FDA032302C /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158D00577B989E548E899FC6 /* SplashViewController.swift */; };
+		2528A8D2CDD656FBA913B202 /* DiaryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 877DD89F303230395C277B48 /* DiaryDetailViewController.swift */; };
+		4133903ECE8E137A49B968D0 /* BabyDiary.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D08C87E19459B6DBB1F16681 /* BabyDiary.xcdatamodeld */; };
+		4333BCF3EA1E541AC9CBD886 /* SpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31E61BE233E80877FE3EE9D /* SpeechManager.swift */; };
+		4E01B214424920DB5D318D60 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993E21E9F36B4EC515A57B7A /* MainTabBarController.swift */; };
+		5755F40E1A4CBE7D10685401 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4D0B191587D3095532228F /* SettingsViewController.swift */; };
+		58AC37FF3617594BB589A9A2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 135F09F676EDF2AF4A6C6613 /* Assets.xcassets */; };
+		762D128C10D8CECB6D0039FC /* CoverCropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902FEA0D38AE25B3183252BE /* CoverCropViewController.swift */; };
+		7ABF0C10457692F512C88235 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC7E6095EAF0C68BBECAE007 /* HomeViewController.swift */; };
+		955F669AFF5409BCC3007229 /* BabySetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F947EAF338755876722249 /* BabySetupViewController.swift */; };
+		A6EB074E166E4CAEB375C2B5 /* DatePickerSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5448E132C103033648CFE68E /* DatePickerSheetViewController.swift */; };
+		B31C47D6FCF6288266458708 /* AllEntriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2A368C91CB41B3059AA06B /* AllEntriesViewController.swift */; };
+		B732FD08B30A84C5AC38A215 /* FullScreenImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE004573B709C7178E93820 /* FullScreenImageViewController.swift */; };
+		C4C635F28E0CFD98F119ACFF /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E46BBDB251AB6BF6D1C205F /* DesignSystem.swift */; };
+		C65C5D9CAD2F97B7FC4A65DA /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DBA2EC6560C5B2AC3C6553 /* CoreDataStack.swift */; };
+		C9B8BA61797305B52196E641 /* Ownglyph_PDH.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5892850F5061A5FA783BC948 /* Ownglyph_PDH.ttf */; };
+		CF4AEB2CD1615A41C6BF3C92 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3F1D0266F42E5D87DF5865 /* AppDelegate.swift */; };
+		D731C57C9A09D7AA40F87D87 /* CDDiaryEntry+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE63B19841AE0587BC8A046 /* CDDiaryEntry+CoreDataClass.swift */; };
+		DBB20BCF06DBEAC364AF2101 /* CDBaby+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4EFC904DA075804E3CF25A /* CDBaby+CoreDataClass.swift */; };
+		E0C88785CD5B45D7D7271FBB /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20B9BFBB0057FE4D6ACB7F2C /* TodayViewController.swift */; };
+		E115B15D4E0E90AA9E237922 /* CustomAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD022B6051E860657D64A284 /* CustomAlertView.swift */; };
+		F3A74E6657D14AC078587AA2 /* MinibookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A09CC95F08EEF78E2142E6 /* MinibookViewController.swift */; };
+		F6B11F3C5C538673D6AEAA9E /* DiaryEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCEE7B3D4C667DABBB73DE2D /* DiaryEditorViewController.swift */; };
+		F897FC7DC175F5F31DB8E0B7 /* CustomPhotoPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8E28970F778C5743F8AD1FE /* CustomPhotoPickerViewController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		02DBA2EC6560C5B2AC3C6553 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		11F947EAF338755876722249 /* BabySetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BabySetupViewController.swift; sourceTree = "<group>"; };
+		135F09F676EDF2AF4A6C6613 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		158D00577B989E548E899FC6 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
+		1B4D0B191587D3095532228F /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		20B9BFBB0057FE4D6ACB7F2C /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
+		25957608D3B7B2DE55EC844B /* BabyDiary.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BabyDiary.xcdatamodel; sourceTree = "<group>"; };
+		3D2A368C91CB41B3059AA06B /* AllEntriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllEntriesViewController.swift; sourceTree = "<group>"; };
+		41A09CC95F08EEF78E2142E6 /* MinibookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinibookViewController.swift; sourceTree = "<group>"; };
+		4E46BBDB251AB6BF6D1C205F /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
+		5448E132C103033648CFE68E /* DatePickerSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerSheetViewController.swift; sourceTree = "<group>"; };
+		5892850F5061A5FA783BC948 /* Ownglyph_PDH.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ownglyph_PDH.ttf; sourceTree = "<group>"; };
+		753F17541EFC24C972B9E18F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		877DD89F303230395C277B48 /* DiaryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryDetailViewController.swift; sourceTree = "<group>"; };
+		8BE004573B709C7178E93820 /* FullScreenImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenImageViewController.swift; sourceTree = "<group>"; };
+		902FEA0D38AE25B3183252BE /* CoverCropViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverCropViewController.swift; sourceTree = "<group>"; };
+		993E21E9F36B4EC515A57B7A /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		AC7E6095EAF0C68BBECAE007 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		CA4EFC904DA075804E3CF25A /* CDBaby+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDBaby+CoreDataClass.swift"; sourceTree = "<group>"; };
+		CCEE7B3D4C667DABBB73DE2D /* DiaryEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryEditorViewController.swift; sourceTree = "<group>"; };
+		CD022B6051E860657D64A284 /* CustomAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlertView.swift; sourceTree = "<group>"; };
+		D01EC6EDF39CD40038B3F8EC /* BabyDiaryUIKit.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = BabyDiaryUIKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D31E61BE233E80877FE3EE9D /* SpeechManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechManager.swift; sourceTree = "<group>"; };
+		E8E28970F778C5743F8AD1FE /* CustomPhotoPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPhotoPickerViewController.swift; sourceTree = "<group>"; };
+		EE3F1D0266F42E5D87DF5865 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		FBE63B19841AE0587BC8A046 /* CDDiaryEntry+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDDiaryEntry+CoreDataClass.swift"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		62A3540354BCFE93776861CB /* BabyDiaryUIKit */ = {
+			isa = PBXGroup;
+			children = (
+				EE3F1D0266F42E5D87DF5865 /* AppDelegate.swift */,
+				135F09F676EDF2AF4A6C6613 /* Assets.xcassets */,
+				753F17541EFC24C972B9E18F /* SceneDelegate.swift */,
+				D08C87E19459B6DBB1F16681 /* BabyDiary.xcdatamodeld */,
+				CEA596B1960E0EA36A594B1E /* CoreData */,
+				6798C818DC6FEE8221404ED6 /* Models */,
+				EB59DDEC4CA56BCDA4DE2C20 /* Resources */,
+				62CEF16F4B917564DA166B5F /* ViewModels */,
+				AFF98C95BD9964A31113C2E3 /* Views */,
+			);
+			path = BabyDiaryUIKit;
+			sourceTree = "<group>";
+		};
+		62CEF16F4B917564DA166B5F /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				D31E61BE233E80877FE3EE9D /* SpeechManager.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		6798C818DC6FEE8221404ED6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				CA4EFC904DA075804E3CF25A /* CDBaby+CoreDataClass.swift */,
+				FBE63B19841AE0587BC8A046 /* CDDiaryEntry+CoreDataClass.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		8AF7D0CD55BB9BFE6AE2F198 = {
+			isa = PBXGroup;
+			children = (
+				62A3540354BCFE93776861CB /* BabyDiaryUIKit */,
+				F4598978358318F019868082 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AFF98C95BD9964A31113C2E3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3D2A368C91CB41B3059AA06B /* AllEntriesViewController.swift */,
+				11F947EAF338755876722249 /* BabySetupViewController.swift */,
+				902FEA0D38AE25B3183252BE /* CoverCropViewController.swift */,
+				CD022B6051E860657D64A284 /* CustomAlertView.swift */,
+				E8E28970F778C5743F8AD1FE /* CustomPhotoPickerViewController.swift */,
+				5448E132C103033648CFE68E /* DatePickerSheetViewController.swift */,
+				877DD89F303230395C277B48 /* DiaryDetailViewController.swift */,
+				CCEE7B3D4C667DABBB73DE2D /* DiaryEditorViewController.swift */,
+				8BE004573B709C7178E93820 /* FullScreenImageViewController.swift */,
+				AC7E6095EAF0C68BBECAE007 /* HomeViewController.swift */,
+				993E21E9F36B4EC515A57B7A /* MainTabBarController.swift */,
+				41A09CC95F08EEF78E2142E6 /* MinibookViewController.swift */,
+				1B4D0B191587D3095532228F /* SettingsViewController.swift */,
+				158D00577B989E548E899FC6 /* SplashViewController.swift */,
+				20B9BFBB0057FE4D6ACB7F2C /* TodayViewController.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		CEA596B1960E0EA36A594B1E /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				02DBA2EC6560C5B2AC3C6553 /* CoreDataStack.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
+		EB59DDEC4CA56BCDA4DE2C20 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4E46BBDB251AB6BF6D1C205F /* DesignSystem.swift */,
+				5892850F5061A5FA783BC948 /* Ownglyph_PDH.ttf */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		F4598978358318F019868082 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D01EC6EDF39CD40038B3F8EC /* BabyDiaryUIKit.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		82E69C2E9F12801EE89969B4 /* BabyDiaryUIKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DF6D6F3F936B4CCABE27621 /* Build configuration list for PBXNativeTarget "BabyDiaryUIKit" */;
+			buildPhases = (
+				B445CA7DF00DEDBCB99E4D73 /* Sources */,
+				4AD6BDC2FD9E1B47467B2351 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BabyDiaryUIKit;
+			packageProductDependencies = (
+			);
+			productName = BabyDiaryUIKit;
+			productReference = D01EC6EDF39CD40038B3F8EC /* BabyDiaryUIKit.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FFE3A317724AA72231BD5762 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2640;
+				TargetAttributes = {
+					82E69C2E9F12801EE89969B4 = {
+						DevelopmentTeam = SU5758PVY2;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 0503F6E95C80AD458670A261 /* Build configuration list for PBXProject "BabyDiaryUIKit" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 8AF7D0CD55BB9BFE6AE2F198;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = F4598978358318F019868082 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				82E69C2E9F12801EE89969B4 /* BabyDiaryUIKit */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4AD6BDC2FD9E1B47467B2351 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				58AC37FF3617594BB589A9A2 /* Assets.xcassets in Resources */,
+				C9B8BA61797305B52196E641 /* Ownglyph_PDH.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B445CA7DF00DEDBCB99E4D73 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B31C47D6FCF6288266458708 /* AllEntriesViewController.swift in Sources */,
+				CF4AEB2CD1615A41C6BF3C92 /* AppDelegate.swift in Sources */,
+				4133903ECE8E137A49B968D0 /* BabyDiary.xcdatamodeld in Sources */,
+				955F669AFF5409BCC3007229 /* BabySetupViewController.swift in Sources */,
+				DBB20BCF06DBEAC364AF2101 /* CDBaby+CoreDataClass.swift in Sources */,
+				D731C57C9A09D7AA40F87D87 /* CDDiaryEntry+CoreDataClass.swift in Sources */,
+				C65C5D9CAD2F97B7FC4A65DA /* CoreDataStack.swift in Sources */,
+				762D128C10D8CECB6D0039FC /* CoverCropViewController.swift in Sources */,
+				E115B15D4E0E90AA9E237922 /* CustomAlertView.swift in Sources */,
+				F897FC7DC175F5F31DB8E0B7 /* CustomPhotoPickerViewController.swift in Sources */,
+				A6EB074E166E4CAEB375C2B5 /* DatePickerSheetViewController.swift in Sources */,
+				C4C635F28E0CFD98F119ACFF /* DesignSystem.swift in Sources */,
+				2528A8D2CDD656FBA913B202 /* DiaryDetailViewController.swift in Sources */,
+				F6B11F3C5C538673D6AEAA9E /* DiaryEditorViewController.swift in Sources */,
+				B732FD08B30A84C5AC38A215 /* FullScreenImageViewController.swift in Sources */,
+				7ABF0C10457692F512C88235 /* HomeViewController.swift in Sources */,
+				4E01B214424920DB5D318D60 /* MainTabBarController.swift in Sources */,
+				F3A74E6657D14AC078587AA2 /* MinibookViewController.swift in Sources */,
+				0BD03DAE66DAB0D9102E1826 /* SceneDelegate.swift in Sources */,
+				5755F40E1A4CBE7D10685401 /* SettingsViewController.swift in Sources */,
+				4333BCF3EA1E541AC9CBD886 /* SpeechManager.swift in Sources */,
+				0CF1996852B6F0FDA032302C /* SplashViewController.swift in Sources */,
+				E0C88785CD5B45D7D7271FBB /* TodayViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4A5FDA2613927A7447B2765D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = SU5758PVY2;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = BabyDiaryUIKit/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.areum.BabyDiaryUIKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		67DB70AEDD08D5C16A63AA19 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = BabyDiaryUIKit/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7F820B29489552773739E831 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = SU5758PVY2;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = BabyDiaryUIKit/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.areum.BabyDiaryUIKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		E1C8692531021A90136CF830 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = BabyDiaryUIKit/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0503F6E95C80AD458670A261 /* Build configuration list for PBXProject "BabyDiaryUIKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A5FDA2613927A7447B2765D /* Debug */,
+				7F820B29489552773739E831 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		1DF6D6F3F936B4CCABE27621 /* Build configuration list for PBXNativeTarget "BabyDiaryUIKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				67DB70AEDD08D5C16A63AA19 /* Debug */,
+				E1C8692531021A90136CF830 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		D08C87E19459B6DBB1F16681 /* BabyDiary.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				25957608D3B7B2DE55EC844B /* BabyDiary.xcdatamodel */,
+			);
+			currentVersion = 25957608D3B7B2DE55EC844B /* BabyDiary.xcdatamodel */;
+			path = BabyDiary.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = FFE3A317724AA72231BD5762 /* Project object */;
+}

@@ -136,7 +136,7 @@ class MinibookViewController: UIViewController {
         view.addSubview(pageContainerView)
 
         NSLayoutConstraint.activate([
-            pageContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 68),
+            pageContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 99),
             pageContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             pageContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             pageContainerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -80),

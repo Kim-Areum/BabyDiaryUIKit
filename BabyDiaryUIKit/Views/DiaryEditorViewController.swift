@@ -236,6 +236,8 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
 
         photoContainer.translatesAutoresizingMaskIntoConstraints = false
         photoContainer.clipsToBounds = true
+        photoContainer.layer.cornerRadius = 8
+        photoContainer.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         cardView.addSubview(photoContainer)
 
         NSLayoutConstraint.activate([

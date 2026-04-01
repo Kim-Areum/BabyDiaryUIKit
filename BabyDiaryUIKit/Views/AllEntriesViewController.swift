@@ -242,27 +242,25 @@ extension AllEntriesViewController: UICollectionViewDelegateFlowLayout {
         let date = makeDate(day: day)
         guard date <= Date() else { return }
 
-        let entry = monthEntries[day]
-        if let entry = entry, (!entry.text.isEmpty || entry.photoData != nil) {
-            guard let baby = CoreDataStack.shared.fetchBaby() else { return }
-            let detailVC = DiaryDetailViewController()
-            detailVC.entry = entry
-            detailVC.baby = baby
-            detailVC.modalPresentationStyle = .fullScreen
-            detailVC.onDismiss = { [weak self] in
+        // 해당 월의 컨텐츠 있는 엔트리들을 모아서 피드 뷰로 이동
+        let monthEntriesList = (1...daysInMonth).compactMap { monthEntries[$0] }
+            .filter { !$0.text.isEmpty || $0.photoData != nil }
+
+        if !monthEntriesList.isEmpty {
+            let feedVC = MonthFeedViewController(entries: monthEntriesList, selectedDate: date)
+            feedVC.modalPresentationStyle = .fullScreen
+            feedVC.onDismiss = { [weak self] in
                 self?.reloadEntries()
             }
-            detailVC.onEdit = { [weak self] editEntry in
-                guard let self = self, let baby = CoreDataStack.shared.fetchBaby() else { return }
-                let editorVC = DiaryEditorViewController(date: editEntry.date, baby: baby)
-                editorVC.modalPresentationStyle = .fullScreen
-                self.present(editorVC, animated: true)
-            }
-            present(detailVC, animated: true)
+            present(feedVC, animated: true)
         } else {
+            // 컨텐츠 없으면 작성화면
             guard let baby = CoreDataStack.shared.fetchBaby() else { return }
             let editorVC = DiaryEditorViewController(date: date, baby: baby)
             editorVC.modalPresentationStyle = .fullScreen
+            editorVC.onDismiss = { [weak self] in
+                self?.reloadEntries()
+            }
             present(editorVC, animated: true)
         }
     }

@@ -17,7 +17,7 @@ class TodayViewController: UIViewController {
 
     private let elephantView = UIImageView()
     private var displayLink: CADisplayLink?
-    private let elephantSize: CGFloat = 30
+    private let elephantSize: CGFloat = 38
     private let cycleDuration: TimeInterval = 20
     private var elephantStartTime: CFTimeInterval = 0
     private let elephantFrameNames = ["Elephant2", "Elephant3"]
@@ -114,7 +114,7 @@ class TodayViewController: UIViewController {
         let topSpacer = UIView()
         topSpacer.translatesAutoresizingMaskIntoConstraints = false
         contentStack.addArrangedSubview(topSpacer)
-        topSpacer.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        topSpacer.heightAnchor.constraint(equalToConstant: 55).isActive = true
 
         // Elephant container
         setupElephantContainer()
@@ -210,6 +210,9 @@ class TodayViewController: UIViewController {
         ])
 
         elephantView.isHidden = hideElephant
+
+        // 코끼리가 잔디 앞에 보이도록
+        elephantContainer.layer.zPosition = 10
     }
 
     private func startElephantAnimation() {
@@ -276,31 +279,70 @@ class TodayViewController: UIViewController {
             grassStack.bottomAnchor.constraint(equalTo: grassContainer.bottomAnchor),
         ])
 
-        for _ in 0..<7 {
+        for i in 0..<7 {
+            let wrapper = UIView()
+            wrapper.clipsToBounds = true
+            wrapper.translatesAutoresizingMaskIntoConstraints = false
+
             let grassImageView = UIImageView(image: UIImage(named: "Grass"))
             grassImageView.contentMode = .scaleAspectFit
             grassImageView.translatesAutoresizingMaskIntoConstraints = false
-            grassStack.addArrangedSubview(grassImageView)
+            wrapper.addSubview(grassImageView)
+
+            NSLayoutConstraint.activate([
+                grassImageView.topAnchor.constraint(equalTo: wrapper.topAnchor),
+                grassImageView.bottomAnchor.constraint(equalTo: wrapper.bottomAnchor),
+                grassImageView.leadingAnchor.constraint(equalTo: wrapper.leadingAnchor),
+                grassImageView.trailingAnchor.constraint(equalTo: wrapper.trailingAnchor),
+            ])
+
+            // 개별 잔디 경계 블렌딩 마스크 (첫번째/마지막 가장자리 제외)
+            let isFirst = i == 0
+            let isLast = i == 6
+            let itemMask = CAGradientLayer()
+            itemMask.startPoint = CGPoint(x: 0, y: 0.5)
+            itemMask.endPoint = CGPoint(x: 1, y: 0.5)
+
+            if isFirst {
+                itemMask.colors = [UIColor.white.cgColor, UIColor.white.cgColor, UIColor.clear.cgColor]
+                itemMask.locations = [0.0, 0.85, 1.0]
+            } else if isLast {
+                itemMask.colors = [UIColor.clear.cgColor, UIColor.white.cgColor, UIColor.white.cgColor]
+                itemMask.locations = [0.0, 0.15, 1.0]
+            } else {
+                itemMask.colors = [UIColor.clear.cgColor, UIColor.white.cgColor, UIColor.white.cgColor, UIColor.clear.cgColor]
+                itemMask.locations = [0.0, 0.15, 0.85, 1.0]
+            }
+            wrapper.layer.mask = itemMask
+
+            grassStack.addArrangedSubview(wrapper)
         }
 
-        // Apply edge fade mask to the entire grass container
-        let maskLayer = CAGradientLayer()
-        maskLayer.colors = [
+        // 양끝 살짝 페이드
+        let edgeMask = CAGradientLayer()
+        edgeMask.colors = [
             UIColor.clear.cgColor,
             UIColor.white.cgColor,
             UIColor.white.cgColor,
             UIColor.clear.cgColor,
         ]
-        maskLayer.locations = [0.0, 0.01, 0.99, 1.0]
-        maskLayer.startPoint = CGPoint(x: 0, y: 0.5)
-        maskLayer.endPoint = CGPoint(x: 1, y: 0.5)
-        grassContainer.layer.mask = maskLayer
+        edgeMask.locations = [0.0, 0.01, 0.99, 1.0]
+        edgeMask.startPoint = CGPoint(x: 0, y: 0.5)
+        edgeMask.endPoint = CGPoint(x: 1, y: 0.5)
+        grassContainer.layer.mask = edgeMask
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        // Update grass mask frame
+        // Update grass mask frames
         grassContainer.layer.mask?.frame = grassContainer.bounds
+        for subview in grassContainer.subviews {
+            if let stack = subview as? UIStackView {
+                for wrapper in stack.arrangedSubviews {
+                    wrapper.layer.mask?.frame = wrapper.bounds
+                }
+            }
+        }
     }
 
     // MARK: - Card Setup

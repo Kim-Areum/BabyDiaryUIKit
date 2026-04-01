@@ -25,6 +25,7 @@
 		B732FD08B30A84C5AC38A215 /* FullScreenImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE004573B709C7178E93820 /* FullScreenImageViewController.swift */; };
 		C4C635F28E0CFD98F119ACFF /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E46BBDB251AB6BF6D1C205F /* DesignSystem.swift */; };
 		C65C5D9CAD2F97B7FC4A65DA /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DBA2EC6560C5B2AC3C6553 /* CoreDataStack.swift */; };
+		C93131F6775B563E410F7FBB /* MonthFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42F2635BD56F92B3C3F2E180 /* MonthFeedViewController.swift */; };
 		C9B8BA61797305B52196E641 /* Ownglyph_PDH.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5892850F5061A5FA783BC948 /* Ownglyph_PDH.ttf */; };
 		CF4AEB2CD1615A41C6BF3C92 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3F1D0266F42E5D87DF5865 /* AppDelegate.swift */; };
 		D731C57C9A09D7AA40F87D87 /* CDDiaryEntry+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE63B19841AE0587BC8A046 /* CDDiaryEntry+CoreDataClass.swift */; };
@@ -47,6 +48,7 @@
 		25957608D3B7B2DE55EC844B /* BabyDiary.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BabyDiary.xcdatamodel; sourceTree = "<group>"; };
 		3D2A368C91CB41B3059AA06B /* AllEntriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllEntriesViewController.swift; sourceTree = "<group>"; };
 		41A09CC95F08EEF78E2142E6 /* MinibookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinibookViewController.swift; sourceTree = "<group>"; };
+		42F2635BD56F92B3C3F2E180 /* MonthFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthFeedViewController.swift; sourceTree = "<group>"; };
 		4E46BBDB251AB6BF6D1C205F /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		5448E132C103033648CFE68E /* DatePickerSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerSheetViewController.swift; sourceTree = "<group>"; };
 		5892850F5061A5FA783BC948 /* Ownglyph_PDH.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ownglyph_PDH.ttf; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 				AC7E6095EAF0C68BBECAE007 /* HomeViewController.swift */,
 				993E21E9F36B4EC515A57B7A /* MainTabBarController.swift */,
 				41A09CC95F08EEF78E2142E6 /* MinibookViewController.swift */,
+				42F2635BD56F92B3C3F2E180 /* MonthFeedViewController.swift */,
 				032D6601516651401ED85F32 /* PlaybackPopupView.swift */,
 				1B4D0B191587D3095532228F /* SettingsViewController.swift */,
 				158D00577B989E548E899FC6 /* SplashViewController.swift */,
@@ -250,6 +253,7 @@
 				7ABF0C10457692F512C88235 /* HomeViewController.swift in Sources */,
 				4E01B214424920DB5D318D60 /* MainTabBarController.swift in Sources */,
 				F3A74E6657D14AC078587AA2 /* MinibookViewController.swift in Sources */,
+				C93131F6775B563E410F7FBB /* MonthFeedViewController.swift in Sources */,
 				92A66B05112D4C3D6B156CB5 /* PlaybackPopupView.swift in Sources */,
 				0BD03DAE66DAB0D9102E1826 /* SceneDelegate.swift in Sources */,
 				5755F40E1A4CBE7D10685401 /* SettingsViewController.swift in Sources */,

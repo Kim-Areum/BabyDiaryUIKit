@@ -413,23 +413,12 @@ class SettingsViewController: UIViewController {
 
         // 앱 아이콘 변경
         let iconName: String? = next == .pink ? "PinkAppIcon" : nil
-        setAppIcon(iconName)
+        if UIApplication.shared.supportsAlternateIcons {
+            UIApplication.shared.setAlternateIconName(iconName)
+        }
+
     }
 
-    private func setAppIcon(_ name: String?) {
-        guard UIApplication.shared.supportsAlternateIcons else {
-            print("🔴 alternate icons not supported")
-            return
-        }
-        print("🟢 setting icon to: \(name ?? "default")")
-        UIApplication.shared.setAlternateIconName(name) { error in
-            if let error = error {
-                print("🔴 icon change error: \(error.localizedDescription)")
-            } else {
-                print("🟢 icon changed successfully")
-            }
-        }
-    }
 
     private func startWiggleAnimation() {
         let animation = CAKeyframeAnimation(keyPath: "transform.rotation.z")

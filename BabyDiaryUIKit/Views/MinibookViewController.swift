@@ -139,7 +139,7 @@ class MinibookViewController: UIViewController {
             pageContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 68),
             pageContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             pageContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            pageContainerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -60),
+            pageContainerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -80),
         ])
     }
 
@@ -152,8 +152,14 @@ class MinibookViewController: UIViewController {
         navRow.alignment = .center
         navRow.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(navRow)
+        view.bringSubviewToFront(navRow)
 
         let btnConfig = UIImage.SymbolConfiguration(pointSize: 13)
+
+        for btn in [firstBtn, prevBtn, nextBtn, lastBtn] {
+            btn.translatesAutoresizingMaskIntoConstraints = false
+            btn.contentEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        }
 
         firstBtn.setImage(UIImage(systemName: "chevron.backward.2", withConfiguration: btnConfig), for: .normal)
         firstBtn.addTarget(self, action: #selector(goFirst), for: .touchUpInside)

@@ -287,7 +287,7 @@ class MinibookViewController: UIViewController {
 
         let titleLabel = UILabel()
         titleLabel.text = "목차"
-        titleLabel.font = DS.font(17)
+        titleLabel.font = DS.font(16)
         titleLabel.textColor = DS.fgStrong
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -468,7 +468,7 @@ class MinibookViewController: UIViewController {
         let baby = CoreDataStack.shared.fetchBaby()
         let titleLabel = UILabel()
         titleLabel.text = "\(baby?.name ?? "")의 일기"
-        titleLabel.font = DS.font(17)
+        titleLabel.font = DS.font(16)
         titleLabel.textColor = DS.fgStrong
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         pageView.addSubview(titleLabel)
@@ -840,7 +840,7 @@ class MinibookViewController: UIViewController {
                 }
                 let title = "\(baby?.name ?? "")의 일기"
                 let titleAttrs: [NSAttributedString.Key: Any] = [
-                    .font: DS.font(17),
+                    .font: DS.font(16),
                     .foregroundColor: DS.fgStrong,
                 ]
                 let titleSize = (title as NSString).size(withAttributes: titleAttrs)
@@ -850,7 +850,7 @@ class MinibookViewController: UIViewController {
             case .tableOfContents(let items):
                 let tocTitle = "목차"
                 let tocTitleAttrs: [NSAttributedString.Key: Any] = [
-                    .font: DS.font(17),
+                    .font: DS.font(16),
                     .foregroundColor: DS.fgStrong,
                 ]
                 let tocTitleSize = (tocTitle as NSString).size(withAttributes: tocTitleAttrs)

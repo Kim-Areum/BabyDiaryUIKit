@@ -47,7 +47,7 @@ class CoverCropViewController: UIViewController, UIScrollViewDelegate {
 
         let titleLabel = UILabel()
         titleLabel.text = "사진 편집"
-        titleLabel.font = DS.font(17)
+        titleLabel.font = DS.font(16)
         titleLabel.textColor = .white
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false

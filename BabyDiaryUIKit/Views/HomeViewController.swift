@@ -40,7 +40,7 @@ class HomeViewController: UIViewController {
     private func setupSegmentedControl() {
         // 오늘 버튼
         todayButton.setTitle("오늘", for: .normal)
-        todayButton.titleLabel?.font = DS.font(17)
+        todayButton.titleLabel?.font = DS.font(16)
         todayButton.setTitleColor(DS.fgStrong, for: .normal)
         todayButton.addTarget(self, action: #selector(todayTapped), for: .touchUpInside)
 
@@ -55,7 +55,7 @@ class HomeViewController: UIViewController {
 
         // 전체 버튼
         allButton.setTitle("전체", for: .normal)
-        allButton.titleLabel?.font = DS.font(17)
+        allButton.titleLabel?.font = DS.font(16)
         allButton.setTitleColor(DS.fgPale, for: .normal)
         allButton.addTarget(self, action: #selector(allTapped), for: .touchUpInside)
 

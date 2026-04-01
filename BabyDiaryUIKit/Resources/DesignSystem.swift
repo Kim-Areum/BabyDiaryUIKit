@@ -94,7 +94,7 @@ class NavBarView: UIView {
         super.init(frame: frame)
         backgroundColor = DS.bgBase
 
-        titleLabel.font = DS.font(17)
+        titleLabel.font = DS.font(16)
         titleLabel.textColor = DS.fgStrong
         titleLabel.textAlignment = .center
 

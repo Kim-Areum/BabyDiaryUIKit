@@ -10,6 +10,12 @@ class DiaryDetailViewController: UIViewController {
     var onDismiss: (() -> Void)?
     var onEdit: ((CDDiaryEntry) -> Void)?
 
+    convenience init(entry: CDDiaryEntry, baby: CDBaby) {
+        self.init(nibName: nil, bundle: nil)
+        self.entry = entry
+        self.baby = baby
+    }
+
     private let scrollView = UIScrollView()
     private let contentStack = UIStackView()
     private let photoImageView = UIImageView()

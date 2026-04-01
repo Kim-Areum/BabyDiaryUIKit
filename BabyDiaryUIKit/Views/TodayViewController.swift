@@ -573,30 +573,23 @@ class TodayViewController: UIViewController {
     }
 
     private func presentDetail(entry: CDDiaryEntry) {
-        // Present DiaryDetailViewController
-        if let detailVC = createViewController(named: "DiaryDetailViewController") {
-            detailVC.modalPresentationStyle = .fullScreen
-            present(detailVC, animated: true)
+        guard let baby = CoreDataStack.shared.fetchBaby() else { return }
+        let detailVC = DiaryDetailViewController(entry: entry, baby: baby)
+        detailVC.modalPresentationStyle = .fullScreen
+        detailVC.onDismiss = { [weak self] in
+            self?.reloadData()
         }
+        present(detailVC, animated: true)
     }
 
     private func presentEditor() {
-        // Present DiaryEditorViewController
-        if let editorVC = createViewController(named: "DiaryEditorViewController") {
-            editorVC.modalPresentationStyle = .fullScreen
-            present(editorVC, animated: true)
+        guard let baby = CoreDataStack.shared.fetchBaby() else { return }
+        let editorVC = DiaryEditorViewController(date: selectedDate, baby: baby)
+        editorVC.modalPresentationStyle = .fullScreen
+        editorVC.onDismiss = { [weak self] in
+            self?.reloadData()
         }
-    }
-
-    /// Attempts to instantiate a view controller by class name.
-    /// Returns nil if the class does not exist yet (allows incremental migration).
-    private func createViewController(named className: String) -> UIViewController? {
-        let fullName = "BabyDiaryUIKit.\(className)"
-        guard let vcClass = NSClassFromString(fullName) as? UIViewController.Type else {
-            print("[TodayVC] \(className) not found yet")
-            return nil
-        }
-        return vcClass.init()
+        present(editorVC, animated: true)
     }
 
     // MARK: - Helpers

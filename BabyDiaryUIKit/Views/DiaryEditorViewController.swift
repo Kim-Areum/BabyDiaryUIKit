@@ -10,6 +10,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
     private let date: Date
     private let baby: CDBaby
     private let speechManager = SpeechManager()
+    var onDismiss: (() -> Void)?
 
     private var text = ""
     private var photoData: Data?
@@ -582,11 +583,16 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
     // MARK: - Actions
 
     @objc private func closeTapped() {
-        dismiss(animated: true)
+        dismiss(animated: true) { [weak self] in
+            self?.onDismiss?()
+        }
     }
 
     @objc private func saveTapped() {
         save()
+        dismiss(animated: true) { [weak self] in
+            self?.onDismiss?()
+        }
     }
 
     @objc private func dismissKeyboard() {

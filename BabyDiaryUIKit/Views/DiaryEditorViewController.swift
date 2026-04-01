@@ -114,7 +114,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         // Right: 저장 button (custom styled)
         let saveLabel = UILabel()
         saveLabel.text = "저장"
-        saveLabel.font = DS.font(14)
+        saveLabel.font = DS.font(13)
         saveLabel.textColor = DS.fgStrong
 
         let saveBg = UIView()
@@ -385,11 +385,11 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         cardBodyView.addSubview(textContainer)
 
         placeholderLabel.text = "오늘 우리 아기와의 하루는 어땠나요?"
-        placeholderLabel.font = DS.font(15)
+        placeholderLabel.font = DS.font(13)
         placeholderLabel.textColor = DS.fgPale
         placeholderLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        textView.font = DS.font(15)
+        textView.font = DS.font(13)
         textView.textColor = DS.fgStrong
         textView.backgroundColor = .clear
         textView.isScrollEnabled = true
@@ -615,7 +615,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         config.imagePadding = 6
         config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
             var attrs = incoming
-            attrs.font = DS.font(14)
+            attrs.font = DS.font(13)
             return attrs
         }
         recordButton.configuration = config
@@ -655,14 +655,14 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
 
         let titleLabel = UILabel()
         titleLabel.text = "이 기록을 삭제할까요?"
-        titleLabel.font = DS.font(15)
+        titleLabel.font = DS.font(14)
         titleLabel.textColor = DS.fgStrong
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
         let cancelBtn = UIButton(type: .system)
         cancelBtn.setTitle("취소", for: .normal)
-        cancelBtn.titleLabel?.font = DS.font(14)
+        cancelBtn.titleLabel?.font = DS.font(13)
         cancelBtn.setTitleColor(DS.fgMuted, for: .normal)
         cancelBtn.backgroundColor = DS.bgSubtle
         cancelBtn.layer.cornerRadius = 10
@@ -671,7 +671,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
 
         let confirmBtn = UIButton(type: .system)
         confirmBtn.setTitle("삭제", for: .normal)
-        confirmBtn.titleLabel?.font = DS.font(14)
+        confirmBtn.titleLabel?.font = DS.font(13)
         confirmBtn.setTitleColor(.white, for: .normal)
         confirmBtn.backgroundColor = UIColor(hex: "E8A0A0")
         confirmBtn.layer.cornerRadius = 10
@@ -930,7 +930,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
 
         let titleLabel = UILabel()
         titleLabel.text = title
-        titleLabel.font = DS.font(15)
+        titleLabel.font = DS.font(14)
         titleLabel.textColor = DS.fgStrong
         titleLabel.textAlignment = .center
 
@@ -949,7 +949,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         okConfig.title = "확인"
         okConfig.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
             var attrs = incoming
-            attrs.font = DS.font(14)
+            attrs.font = DS.font(13)
             return attrs
         }
         okButton.configuration = okConfig
@@ -995,7 +995,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
 
         let titleLabel = UILabel()
         titleLabel.text = "사진을 삭제할까요?"
-        titleLabel.font = DS.font(15)
+        titleLabel.font = DS.font(14)
         titleLabel.textColor = DS.fgStrong
         titleLabel.textAlignment = .center
 
@@ -1007,7 +1007,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         cancelConfig.title = "취소"
         cancelConfig.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
             var attrs = incoming
-            attrs.font = DS.font(14)
+            attrs.font = DS.font(13)
             return attrs
         }
         cancelButton.configuration = cancelConfig
@@ -1023,7 +1023,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         deleteConfig.title = "삭제"
         deleteConfig.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
             var attrs = incoming
-            attrs.font = DS.font(14)
+            attrs.font = DS.font(13)
             return attrs
         }
         deleteButton.configuration = deleteConfig
@@ -1103,12 +1103,12 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
 
         let titleLabel = UILabel()
         titleLabel.text = "녹음 파일"
-        titleLabel.font = DS.font(16)
+        titleLabel.font = DS.font(14)
         titleLabel.textColor = DS.fgStrong
 
         let countLabel = UILabel()
         countLabel.text = "\(audioFileNames.count)개"
-        countLabel.font = DS.font(13)
+        countLabel.font = DS.font(11)
         countLabel.textColor = DS.fgMuted
 
         let closeButton = UIButton(type: .system)
@@ -1184,7 +1184,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         playAllConfig.title = isPlaying ? "전체 중지" : "전체 재생"
         playAllConfig.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
             var attrs = incoming
-            attrs.font = DS.font(14)
+            attrs.font = DS.font(13)
             return attrs
         }
         playAllButton.configuration = playAllConfig
@@ -1242,7 +1242,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
 
         let nameLabel = UILabel()
         nameLabel.text = "녹음 \(index + 1)"
-        nameLabel.font = DS.font(14)
+        nameLabel.font = DS.font(13)
         nameLabel.textColor = DS.fgStrong
 
         let timeLabel = UILabel()
@@ -1374,7 +1374,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
 
         let titleLabel = UILabel()
         titleLabel.text = "녹음 \(index + 1)을 삭제할까요?"
-        titleLabel.font = DS.font(15)
+        titleLabel.font = DS.font(14)
         titleLabel.textColor = DS.fgStrong
         titleLabel.textAlignment = .center
 
@@ -1386,7 +1386,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         cancelConfig.title = "취소"
         cancelConfig.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
             var attrs = incoming
-            attrs.font = DS.font(14)
+            attrs.font = DS.font(13)
             return attrs
         }
         cancelButton.configuration = cancelConfig
@@ -1402,7 +1402,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         deleteConfig.title = "삭제"
         deleteConfig.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
             var attrs = incoming
-            attrs.font = DS.font(14)
+            attrs.font = DS.font(13)
             return attrs
         }
         deleteButton.configuration = deleteConfig

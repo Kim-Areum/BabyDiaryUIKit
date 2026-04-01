@@ -207,11 +207,11 @@ class SettingsViewController: UIViewController {
         nameStack.spacing = 6
 
         nameLabel.text = "아기 이름"
-        nameLabel.font = DS.font(13)
+        nameLabel.font = DS.font(14)
         nameLabel.textColor = DS.fgMuted
         nameStack.addArrangedSubview(nameLabel)
 
-        nameField.font = DS.font(16)
+        nameField.font = DS.font(14)
         nameField.placeholder = "이름"
         nameField.backgroundColor = DS.bgBase
         nameField.layer.cornerRadius = 12
@@ -233,11 +233,11 @@ class SettingsViewController: UIViewController {
         birthStack.spacing = 6
 
         birthLabel.text = "생년월일"
-        birthLabel.font = DS.font(13)
+        birthLabel.font = DS.font(14)
         birthLabel.textColor = DS.fgMuted
         birthStack.addArrangedSubview(birthLabel)
 
-        birthButton.titleLabel?.font = DS.font(16)
+        birthButton.titleLabel?.font = DS.font(14)
         birthButton.setTitleColor(DS.fgStrong, for: .normal)
         birthButton.contentHorizontalAlignment = .left
         birthButton.contentEdgeInsets = UIEdgeInsets(top: 14, left: 14, bottom: 14, right: 14)

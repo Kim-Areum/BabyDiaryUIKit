@@ -47,14 +47,14 @@ class CoverCropViewController: UIViewController, UIScrollViewDelegate {
 
         let titleLabel = UILabel()
         titleLabel.text = "사진 편집"
-        titleLabel.font = DS.font(17)
+        titleLabel.font = DS.font(15)
         titleLabel.textColor = .white
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
         let saveButton = UIButton(type: .system)
         saveButton.setTitle("저장", for: .normal)
-        saveButton.titleLabel?.font = DS.font(14)
+        saveButton.titleLabel?.font = DS.font(13)
         saveButton.setTitleColor(DS.fgStrong, for: .normal)
         saveButton.backgroundColor = DS.blue
         saveButton.layer.cornerRadius = 15
@@ -158,7 +158,7 @@ class CoverCropViewController: UIViewController, UIScrollViewDelegate {
     private func setupHint() {
         let hintLabel = UILabel()
         hintLabel.text = "핀치로 확대/축소, 드래그로 위치 조정"
-        hintLabel.font = DS.font(12)
+        hintLabel.font = DS.font(10)
         hintLabel.textColor = UIColor.white.withAlphaComponent(0.5)
         hintLabel.textAlignment = .center
         hintLabel.translatesAutoresizingMaskIntoConstraints = false

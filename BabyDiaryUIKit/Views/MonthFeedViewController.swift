@@ -317,7 +317,7 @@ private class FeedEntryCell: UITableViewCell {
         dayCountLabel.textColor = DS.fgPale
         topRow.addArrangedSubview(dayCountLabel)
 
-        bodyTextLabel.font = DS.font(14)
+        bodyTextLabel.font = DS.font(13)
         bodyTextLabel.textColor = DS.fgStrong
         bodyTextLabel.numberOfLines = 6
         bodyTextLabel.lineBreakMode = .byTruncatingTail

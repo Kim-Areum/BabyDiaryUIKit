@@ -144,7 +144,7 @@ class DiaryDetailViewController: UIViewController {
         ])
 
         // Text label
-        textLabel.font = DS.font(15)
+        textLabel.font = DS.font(13)
         textLabel.textColor = DS.fgStrong
         textLabel.numberOfLines = 0
         let paragraphStyle = NSMutableParagraphStyle()
@@ -220,7 +220,7 @@ class DiaryDetailViewController: UIViewController {
             textLabel.attributedText = NSAttributedString(
                 string: displayText,
                 attributes: [
-                    .font: DS.font(15),
+                    .font: DS.font(13),
                     .foregroundColor: DS.fgStrong,
                     .paragraphStyle: paragraphStyle,
                 ]
@@ -394,7 +394,7 @@ class DiaryDetailViewController: UIViewController {
 
         let label = UILabel()
         label.text = title
-        label.font = DS.font(15)
+        label.font = DS.font(13)
         label.textColor = color
 
         let hStack = UIStackView(arrangedSubviews: [iconView, label])
@@ -462,7 +462,7 @@ class DiaryDetailViewController: UIViewController {
 
         let messageLabel = UILabel()
         messageLabel.text = "이 기록을 삭제할까요?"
-        messageLabel.font = DS.font(15)
+        messageLabel.font = DS.font(14)
         messageLabel.textColor = DS.fgStrong
         messageLabel.textAlignment = .center
         vStack.addArrangedSubview(messageLabel)
@@ -474,7 +474,7 @@ class DiaryDetailViewController: UIViewController {
 
         let cancelBtn = UIButton(type: .system)
         cancelBtn.setTitle("취소", for: .normal)
-        cancelBtn.titleLabel?.font = DS.font(14)
+        cancelBtn.titleLabel?.font = DS.font(13)
         cancelBtn.setTitleColor(DS.fgMuted, for: .normal)
         cancelBtn.backgroundColor = DS.bgSubtle
         cancelBtn.layer.cornerRadius = 10
@@ -484,7 +484,7 @@ class DiaryDetailViewController: UIViewController {
 
         let deleteBtn = UIButton(type: .system)
         deleteBtn.setTitle("삭제", for: .normal)
-        deleteBtn.titleLabel?.font = DS.font(14)
+        deleteBtn.titleLabel?.font = DS.font(13)
         deleteBtn.setTitleColor(.white, for: .normal)
         deleteBtn.backgroundColor = UIColor(hex: "E8A0A0")
         deleteBtn.layer.cornerRadius = 10
@@ -579,14 +579,14 @@ class DiaryDetailViewController: UIViewController {
 
         let headerTitle = UILabel()
         headerTitle.text = "녹음 파일"
-        headerTitle.font = DS.font(16)
+        headerTitle.font = DS.font(14)
         headerTitle.textColor = DS.fgStrong
         headerTitle.translatesAutoresizingMaskIntoConstraints = false
         headerRow.addSubview(headerTitle)
 
         let countLabel = UILabel()
         countLabel.text = "\(entry.audioFileNamesArray.count)개"
-        countLabel.font = DS.font(13)
+        countLabel.font = DS.font(11)
         countLabel.textColor = DS.fgMuted
         countLabel.translatesAutoresizingMaskIntoConstraints = false
         headerRow.addSubview(countLabel)
@@ -632,7 +632,7 @@ class DiaryDetailViewController: UIViewController {
 
             let nameLabel = UILabel()
             nameLabel.text = "녹음 \(index + 1)"
-            nameLabel.font = DS.font(14)
+            nameLabel.font = DS.font(13)
             nameLabel.textColor = DS.fgStrong
             nameLabel.translatesAutoresizingMaskIntoConstraints = false
             row.addSubview(nameLabel)
@@ -687,7 +687,7 @@ class DiaryDetailViewController: UIViewController {
         playAllConfig.imagePadding = 6
         playAllConfig.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
             var outgoing = incoming
-            outgoing.font = DS.font(14)
+            outgoing.font = DS.font(13)
             return outgoing
         }
         playAllBtn.configuration = playAllConfig

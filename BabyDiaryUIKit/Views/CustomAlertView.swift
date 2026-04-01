@@ -24,7 +24,7 @@ class CustomAlertView: UIView {
         addSubview(containerView)
 
         titleLabel.text = title
-        titleLabel.font = DS.font(16)
+        titleLabel.font = DS.font(14)
         titleLabel.textColor = DS.fgStrong
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -38,7 +38,7 @@ class CustomAlertView: UIView {
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
 
         actionButton.setTitle(buttonText, for: .normal)
-        actionButton.titleLabel?.font = DS.font(14)
+        actionButton.titleLabel?.font = DS.font(13)
         actionButton.setTitleColor(DS.fgStrong, for: .normal)
         actionButton.backgroundColor = DS.yellow
         actionButton.layer.cornerRadius = 12

@@ -179,11 +179,11 @@ class BabySetupViewController: UIViewController {
         nameStack.translatesAutoresizingMaskIntoConstraints = false
 
         nameLabel.text = "아기 이름"
-        nameLabel.font = DS.font(13)
+        nameLabel.font = DS.font(14)
         nameLabel.textColor = DS.fgMuted
         nameStack.addArrangedSubview(nameLabel)
 
-        nameField.font = DS.font(16)
+        nameField.font = DS.font(14)
         nameField.placeholder = "이름을 입력하세요"
         nameField.backgroundColor = DS.bgBase
         nameField.layer.cornerRadius = 12
@@ -210,11 +210,11 @@ class BabySetupViewController: UIViewController {
         birthStack.translatesAutoresizingMaskIntoConstraints = false
 
         birthLabel.text = "생년월일"
-        birthLabel.font = DS.font(13)
+        birthLabel.font = DS.font(14)
         birthLabel.textColor = DS.fgMuted
         birthStack.addArrangedSubview(birthLabel)
 
-        birthButton.titleLabel?.font = DS.font(16)
+        birthButton.titleLabel?.font = DS.font(14)
         birthButton.setTitleColor(DS.fgStrong, for: .normal)
         birthButton.contentHorizontalAlignment = .left
         birthButton.contentEdgeInsets = UIEdgeInsets(top: 14, left: 14, bottom: 14, right: 14)
@@ -234,7 +234,7 @@ class BabySetupViewController: UIViewController {
 
     private func setupStartButton() {
         startButton.setTitle("시작하기", for: .normal)
-        startButton.titleLabel?.font = DS.font(16)
+        startButton.titleLabel?.font = DS.font(13)
         startButton.layer.cornerRadius = 22
         startButton.clipsToBounds = true
         startButton.addTarget(self, action: #selector(startTapped), for: .touchUpInside)

@@ -329,7 +329,7 @@ class MinibookViewController: UIViewController {
             } else {
                 pageRangeLabel.text = "\(item.firstPage)~\(item.lastPage)"
             }
-            pageRangeLabel.font = DS.font(10)
+            pageRangeLabel.font = DS.font(13)
             pageRangeLabel.textColor = DS.fgPale
             pageRangeLabel.textAlignment = .right
             pageRangeLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -423,7 +423,7 @@ class MinibookViewController: UIViewController {
         // B7 size label
         let sizeLabel = UILabel()
         sizeLabel.text = "B7  94 x 128 mm"
-        sizeLabel.font = DS.font(13)
+        sizeLabel.font = DS.font(10)
         sizeLabel.textColor = DS.fgPale
         sizeLabel.textAlignment = .center
         sizeLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -468,7 +468,7 @@ class MinibookViewController: UIViewController {
         let baby = CoreDataStack.shared.fetchBaby()
         let titleLabel = UILabel()
         titleLabel.text = "\(baby?.name ?? "")의 일기"
-        titleLabel.font = DS.font(18)
+        titleLabel.font = DS.font(15)
         titleLabel.textColor = DS.fgStrong
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         pageView.addSubview(titleLabel)
@@ -546,7 +546,7 @@ class MinibookViewController: UIViewController {
 
         let dayCountLabel = UILabel()
         dayCountLabel.text = baby?.dayAndMonthAt(date: entry.date) ?? ""
-        dayCountLabel.font = DS.font(9)
+        dayCountLabel.font = DS.font(11)
         dayCountLabel.textColor = DS.fgPale
         dayCountLabel.translatesAutoresizingMaskIntoConstraints = false
         pageView.addSubview(dayCountLabel)
@@ -561,13 +561,13 @@ class MinibookViewController: UIViewController {
         // Text
         if !textSlice.isEmpty {
             let textLabel = UILabel()
-            textLabel.font = DS.font(11)
+            textLabel.font = DS.font(13)
             textLabel.textColor = DS.fgStrong
             textLabel.numberOfLines = 0
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineSpacing = 6
             textLabel.attributedText = NSAttributedString(string: textSlice, attributes: [
-                .font: DS.font(11),
+                .font: DS.font(13),
                 .foregroundColor: DS.fgStrong,
                 .paragraphStyle: paragraphStyle,
             ])
@@ -584,7 +584,7 @@ class MinibookViewController: UIViewController {
         // Page number
         let pageNumLabel = UILabel()
         pageNumLabel.text = "\(pageNum)"
-        pageNumLabel.font = DS.font(9)
+        pageNumLabel.font = DS.font(11)
         pageNumLabel.textColor = DS.fgPale
         pageNumLabel.translatesAutoresizingMaskIntoConstraints = false
         pageView.addSubview(pageNumLabel)
@@ -600,13 +600,13 @@ class MinibookViewController: UIViewController {
         pageView.clipsToBounds = true
 
         let textLabel = UILabel()
-        textLabel.font = DS.font(11)
+        textLabel.font = DS.font(13)
         textLabel.textColor = DS.fgStrong
         textLabel.numberOfLines = 0
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 6
         textLabel.attributedText = NSAttributedString(string: textSlice, attributes: [
-            .font: DS.font(11),
+            .font: DS.font(13),
             .foregroundColor: DS.fgStrong,
             .paragraphStyle: paragraphStyle,
         ])
@@ -615,7 +615,7 @@ class MinibookViewController: UIViewController {
 
         let pageNumLabel = UILabel()
         pageNumLabel.text = "\(pageNum)"
-        pageNumLabel.font = DS.font(9)
+        pageNumLabel.font = DS.font(11)
         pageNumLabel.textColor = DS.fgPale
         pageNumLabel.translatesAutoresizingMaskIntoConstraints = false
         pageView.addSubview(pageNumLabel)
@@ -642,13 +642,13 @@ class MinibookViewController: UIViewController {
 
         let line1 = UILabel()
         line1.text = "아직 기록이 없어요."
-        line1.font = DS.font(14)
+        line1.font = DS.font(13)
         line1.textColor = DS.fgPale
         messageStack.addArrangedSubview(line1)
 
         let line2 = UILabel()
         line2.text = "오늘부터 시작해보세요!"
-        line2.font = DS.font(14)
+        line2.font = DS.font(13)
         line2.textColor = DS.fgPale
         messageStack.addArrangedSubview(line2)
 
@@ -687,7 +687,7 @@ class MinibookViewController: UIViewController {
 
         let titleLabel = UILabel()
         titleLabel.text = "\(baby?.name ?? "")의 일기"
-        titleLabel.font = DS.font(14)
+        titleLabel.font = DS.font(13)
         titleLabel.textColor = DS.fgMuted
         vStack.addArrangedSubview(titleLabel)
 
@@ -840,7 +840,7 @@ class MinibookViewController: UIViewController {
                 }
                 let title = "\(baby?.name ?? "")의 일기"
                 let titleAttrs: [NSAttributedString.Key: Any] = [
-                    .font: DS.font(18),
+                    .font: DS.font(15),
                     .foregroundColor: DS.fgStrong,
                 ]
                 let titleSize = (title as NSString).size(withAttributes: titleAttrs)
@@ -862,15 +862,33 @@ class MinibookViewController: UIViewController {
                     .foregroundColor: DS.fgStrong,
                 ]
                 let numAttrs: [NSAttributedString.Key: Any] = [
-                    .font: DS.font(10),
+                    .font: DS.font(13),
                     .foregroundColor: DS.fgPale,
                 ]
                 for item in items {
                     let label = formatMonthAge(item.month)
+                    let labelSize = (label as NSString).size(withAttributes: itemAttrs)
                     (label as NSString).draw(at: CGPoint(x: margin + 4, y: tocY), withAttributes: itemAttrs)
+
                     let numStr = item.firstPage == item.lastPage ? "\(item.firstPage)" : "\(item.firstPage)~\(item.lastPage)"
                     let numSize = (numStr as NSString).size(withAttributes: numAttrs)
                     (numStr as NSString).draw(at: CGPoint(x: size.width - margin - 4 - numSize.width, y: tocY + 2), withAttributes: numAttrs)
+
+                    // 점선
+                    let dotStartX = margin + 4 + labelSize.width + 4
+                    let dotEndX = size.width - margin - 4 - numSize.width - 4
+                    let dotY = tocY + labelSize.height / 2
+                    if dotEndX > dotStartX {
+                        context.saveGState()
+                        context.setStrokeColor(DS.fgPale.cgColor)
+                        context.setLineWidth(0.5)
+                        context.setLineDash(phase: 0, lengths: [2, 3])
+                        context.move(to: CGPoint(x: dotStartX, y: dotY))
+                        context.addLine(to: CGPoint(x: dotEndX, y: dotY))
+                        context.strokePath()
+                        context.restoreGState()
+                    }
+
                     tocY += 22
                 }
 
@@ -884,26 +902,40 @@ class MinibookViewController: UIViewController {
                     yOffset += photoHeight + 10
                 }
 
+                // 날짜 뱃지 (배경 포함)
                 let dateAttrs: [NSAttributedString.Key: Any] = [
                     .font: DS.font(11),
                     .foregroundColor: DS.fgNeutral,
                 ]
-                (entry.formattedDate as NSString).draw(at: CGPoint(x: margin, y: yOffset), withAttributes: dateAttrs)
+                let dateText = entry.formattedDate
+                let dateSize = (dateText as NSString).size(withAttributes: dateAttrs)
+                let badgePadH: CGFloat = 10
+                let badgePadV: CGFloat = 4
+                let badgeRect = CGRect(x: margin, y: yOffset, width: dateSize.width + badgePadH * 2, height: dateSize.height + badgePadV * 2)
+                let badgePath = UIBezierPath(roundedRect: badgeRect, cornerRadius: 4)
+                context.saveGState()
+                DS.yellow.setFill()
+                badgePath.fill()
+                DS.yellowBorder.setStroke()
+                badgePath.lineWidth = 0.5
+                badgePath.stroke()
+                context.restoreGState()
+                (dateText as NSString).draw(at: CGPoint(x: margin + badgePadH, y: yOffset + badgePadV), withAttributes: dateAttrs)
 
                 let dText = baby?.dayAndMonthAt(date: entry.date) ?? ""
                 let dAttrs: [NSAttributedString.Key: Any] = [
-                    .font: DS.font(9),
+                    .font: DS.font(11),
                     .foregroundColor: DS.fgPale,
                 ]
                 let dSize = (dText as NSString).size(withAttributes: dAttrs)
-                (dText as NSString).draw(at: CGPoint(x: size.width - margin - dSize.width, y: yOffset + 2), withAttributes: dAttrs)
-                yOffset += 20
+                (dText as NSString).draw(at: CGPoint(x: size.width - margin - dSize.width, y: yOffset + badgePadV), withAttributes: dAttrs)
+                yOffset += badgeRect.height + 10
 
                 if !textSlice.isEmpty {
                     let paragraphStyle = NSMutableParagraphStyle()
                     paragraphStyle.lineSpacing = 6
                     let textAttrs: [NSAttributedString.Key: Any] = [
-                        .font: DS.font(11),
+                        .font: DS.font(13),
                         .foregroundColor: DS.fgStrong,
                         .paragraphStyle: paragraphStyle,
                     ]
@@ -912,7 +944,7 @@ class MinibookViewController: UIViewController {
                 }
 
                 let pnAttrs: [NSAttributedString.Key: Any] = [
-                    .font: DS.font(9),
+                    .font: DS.font(11),
                     .foregroundColor: DS.fgPale,
                 ]
                 let numText = "\(num)"
@@ -923,7 +955,7 @@ class MinibookViewController: UIViewController {
                 let paragraphStyle = NSMutableParagraphStyle()
                 paragraphStyle.lineSpacing = 6
                 let textAttrs: [NSAttributedString.Key: Any] = [
-                    .font: DS.font(11),
+                    .font: DS.font(13),
                     .foregroundColor: DS.fgStrong,
                     .paragraphStyle: paragraphStyle,
                 ]
@@ -931,7 +963,7 @@ class MinibookViewController: UIViewController {
                 (textSlice as NSString).draw(in: textDrawRect, withAttributes: textAttrs)
 
                 let pnAttrs2: [NSAttributedString.Key: Any] = [
-                    .font: DS.font(9),
+                    .font: DS.font(11),
                     .foregroundColor: DS.fgPale,
                 ]
                 let numText = "\(num)"
@@ -940,7 +972,7 @@ class MinibookViewController: UIViewController {
 
             case .empty:
                 let emptyAttrs: [NSAttributedString.Key: Any] = [
-                    .font: DS.font(14),
+                    .font: DS.font(13),
                     .foregroundColor: DS.fgPale,
                 ]
                 let text1 = "아직 기록이 없어요."
@@ -954,12 +986,14 @@ class MinibookViewController: UIViewController {
                 if let data = baby?.photoData, let image = UIImage(data: data) {
                     let photoSize: CGFloat = 60
                     let photoRect = CGRect(x: (size.width - photoSize) / 2, y: size.height / 2 - 50, width: photoSize, height: photoSize)
+                    context.saveGState()
                     let path = UIBezierPath(roundedRect: photoRect, cornerRadius: photoSize / 2)
                     path.addClip()
                     image.draw(in: photoRect)
+                    context.restoreGState()
                 }
                 let titleAttrs: [NSAttributedString.Key: Any] = [
-                    .font: DS.font(14),
+                    .font: DS.font(13),
                     .foregroundColor: DS.fgMuted,
                 ]
                 let title = "\(baby?.name ?? "")의 일기"

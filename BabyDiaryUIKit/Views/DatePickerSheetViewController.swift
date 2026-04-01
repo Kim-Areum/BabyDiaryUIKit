@@ -45,7 +45,7 @@ class DatePickerSheetViewController: UIViewController, UIPickerViewDelegate, UIP
 
         let doneButton = UIButton(type: .system)
         doneButton.setTitle("완료", for: .normal)
-        doneButton.titleLabel?.font = DS.font(14)
+        doneButton.titleLabel?.font = DS.font(13)
         doneButton.setTitleColor(DS.fgStrong, for: .normal)
         doneButton.backgroundColor = DS.blue
         doneButton.layer.cornerRadius = 15

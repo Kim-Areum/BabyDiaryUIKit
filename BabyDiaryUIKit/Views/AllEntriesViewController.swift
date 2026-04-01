@@ -60,7 +60,7 @@ class AllEntriesViewController: UIViewController {
         nextButton.addTarget(self, action: #selector(nextMonth), for: .touchUpInside)
         nextButton.translatesAutoresizingMaskIntoConstraints = false
 
-        monthLabel.font = DS.font(16)
+        monthLabel.font = DS.font(13)
         monthLabel.textColor = DS.fgStrong
         monthLabel.textAlignment = .center
         monthLabel.translatesAutoresizingMaskIntoConstraints = false

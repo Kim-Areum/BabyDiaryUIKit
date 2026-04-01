@@ -48,7 +48,7 @@ class CustomPhotoPickerViewController: UIViewController, UICollectionViewDelegat
 
         let doneButton = UIButton(type: .system)
         doneButton.setTitle("완료", for: .normal)
-        doneButton.titleLabel?.font = DS.font(14)
+        doneButton.titleLabel?.font = DS.font(13)
         doneButton.setTitleColor(DS.fgPale, for: .normal)
         doneButton.backgroundColor = DS.bgNeutral
         doneButton.layer.cornerRadius = 15

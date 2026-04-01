@@ -426,7 +426,7 @@ class TodayViewController: UIViewController {
         ])
 
         // Diary text
-        diaryTextLabel.font = DS.font(15)
+        diaryTextLabel.font = DS.font(13)
         diaryTextLabel.textColor = DS.fgStrong
         diaryTextLabel.numberOfLines = 0
         diaryTextLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -505,7 +505,7 @@ class TodayViewController: UIViewController {
         attString.append(NSAttributedString(
             string: "  \(title)",
             attributes: [
-                .font: DS.font(14),
+                .font: DS.font(13),
                 .foregroundColor: DS.fgStrong,
             ]
         ))
@@ -551,7 +551,7 @@ class TodayViewController: UIViewController {
             let attrText = NSAttributedString(
                 string: entry.text,
                 attributes: [
-                    .font: DS.font(15),
+                    .font: DS.font(13),
                     .foregroundColor: DS.fgStrong,
                     .paragraphStyle: paragraphStyle,
                 ]
@@ -563,7 +563,7 @@ class TodayViewController: UIViewController {
             let attrText = NSAttributedString(
                 string: "오늘 우리 아기와의 하루는 어땠나요?",
                 attributes: [
-                    .font: DS.font(15),
+                    .font: DS.font(13),
                     .foregroundColor: DS.fgPale,
                     .paragraphStyle: paragraphStyle,
                 ]
@@ -626,7 +626,7 @@ class TodayViewController: UIViewController {
         let editBtn = UIButton(type: .system)
         editBtn.setTitle("  수정", for: .normal)
         editBtn.setImage(UIImage(systemName: "pencil"), for: .normal)
-        editBtn.titleLabel?.font = DS.font(15)
+        editBtn.titleLabel?.font = DS.font(13)
         editBtn.tintColor = DS.fgStrong
         editBtn.setTitleColor(DS.fgStrong, for: .normal)
         editBtn.contentHorizontalAlignment = .left
@@ -640,7 +640,7 @@ class TodayViewController: UIViewController {
         let deleteBtn = UIButton(type: .system)
         deleteBtn.setTitle("  삭제", for: .normal)
         deleteBtn.setImage(UIImage(systemName: "trash"), for: .normal)
-        deleteBtn.titleLabel?.font = DS.font(15)
+        deleteBtn.titleLabel?.font = DS.font(13)
         deleteBtn.tintColor = UIColor(hex: "D05050")
         deleteBtn.setTitleColor(UIColor(hex: "D05050"), for: .normal)
         deleteBtn.contentHorizontalAlignment = .left
@@ -714,14 +714,14 @@ class TodayViewController: UIViewController {
 
         let titleLabel = UILabel()
         titleLabel.text = "이 기록을 삭제할까요?"
-        titleLabel.font = DS.font(15)
+        titleLabel.font = DS.font(14)
         titleLabel.textColor = DS.fgStrong
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
         let cancelBtn = UIButton(type: .system)
         cancelBtn.setTitle("취소", for: .normal)
-        cancelBtn.titleLabel?.font = DS.font(14)
+        cancelBtn.titleLabel?.font = DS.font(13)
         cancelBtn.setTitleColor(DS.fgMuted, for: .normal)
         cancelBtn.backgroundColor = DS.bgSubtle
         cancelBtn.layer.cornerRadius = 10
@@ -731,7 +731,7 @@ class TodayViewController: UIViewController {
 
         let confirmBtn = UIButton(type: .system)
         confirmBtn.setTitle("삭제", for: .normal)
-        confirmBtn.titleLabel?.font = DS.font(14)
+        confirmBtn.titleLabel?.font = DS.font(13)
         confirmBtn.setTitleColor(.white, for: .normal)
         confirmBtn.backgroundColor = UIColor(hex: "E8A0A0")
         confirmBtn.layer.cornerRadius = 10

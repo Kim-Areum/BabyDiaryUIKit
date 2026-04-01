@@ -51,12 +51,12 @@ class PlaybackPopupView: UIView {
 
         let titleLabel = UILabel()
         titleLabel.text = "녹음 파일"
-        titleLabel.font = DS.font(16)
+        titleLabel.font = DS.font(14)
         titleLabel.textColor = DS.fgStrong
 
         let countLabel = UILabel()
         countLabel.text = "\(fileNames.count)개"
-        countLabel.font = DS.font(13)
+        countLabel.font = DS.font(11)
         countLabel.textColor = DS.fgMuted
 
         let closeBtn = UIButton(type: .system)
@@ -110,7 +110,7 @@ class PlaybackPopupView: UIView {
 
             let nameLabel = UILabel()
             nameLabel.text = "녹음 \(index + 1)"
-            nameLabel.font = DS.font(14)
+            nameLabel.font = DS.font(13)
             nameLabel.textColor = DS.fgStrong
             infoStack.addArrangedSubview(nameLabel)
 
@@ -183,7 +183,7 @@ class PlaybackPopupView: UIView {
         let playConfig = UIImage.SymbolConfiguration(pointSize: 12)
         playAllBtn.setImage(UIImage(systemName: "play.fill", withConfiguration: playConfig), for: .normal)
         playAllBtn.setTitle(" 전체 재생", for: .normal)
-        playAllBtn.titleLabel?.font = DS.font(14)
+        playAllBtn.titleLabel?.font = DS.font(13)
         playAllBtn.tintColor = DS.fgStrong
         playAllBtn.setTitleColor(DS.fgStrong, for: .normal)
         playAllBtn.addTarget(self, action: #selector(playAllTapped), for: .touchUpInside)

@@ -242,19 +242,22 @@ extension AllEntriesViewController: UICollectionViewDelegateFlowLayout {
         let date = makeDate(day: day)
         guard date <= Date() else { return }
 
-        // 해당 월의 컨텐츠 있는 엔트리들을 모아서 피드 뷰로 이동
-        let monthEntriesList = (1...daysInMonth).compactMap { monthEntries[$0] }
-            .filter { !$0.text.isEmpty || $0.photoData != nil }
+        let entry = monthEntries[day]
+        let hasContent = entry != nil && (!entry!.text.isEmpty || entry!.photoData != nil)
 
-        if !monthEntriesList.isEmpty {
+        if hasContent {
+            // 컨텐츠 있으면 피드 뷰
+            let monthEntriesList = (1...daysInMonth).compactMap { monthEntries[$0] }
+                .filter { !$0.text.isEmpty || $0.photoData != nil }
             let feedVC = MonthFeedViewController(entries: monthEntriesList, selectedDate: date)
             feedVC.modalPresentationStyle = .fullScreen
+            feedVC.transitioningDelegate = PushTransitionManager.shared
             feedVC.onDismiss = { [weak self] in
                 self?.reloadEntries()
             }
             present(feedVC, animated: true)
         } else {
-            // 컨텐츠 없으면 작성화면
+            // 빈 섬네일이면 기록화면
             guard let baby = CoreDataStack.shared.fetchBaby() else { return }
             let editorVC = DiaryEditorViewController(date: date, baby: baby)
             editorVC.modalPresentationStyle = .fullScreen

@@ -26,11 +26,15 @@ class MonthFeedViewController: UIViewController {
 
     // MARK: - Lifecycle
 
+    private let swipeBack = SwipeBackInteractionController()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = DS.bgBase
+        transitioningDelegate = PushTransitionManager.shared
         setupNavBar()
         setupTableView()
+        swipeBack.attach(to: self)
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             self?.scrollToSelectedDate()

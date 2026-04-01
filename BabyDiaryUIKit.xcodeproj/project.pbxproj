@@ -19,6 +19,7 @@
 		7ABF0C10457692F512C88235 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC7E6095EAF0C68BBECAE007 /* HomeViewController.swift */; };
 		92A66B05112D4C3D6B156CB5 /* PlaybackPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032D6601516651401ED85F32 /* PlaybackPopupView.swift */; };
 		955F669AFF5409BCC3007229 /* BabySetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F947EAF338755876722249 /* BabySetupViewController.swift */; };
+		9DF2060F0B0741E6181721B7 /* PushTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D93EBC167B4B79F41D6CE56 /* PushTransitionManager.swift */; };
 		A6EB074E166E4CAEB375C2B5 /* DatePickerSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5448E132C103033648CFE68E /* DatePickerSheetViewController.swift */; };
 		B276E43329C90E529F687130 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E18E3026D731000BF5FE5976 /* Localizable.strings */; };
 		B31C47D6FCF6288266458708 /* AllEntriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2A368C91CB41B3059AA06B /* AllEntriesViewController.swift */; };
@@ -53,6 +54,7 @@
 		5448E132C103033648CFE68E /* DatePickerSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerSheetViewController.swift; sourceTree = "<group>"; };
 		5892850F5061A5FA783BC948 /* Ownglyph_PDH.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ownglyph_PDH.ttf; sourceTree = "<group>"; };
 		753F17541EFC24C972B9E18F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		7D93EBC167B4B79F41D6CE56 /* PushTransitionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushTransitionManager.swift; sourceTree = "<group>"; };
 		877DD89F303230395C277B48 /* DiaryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryDetailViewController.swift; sourceTree = "<group>"; };
 		8BE004573B709C7178E93820 /* FullScreenImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenImageViewController.swift; sourceTree = "<group>"; };
 		902FEA0D38AE25B3183252BE /* CoverCropViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverCropViewController.swift; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 				41A09CC95F08EEF78E2142E6 /* MinibookViewController.swift */,
 				42F2635BD56F92B3C3F2E180 /* MonthFeedViewController.swift */,
 				032D6601516651401ED85F32 /* PlaybackPopupView.swift */,
+				7D93EBC167B4B79F41D6CE56 /* PushTransitionManager.swift */,
 				1B4D0B191587D3095532228F /* SettingsViewController.swift */,
 				158D00577B989E548E899FC6 /* SplashViewController.swift */,
 				20B9BFBB0057FE4D6ACB7F2C /* TodayViewController.swift */,
@@ -255,6 +258,7 @@
 				F3A74E6657D14AC078587AA2 /* MinibookViewController.swift in Sources */,
 				C93131F6775B563E410F7FBB /* MonthFeedViewController.swift in Sources */,
 				92A66B05112D4C3D6B156CB5 /* PlaybackPopupView.swift in Sources */,
+				9DF2060F0B0741E6181721B7 /* PushTransitionManager.swift in Sources */,
 				0BD03DAE66DAB0D9102E1826 /* SceneDelegate.swift in Sources */,
 				5755F40E1A4CBE7D10685401 /* SettingsViewController.swift in Sources */,
 				4333BCF3EA1E541AC9CBD886 /* SpeechManager.swift in Sources */,

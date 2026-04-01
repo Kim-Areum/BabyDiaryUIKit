@@ -29,6 +29,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
     private let navBar = NavBarView()
     private let mainScrollView = UIScrollView()
     private let contentStack = UIStackView()
+    private var contentTopConstraint: NSLayoutConstraint?
 
     // Card
     private let cardView = UIView()
@@ -168,11 +169,13 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
             mainScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             mainScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
-            contentStack.topAnchor.constraint(equalTo: mainScrollView.contentLayoutGuide.topAnchor, constant: 20),
-            contentStack.bottomAnchor.constraint(equalTo: mainScrollView.contentLayoutGuide.bottomAnchor, constant: -40),
+            contentStack.bottomAnchor.constraint(equalTo: mainScrollView.contentLayoutGuide.bottomAnchor, constant: -200),
             contentStack.centerXAnchor.constraint(equalTo: mainScrollView.centerXAnchor),
             contentStack.widthAnchor.constraint(equalToConstant: cardWidth),
         ])
+
+        contentTopConstraint = contentStack.topAnchor.constraint(equalTo: mainScrollView.contentLayoutGuide.topAnchor, constant: 60)
+        contentTopConstraint?.isActive = true
     }
 
     // MARK: - Setup Card
@@ -762,14 +765,36 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
     // MARK: - Keyboard
 
     @objc private func keyboardWillShow(_ notification: Notification) {
-        guard let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
-        mainScrollView.contentInset.bottom = frame.height
-        mainScrollView.verticalScrollIndicatorInsets.bottom = frame.height
+        guard let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
+              let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double else { return }
+        let keyboardHeight = frame.height
+
+        mainScrollView.contentInset.bottom = keyboardHeight
+        mainScrollView.verticalScrollIndicatorInsets.bottom = keyboardHeight
+
+        // 카드 위로
+        contentTopConstraint?.constant = 20
+        UIView.animate(withDuration: duration) {
+            self.view.layoutIfNeeded()
+        }
+
+        // 텍스트뷰가 보이도록 스크롤
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration) { [weak self] in
+            guard let self = self else { return }
+            let textViewFrame = self.textView.convert(self.textView.bounds, to: self.mainScrollView)
+            self.mainScrollView.scrollRectToVisible(textViewFrame.insetBy(dx: 0, dy: -20), animated: true)
+        }
     }
 
     @objc private func keyboardWillHide(_ notification: Notification) {
-        mainScrollView.contentInset.bottom = 0
-        mainScrollView.verticalScrollIndicatorInsets.bottom = 0
+        guard let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double else { return }
+        // 카드 원래 위치로
+        contentTopConstraint?.constant = 60
+        UIView.animate(withDuration: duration) {
+            self.mainScrollView.contentInset.bottom = 0
+            self.mainScrollView.verticalScrollIndicatorInsets.bottom = 0
+            self.view.layoutIfNeeded()
+        }
     }
 
     // MARK: - Voice Recording

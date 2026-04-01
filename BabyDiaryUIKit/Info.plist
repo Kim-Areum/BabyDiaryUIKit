@@ -33,6 +33,11 @@
 	<string>음성을 텍스트로 변환하기 위해 음성 인식 권한이 필요합니다.</string>
 	<key>CFBundleIcons</key>
 	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array/>
+		</dict>
 		<key>CFBundleAlternateIcons</key>
 		<dict>
 			<key>PinkAppIcon</key>
@@ -41,8 +46,6 @@
 				<array>
 					<string>PinkAppIcon</string>
 				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
 			</dict>
 		</dict>
 	</dict>

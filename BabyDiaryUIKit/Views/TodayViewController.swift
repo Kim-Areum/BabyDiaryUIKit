@@ -442,8 +442,8 @@ class TodayViewController: UIViewController {
 
         let textScroll = UIScrollView()
         textScroll.translatesAutoresizingMaskIntoConstraints = false
-        textScroll.showsVerticalScrollIndicator = false
-        textScroll.isUserInteractionEnabled = false
+        textScroll.showsVerticalScrollIndicator = true
+        textScroll.isUserInteractionEnabled = true
         bodyView.addSubview(textScroll)
         textScroll.addSubview(diaryTextLabel)
 

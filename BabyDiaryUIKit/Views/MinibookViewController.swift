@@ -23,9 +23,9 @@ class MinibookViewController: UIViewController {
     private var isExporting = false
 
     private let coverKey = "minibook_cover_photo"
-    private let firstPageWithPhotoChars = 350
-    private let firstPageNoPhotoChars = 600
-    private let continuationChars = 650
+    private let firstPageWithPhotoChars = 210
+    private let firstPageNoPhotoChars = 450
+    private let continuationChars = 500
 
     // UI
     private let pageContainerView = UIView()
@@ -89,14 +89,22 @@ class MinibookViewController: UIViewController {
 
                 let text = entry.text
                 let hasPhoto = entry.photoData != nil
-                let maxFirst = hasPhoto ? firstPageWithPhotoChars : firstPageNoPhotoChars
+                let pageWidth = UIScreen.main.bounds.width * 0.8
+                let textWidth = pageWidth - 20 // 좌우 패딩 10씩
 
-                if text.count <= maxFirst {
+                let firstText: String
+                if hasPhoto {
+                    firstText = splitByLines(text, maxLines: 6, width: textWidth)
+                } else {
+                    let maxFirst = firstPageNoPhotoChars
+                    firstText = text.count <= maxFirst ? text : splitAtWordBoundary(text, limit: maxFirst)
+                }
+
+                if firstText.count >= text.count {
                     entryPages.append(.entryFirst(entry: entry, textSlice: text, pageNum: pageNum))
                     monthToLastPage[monthAge] = pageNum
                     pageNum += 1
                 } else {
-                    let firstText = splitAtWordBoundary(text, limit: maxFirst)
                     entryPages.append(.entryFirst(entry: entry, textSlice: firstText, pageNum: pageNum))
                     monthToLastPage[monthAge] = pageNum
                     pageNum += 1
@@ -154,6 +162,58 @@ class MinibookViewController: UIViewController {
             return String(text[text.startIndex...lastSpace])
         }
         return String(slice)
+    }
+
+    /// 주어진 너비와 최대 줄 수에 맞는 텍스트를 반환
+    private func splitByLines(_ text: String, maxLines: Int, width: CGFloat) -> String {
+        guard !text.isEmpty else { return text }
+
+        let font = DS.font(14)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 6
+        let attrs: [NSAttributedString.Key: Any] = [
+            .font: font,
+            .paragraphStyle: paragraphStyle,
+        ]
+
+        let nsText = text as NSString
+        let maxSize = CGSize(width: width, height: .greatestFiniteMagnitude)
+
+        // 정확한 줄 높이 계산 (lineSpacing 포함)
+        let twoLineHeight = NSAttributedString(string: "가\n가", attributes: attrs)
+            .boundingRect(with: maxSize, options: [.usesLineFragmentOrigin], context: nil).height
+        let oneLineOnly = NSAttributedString(string: "가", attributes: attrs)
+            .boundingRect(with: maxSize, options: [.usesLineFragmentOrigin], context: nil).height
+        let lineWithSpacing = twoLineHeight - oneLineOnly // 한 줄 + lineSpacing
+        let maxHeight = oneLineOnly + lineWithSpacing * CGFloat(maxLines - 1)
+
+        // 이진 탐색으로 maxLines에 맞는 글자 수 찾기
+        var lo = 0
+        var hi = nsText.length
+        var result = nsText.length
+
+        while lo <= hi {
+            let mid = (lo + hi) / 2
+            let sub = nsText.substring(to: mid)
+            let attrStr = NSAttributedString(string: sub, attributes: attrs)
+            let height = attrStr.boundingRect(with: maxSize, options: [.usesLineFragmentOrigin], context: nil).height
+
+            if height <= maxHeight {
+                result = mid
+                lo = mid + 1
+            } else {
+                hi = mid - 1
+            }
+        }
+
+        if result >= nsText.length { return text }
+
+        // 단어 경계에서 자르기
+        let slice = nsText.substring(to: result)
+        if let lastSpace = slice.lastIndex(where: { $0 == " " || $0 == "\n" || $0 == "." || $0 == "," }) {
+            return String(slice[slice.startIndex...lastSpace])
+        }
+        return slice
     }
 
     // MARK: - Nav Bar
@@ -580,15 +640,15 @@ class MinibookViewController: UIViewController {
 
             NSLayoutConstraint.activate([
                 textLabel.topAnchor.constraint(equalTo: dateBadge.bottomAnchor, constant: 10),
-                textLabel.leadingAnchor.constraint(equalTo: pageView.leadingAnchor, constant: 16),
-                textLabel.trailingAnchor.constraint(equalTo: pageView.trailingAnchor, constant: -16),
+                textLabel.leadingAnchor.constraint(equalTo: pageView.leadingAnchor, constant: 10),
+                textLabel.trailingAnchor.constraint(equalTo: pageView.trailingAnchor, constant: -10),
             ])
         }
 
         // Page number
         let pageNumLabel = UILabel()
         pageNumLabel.text = "\(pageNum)"
-        pageNumLabel.font = DS.font(11)
+        pageNumLabel.font = DS.font(9)
         pageNumLabel.textColor = DS.fgPale
         pageNumLabel.translatesAutoresizingMaskIntoConstraints = false
         pageView.addSubview(pageNumLabel)
@@ -619,7 +679,7 @@ class MinibookViewController: UIViewController {
 
         let pageNumLabel = UILabel()
         pageNumLabel.text = "\(pageNum)"
-        pageNumLabel.font = DS.font(11)
+        pageNumLabel.font = DS.font(9)
         pageNumLabel.textColor = DS.fgPale
         pageNumLabel.translatesAutoresizingMaskIntoConstraints = false
         pageView.addSubview(pageNumLabel)

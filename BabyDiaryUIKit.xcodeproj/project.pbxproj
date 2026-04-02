@@ -13,10 +13,8 @@
 		4133903ECE8E137A49B968D0 /* BabyDiary.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D08C87E19459B6DBB1F16681 /* BabyDiary.xcdatamodeld */; };
 		4333BCF3EA1E541AC9CBD886 /* SpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31E61BE233E80877FE3EE9D /* SpeechManager.swift */; };
 		4E01B214424920DB5D318D60 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993E21E9F36B4EC515A57B7A /* MainTabBarController.swift */; };
-		515CC279610A7A129C4274F3 /* PinkAppIcon60x60@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AFDA2165473B75063230351 /* PinkAppIcon60x60@3x.png */; };
 		5755F40E1A4CBE7D10685401 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4D0B191587D3095532228F /* SettingsViewController.swift */; };
 		58AC37FF3617594BB589A9A2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 135F09F676EDF2AF4A6C6613 /* Assets.xcassets */; };
-		6624D1EA4A8C5199900B52CF /* PinkAppIcon60x60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F839450F7829B850D8F0428A /* PinkAppIcon60x60@2x.png */; };
 		762D128C10D8CECB6D0039FC /* CoverCropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902FEA0D38AE25B3183252BE /* CoverCropViewController.swift */; };
 		7ABF0C10457692F512C88235 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC7E6095EAF0C68BBECAE007 /* HomeViewController.swift */; };
 		92A66B05112D4C3D6B156CB5 /* PlaybackPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032D6601516651401ED85F32 /* PlaybackPopupView.swift */; };
@@ -43,7 +41,6 @@
 /* Begin PBXFileReference section */
 		02DBA2EC6560C5B2AC3C6553 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		032D6601516651401ED85F32 /* PlaybackPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackPopupView.swift; sourceTree = "<group>"; };
-		0AFDA2165473B75063230351 /* PinkAppIcon60x60@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PinkAppIcon60x60@3x.png"; sourceTree = "<group>"; };
 		11F947EAF338755876722249 /* BabySetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BabySetupViewController.swift; sourceTree = "<group>"; };
 		135F09F676EDF2AF4A6C6613 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		158D00577B989E548E899FC6 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
@@ -71,7 +68,6 @@
 		E18E3026D731000BF5FE5976 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E8E28970F778C5743F8AD1FE /* CustomPhotoPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPhotoPickerViewController.swift; sourceTree = "<group>"; };
 		EE3F1D0266F42E5D87DF5865 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		F839450F7829B850D8F0428A /* PinkAppIcon60x60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PinkAppIcon60x60@2x.png"; sourceTree = "<group>"; };
 		FBE63B19841AE0587BC8A046 /* CDDiaryEntry+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDDiaryEntry+CoreDataClass.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -82,8 +78,6 @@
 				EE3F1D0266F42E5D87DF5865 /* AppDelegate.swift */,
 				135F09F676EDF2AF4A6C6613 /* Assets.xcassets */,
 				E18E3026D731000BF5FE5976 /* Localizable.strings */,
-				F839450F7829B850D8F0428A /* PinkAppIcon60x60@2x.png */,
-				0AFDA2165473B75063230351 /* PinkAppIcon60x60@3x.png */,
 				753F17541EFC24C972B9E18F /* SceneDelegate.swift */,
 				D08C87E19459B6DBB1F16681 /* BabyDiary.xcdatamodeld */,
 				CEA596B1960E0EA36A594B1E /* CoreData */,
@@ -234,8 +228,6 @@
 				58AC37FF3617594BB589A9A2 /* Assets.xcassets in Resources */,
 				B276E43329C90E529F687130 /* Localizable.strings in Resources */,
 				C9B8BA61797305B52196E641 /* Ownglyph_PDH.ttf in Resources */,
-				6624D1EA4A8C5199900B52CF /* PinkAppIcon60x60@2x.png in Resources */,
-				515CC279610A7A129C4274F3 /* PinkAppIcon60x60@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

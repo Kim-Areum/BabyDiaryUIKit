@@ -775,7 +775,15 @@ class MinibookViewController: UIViewController {
     }
 
     @objc private func exportTapped() {
-        guard !entries.isEmpty, !isExporting else { return }
+        guard !isExporting else { return }
+
+        let hasContent = entries.contains { !$0.text.isEmpty || $0.photoData != nil }
+        if !hasContent {
+            let alert = CustomAlertView(title: "내보낼 기록이 없어요", message: "일기를 작성하면 미니북을 내보낼 수 있어요.", buttonText: "확인")
+            alert.show(in: view)
+            return
+        }
+
         exportPDF()
     }
 

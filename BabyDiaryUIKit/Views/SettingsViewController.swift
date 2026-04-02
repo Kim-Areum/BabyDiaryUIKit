@@ -426,19 +426,6 @@ class SettingsViewController: UIViewController {
         // 코끼리 이미지 교체
         let newName = next == .pink ? "PinkElephant2" : "Elephant2"
         elephantImageView.image = UIImage(named: newName)
-
-        // 앱 아이콘 변경
-        let iconName: String? = next == .pink ? "PinkAppIcon" : nil
-        if UIApplication.shared.supportsAlternateIcons {
-            UIApplication.shared.setAlternateIconName(iconName) { error in
-                if let error = error {
-                    print("🔴 아이콘 변경 실패: \(error.localizedDescription)")
-                } else {
-                    print("🟢 아이콘 변경 성공: \(iconName ?? "기본")")
-                }
-            }
-        }
-
     }
 
 

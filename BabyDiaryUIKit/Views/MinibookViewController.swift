@@ -93,12 +93,10 @@ class MinibookViewController: UIViewController {
                 let pageHeight = pageWidth * 128.0 / 94.0
                 let textWidth = pageWidth - 32 // 좌우 패딩 16씩
 
-                // 사진 있는 페이지: 6줄 고정
-                // 사진 없는/이어서 페이지: 사진 자리만큼 더 많은 줄
-                let photoLines = 6
-                let photoAreaLines = Int(pageWidth * 0.65 / 22) // 사진 영역이 차지하는 줄 수 (약 줄 높이 22pt 기준)
-                let noPhotoLines = photoLines + photoAreaLines
-                let contLines = noPhotoLines + 2 // 날짜뱃지 없으니 2줄 더
+                // 줄 수 고정
+                let photoLines = 6       // 사진 있는 페이지
+                let noPhotoLines = 16    // 사진 없는 첫 페이지
+                let contLines = 18       // 이어서 페이지
 
                 let firstText: String
                 if hasPhoto {

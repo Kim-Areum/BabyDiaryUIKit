@@ -438,6 +438,10 @@ class MinibookViewController: UIViewController {
         ])
 
         // Cover photo
+        if coverPhotoData == nil {
+            pageView.backgroundColor = DS.bgSubtle
+        }
+
         if let data = coverPhotoData, let image = UIImage(data: data) {
             let imageView = UIImageView(image: image)
             imageView.contentMode = .scaleAspectFill

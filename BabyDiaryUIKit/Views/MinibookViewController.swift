@@ -91,7 +91,7 @@ class MinibookViewController: UIViewController {
                 let hasPhoto = entry.photoData != nil
                 let pageWidth = UIScreen.main.bounds.width * 0.8
                 let pageHeight = pageWidth * 128.0 / 94.0
-                let textWidth = pageWidth - 32 // 좌우 패딩 16씩
+                let textWidth = pageWidth - 40 // 좌우 패딩 24씩
 
                 // 줄 수 고정
                 let photoLines = 6       // 사진 있는 페이지
@@ -232,12 +232,7 @@ class MinibookViewController: UIViewController {
 
         if result >= nsText.length { return text }
 
-        // 단어 경계에서 자르기
-        let slice = nsText.substring(to: result)
-        if let lastSpace = slice.lastIndex(where: { $0 == " " || $0 == "\n" || $0 == "." || $0 == "," }) {
-            return String(slice[slice.startIndex...lastSpace])
-        }
-        return slice
+        return nsText.substring(to: result)
     }
 
     // MARK: - Nav Bar
@@ -560,6 +555,7 @@ class MinibookViewController: UIViewController {
         titleLabel.textColor = DS.fgStrong
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         pageView.addSubview(titleLabel)
+        pageView.bringSubviewToFront(titleLabel)
 
         NSLayoutConstraint.activate([
             titleLabel.centerXAnchor.constraint(equalTo: pageView.centerXAnchor),
@@ -617,13 +613,13 @@ class MinibookViewController: UIViewController {
             pageView.addSubview(imageView)
 
             NSLayoutConstraint.activate([
-                imageView.topAnchor.constraint(equalTo: pageView.topAnchor, constant: 16),
-                imageView.leadingAnchor.constraint(equalTo: pageView.leadingAnchor, constant: 16),
-                imageView.trailingAnchor.constraint(equalTo: pageView.trailingAnchor, constant: -16),
+                imageView.topAnchor.constraint(equalTo: pageView.topAnchor, constant: 20),
+                imageView.leadingAnchor.constraint(equalTo: pageView.leadingAnchor, constant: 20),
+                imageView.trailingAnchor.constraint(equalTo: pageView.trailingAnchor, constant: -20),
                 imageView.heightAnchor.constraint(equalToConstant: width * 0.65),
             ])
             topAnchor = imageView.bottomAnchor
-            topConstant = 10
+            topConstant = 14
         }
 
         // Date + D+ row
@@ -641,8 +637,8 @@ class MinibookViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             dateBadge.topAnchor.constraint(equalTo: topAnchor, constant: topConstant),
-            dateBadge.leadingAnchor.constraint(equalTo: pageView.leadingAnchor, constant: 16),
-            dayCountLabel.trailingAnchor.constraint(equalTo: pageView.trailingAnchor, constant: -16),
+            dateBadge.leadingAnchor.constraint(equalTo: pageView.leadingAnchor, constant: 20),
+            dayCountLabel.trailingAnchor.constraint(equalTo: pageView.trailingAnchor, constant: -20),
             dayCountLabel.centerYAnchor.constraint(equalTo: dateBadge.centerYAnchor),
         ])
 
@@ -663,9 +659,9 @@ class MinibookViewController: UIViewController {
             pageView.addSubview(textLabel)
 
             NSLayoutConstraint.activate([
-                textLabel.topAnchor.constraint(equalTo: dateBadge.bottomAnchor, constant: 10),
-                textLabel.leadingAnchor.constraint(equalTo: pageView.leadingAnchor, constant: 16),
-                textLabel.trailingAnchor.constraint(equalTo: pageView.trailingAnchor, constant: -16),
+                textLabel.topAnchor.constraint(equalTo: dateBadge.bottomAnchor, constant: 14),
+                textLabel.leadingAnchor.constraint(equalTo: pageView.leadingAnchor, constant: 20),
+                textLabel.trailingAnchor.constraint(equalTo: pageView.trailingAnchor, constant: -20),
             ])
         }
 
@@ -678,7 +674,7 @@ class MinibookViewController: UIViewController {
         pageView.addSubview(pageNumLabel)
 
         NSLayoutConstraint.activate([
-            pageNumLabel.trailingAnchor.constraint(equalTo: pageView.trailingAnchor, constant: -16),
+            pageNumLabel.trailingAnchor.constraint(equalTo: pageView.trailingAnchor, constant: -20),
             pageNumLabel.bottomAnchor.constraint(equalTo: pageView.bottomAnchor, constant: -8),
         ])
     }
@@ -709,11 +705,11 @@ class MinibookViewController: UIViewController {
         pageView.addSubview(pageNumLabel)
 
         NSLayoutConstraint.activate([
-            textLabel.topAnchor.constraint(equalTo: pageView.topAnchor, constant: 16),
-            textLabel.leadingAnchor.constraint(equalTo: pageView.leadingAnchor, constant: 16),
-            textLabel.trailingAnchor.constraint(equalTo: pageView.trailingAnchor, constant: -16),
+            textLabel.topAnchor.constraint(equalTo: pageView.topAnchor, constant: 20),
+            textLabel.leadingAnchor.constraint(equalTo: pageView.leadingAnchor, constant: 20),
+            textLabel.trailingAnchor.constraint(equalTo: pageView.trailingAnchor, constant: -20),
 
-            pageNumLabel.trailingAnchor.constraint(equalTo: pageView.trailingAnchor, constant: -16),
+            pageNumLabel.trailingAnchor.constraint(equalTo: pageView.trailingAnchor, constant: -20),
             pageNumLabel.bottomAnchor.constraint(equalTo: pageView.bottomAnchor, constant: -8),
         ])
     }
@@ -928,13 +924,20 @@ class MinibookViewController: UIViewController {
             context.fill(rect)
 
             let baby = CoreDataStack.shared.fetchBaby()
-            let margin: CGFloat = 16
+            let margin: CGFloat = 20
             let textRect = rect.insetBy(dx: margin, dy: margin)
 
             switch page {
             case .cover:
                 if let data = coverPhotoData, let image = UIImage(data: data) {
                     image.draw(in: rect)
+                    // 하단 그라디언트
+                    let gradientColors = [UIColor.clear.cgColor, UIColor(hex: "FFFBF0").withAlphaComponent(0.6).cgColor]
+                    let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: gradientColors as CFArray, locations: [0.0, 1.0])!
+                    context.drawLinearGradient(gradient, start: CGPoint(x: 0, y: size.height * 0.5), end: CGPoint(x: 0, y: size.height), options: [])
+                } else {
+                    context.setFillColor(DS.bgSubtle.cgColor)
+                    context.fill(rect)
                 }
                 let title = "\(baby?.name ?? "")의 일기"
                 let titleAttrs: [NSAttributedString.Key: Any] = [

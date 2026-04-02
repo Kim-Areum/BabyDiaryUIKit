@@ -374,7 +374,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         dateRow.addArrangedSubview(dayCountLabel)
 
         NSLayoutConstraint.activate([
-            dateRow.topAnchor.constraint(equalTo: cardBodyView.topAnchor, constant: 10),
+            dateRow.topAnchor.constraint(equalTo: cardBodyView.topAnchor, constant: 14),
             dateRow.leadingAnchor.constraint(equalTo: cardBodyView.leadingAnchor),
             dateRow.trailingAnchor.constraint(equalTo: cardBodyView.trailingAnchor),
         ])
@@ -404,10 +404,10 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         textContainer.addSubview(textView)
 
         NSLayoutConstraint.activate([
-            textContainer.topAnchor.constraint(equalTo: dateRow.bottomAnchor, constant: 10),
+            textContainer.topAnchor.constraint(equalTo: dateRow.bottomAnchor, constant: 8),
             textContainer.leadingAnchor.constraint(equalTo: cardBodyView.leadingAnchor),
             textContainer.trailingAnchor.constraint(equalTo: cardBodyView.trailingAnchor),
-            textContainer.heightAnchor.constraint(equalToConstant: 120),
+            textContainer.heightAnchor.constraint(greaterThanOrEqualToConstant: 100),
 
             placeholderLabel.topAnchor.constraint(equalTo: textContainer.topAnchor, constant: 8),
             placeholderLabel.leadingAnchor.constraint(equalTo: textContainer.leadingAnchor, constant: 5),
@@ -418,34 +418,18 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
             textView.bottomAnchor.constraint(equalTo: textContainer.bottomAnchor),
         ])
 
-        // Bottom bar: refine button + audio count
-        let bottomBar = UIStackView()
-        bottomBar.axis = .horizontal
-        bottomBar.alignment = .center
-        bottomBar.translatesAutoresizingMaskIntoConstraints = false
-        cardBodyView.addSubview(bottomBar)
-
-        // Refine button
-        refineButton.translatesAutoresizingMaskIntoConstraints = false
-        refineButton.addTarget(self, action: #selector(refineTapped), for: .touchUpInside)
-        refineSpinner.translatesAutoresizingMaskIntoConstraints = false
-        refineSpinner.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
-        refineSpinner.color = DS.fgMuted
-        refineSpinner.hidesWhenStopped = true
-        updateRefineButton()
-
         // Audio count button
         audioCountButton.translatesAutoresizingMaskIntoConstraints = false
         audioCountButton.addTarget(self, action: #selector(audioCountTapped), for: .touchUpInside)
-
-        bottomBar.addArrangedSubview(refineButton)
-        bottomBar.addArrangedSubview(UIView()) // spacer
-        bottomBar.addArrangedSubview(audioCountButton)
+        audioCountButton.contentEdgeInsets = UIEdgeInsets(top: 3, left: 8, bottom: 3, right: 8)
+        audioCountButton.backgroundColor = DS.bgSubtle
+        audioCountButton.layer.cornerRadius = 12
+        cardBodyView.addSubview(audioCountButton)
 
         NSLayoutConstraint.activate([
-            bottomBar.topAnchor.constraint(equalTo: textContainer.bottomAnchor, constant: 4),
-            bottomBar.leadingAnchor.constraint(equalTo: cardBodyView.leadingAnchor),
-            bottomBar.trailingAnchor.constraint(equalTo: cardBodyView.trailingAnchor),
+            audioCountButton.topAnchor.constraint(equalTo: textContainer.bottomAnchor, constant: 8),
+            audioCountButton.trailingAnchor.constraint(equalTo: cardBodyView.trailingAnchor),
+            audioCountButton.bottomAnchor.constraint(equalTo: cardBodyView.bottomAnchor, constant: -2),
         ])
     }
 
@@ -823,11 +807,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
 
     private func appendVoiceResult(_ voiceText: String) {
         guard !voiceText.isEmpty else { return }
-        let tf = DateFormatter()
-        tf.locale = Locale(identifier: "en_US")
-        tf.dateFormat = "h:mm a"
-        let timestamp = tf.string(from: Date())
-        let newEntry = "\(voiceText) \(timestamp)"
+        let newEntry = voiceText
         text = text.isEmpty ? newEntry : text + "\n\(newEntry)"
         textView.text = text
         updatePlaceholder()

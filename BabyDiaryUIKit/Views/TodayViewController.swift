@@ -403,9 +403,9 @@ class TodayViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             bodyView.topAnchor.constraint(equalTo: photoImageView.bottomAnchor),
-            bodyView.leadingAnchor.constraint(equalTo: innerClip.leadingAnchor, constant: 14),
-            bodyView.trailingAnchor.constraint(equalTo: innerClip.trailingAnchor, constant: -14),
-            bodyView.bottomAnchor.constraint(equalTo: innerClip.bottomAnchor, constant: -14),
+            bodyView.leadingAnchor.constraint(equalTo: innerClip.leadingAnchor, constant: 16),
+            bodyView.trailingAnchor.constraint(equalTo: innerClip.trailingAnchor, constant: -16),
+            bodyView.bottomAnchor.constraint(equalTo: innerClip.bottomAnchor, constant: -16),
         ])
 
         // Top row: date badge + D+ count
@@ -429,7 +429,7 @@ class TodayViewController: UIViewController {
 
 
         NSLayoutConstraint.activate([
-            topRow.topAnchor.constraint(equalTo: bodyView.topAnchor, constant: 14),
+            topRow.topAnchor.constraint(equalTo: bodyView.topAnchor, constant: 16),
             topRow.leadingAnchor.constraint(equalTo: bodyView.leadingAnchor),
             topRow.trailingAnchor.constraint(equalTo: bodyView.trailingAnchor),
         ])
@@ -451,7 +451,7 @@ class TodayViewController: UIViewController {
             textScroll.topAnchor.constraint(equalTo: topRow.bottomAnchor, constant: 8),
             textScroll.leadingAnchor.constraint(equalTo: bodyView.leadingAnchor),
             textScroll.trailingAnchor.constraint(equalTo: bodyView.trailingAnchor),
-            textScroll.heightAnchor.constraint(equalToConstant: 120),
+            textScroll.heightAnchor.constraint(equalToConstant: 150),
 
             diaryTextLabel.topAnchor.constraint(equalTo: textScroll.topAnchor),
             diaryTextLabel.leadingAnchor.constraint(equalTo: textScroll.leadingAnchor),
@@ -467,13 +467,13 @@ class TodayViewController: UIViewController {
         audioCountButton.tintColor = DS.fgMuted
         audioCountButton.backgroundColor = DS.bgSubtle
         audioCountButton.layer.cornerRadius = 12
-        audioCountButton.contentEdgeInsets = UIEdgeInsets(top: 6, left: 10, bottom: 6, right: 10)
+        audioCountButton.contentEdgeInsets = UIEdgeInsets(top: 3, left: 8, bottom: 3, right: 8)
         audioCountButton.isHidden = true
         audioCountButton.addTarget(self, action: #selector(audioCountTapped), for: .touchUpInside)
         bodyView.addSubview(audioCountButton)
 
         NSLayoutConstraint.activate([
-            audioCountButton.topAnchor.constraint(equalTo: textScroll.bottomAnchor, constant: 4),
+            audioCountButton.topAnchor.constraint(equalTo: textScroll.bottomAnchor, constant: 2),
             audioCountButton.trailingAnchor.constraint(equalTo: bodyView.trailingAnchor),
         ])
     }
@@ -830,11 +830,7 @@ class TodayViewController: UIViewController {
 
     private func appendVoiceResult(_ voiceText: String) {
         guard !voiceText.isEmpty else { return }
-        let tf = DateFormatter()
-        tf.locale = Locale(identifier: "en_US")
-        tf.dateFormat = "h:mm a"
-        let timestamp = tf.string(from: Date())
-        let newEntry = "\(voiceText) \(timestamp)"
+        let newEntry = voiceText
 
         let stack = CoreDataStack.shared
         if let entry = stack.fetchEntry(for: selectedDate) {

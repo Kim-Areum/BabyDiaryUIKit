@@ -67,7 +67,12 @@ class AllEntriesViewController: UIViewController {
         monthLabel.font = DS.font(14)
         monthLabel.textColor = DS.fgStrong
         monthLabel.textAlignment = .center
+        monthLabel.isUserInteractionEnabled = true
         monthLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(goToCurrentMonth))
+        doubleTap.numberOfTapsRequired = 2
+        monthLabel.addGestureRecognizer(doubleTap)
 
         navRow.addSubview(prevButton)
         navRow.addSubview(monthLabel)
@@ -246,6 +251,17 @@ class AllEntriesViewController: UIViewController {
         } else {
             currentMonth += 1
         }
+        buildMonthEntries()
+        updateMonthLabel()
+        updateNavigationButtons()
+        collectionView.reloadData()
+    }
+
+    @objc private func goToCurrentMonth() {
+        let cal = Calendar.current
+        let now = Date()
+        currentYear = cal.component(.year, from: now)
+        currentMonth = cal.component(.month, from: now)
         buildMonthEntries()
         updateMonthLabel()
         updateNavigationButtons()

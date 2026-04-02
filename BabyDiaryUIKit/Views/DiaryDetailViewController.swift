@@ -163,10 +163,6 @@ class DiaryDetailViewController: UIViewController {
         actionRow.translatesAutoresizingMaskIntoConstraints = false
         textContainer.addSubview(actionRow)
 
-        // Refine button
-        refineButton.translatesAutoresizingMaskIntoConstraints = false
-        actionRow.addSubview(refineButton)
-
         // Audio button
         audioButton.translatesAutoresizingMaskIntoConstraints = false
         actionRow.addSubview(audioButton)
@@ -177,9 +173,6 @@ class DiaryDetailViewController: UIViewController {
             actionRow.trailingAnchor.constraint(equalTo: textContainer.trailingAnchor, constant: -20),
             actionRow.bottomAnchor.constraint(equalTo: textContainer.bottomAnchor, constant: -20),
             actionRow.heightAnchor.constraint(greaterThanOrEqualToConstant: 32),
-
-            refineButton.leadingAnchor.constraint(equalTo: actionRow.leadingAnchor),
-            refineButton.centerYAnchor.constraint(equalTo: actionRow.centerYAnchor),
 
             audioButton.trailingAnchor.constraint(equalTo: actionRow.trailingAnchor),
             audioButton.centerYAnchor.constraint(equalTo: actionRow.centerYAnchor),

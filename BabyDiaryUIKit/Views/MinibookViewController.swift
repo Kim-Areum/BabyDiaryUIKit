@@ -90,14 +90,21 @@ class MinibookViewController: UIViewController {
                 let text = entry.text
                 let hasPhoto = entry.photoData != nil
                 let pageWidth = UIScreen.main.bounds.width * 0.8
-                let textWidth = pageWidth - 20 // 좌우 패딩 10씩
+                let pageHeight = pageWidth * 128.0 / 94.0
+                let textWidth = pageWidth - 32 // 좌우 패딩 16씩
+
+                // 사진 있는 페이지: 6줄 고정
+                // 사진 없는/이어서 페이지: 사진 자리만큼 더 많은 줄
+                let photoLines = 6
+                let photoAreaLines = Int(pageWidth * 0.65 / 22) // 사진 영역이 차지하는 줄 수 (약 줄 높이 22pt 기준)
+                let noPhotoLines = photoLines + photoAreaLines
+                let contLines = noPhotoLines + 2 // 날짜뱃지 없으니 2줄 더
 
                 let firstText: String
                 if hasPhoto {
-                    firstText = splitByLines(text, maxLines: 6, width: textWidth)
+                    firstText = splitByLines(text, maxLines: photoLines, width: textWidth)
                 } else {
-                    let maxFirst = firstPageNoPhotoChars
-                    firstText = text.count <= maxFirst ? text : splitAtWordBoundary(text, limit: maxFirst)
+                    firstText = splitByLines(text, maxLines: noPhotoLines, width: textWidth)
                 }
 
                 if firstText.count >= text.count {
@@ -111,7 +118,7 @@ class MinibookViewController: UIViewController {
 
                     var remaining = String(text.dropFirst(firstText.count))
                     while !remaining.isEmpty {
-                        let chunk = splitAtWordBoundary(remaining, limit: continuationChars)
+                        let chunk = splitByLines(remaining, maxLines: contLines, width: textWidth)
                         entryPages.append(.entryContinuation(entry: entry, textSlice: chunk, pageNum: pageNum))
                         monthToLastPage[monthAge] = pageNum
                         pageNum += 1
@@ -162,6 +169,25 @@ class MinibookViewController: UIViewController {
             return String(text[text.startIndex...lastSpace])
         }
         return String(slice)
+    }
+
+    /// 주어진 높이에 몇 줄이 들어가는지 계산
+    private func calcMaxLines(height: CGFloat, width: CGFloat) -> Int {
+        let font = DS.font(14)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 6
+        let attrs: [NSAttributedString.Key: Any] = [.font: font, .paragraphStyle: paragraphStyle]
+        let maxSize = CGSize(width: width, height: .greatestFiniteMagnitude)
+
+        let oneLineOnly = NSAttributedString(string: "가", attributes: attrs)
+            .boundingRect(with: maxSize, options: [.usesLineFragmentOrigin], context: nil).height
+        let twoLineHeight = NSAttributedString(string: "가\n가", attributes: attrs)
+            .boundingRect(with: maxSize, options: [.usesLineFragmentOrigin], context: nil).height
+        let lineWithSpacing = twoLineHeight - oneLineOnly
+
+        if lineWithSpacing <= 0 { return 1 }
+        let lines = Int((height - oneLineOnly) / lineWithSpacing) + 1
+        return max(1, lines)
     }
 
     /// 주어진 너비와 최대 줄 수에 맞는 텍스트를 반환
@@ -640,8 +666,8 @@ class MinibookViewController: UIViewController {
 
             NSLayoutConstraint.activate([
                 textLabel.topAnchor.constraint(equalTo: dateBadge.bottomAnchor, constant: 10),
-                textLabel.leadingAnchor.constraint(equalTo: pageView.leadingAnchor, constant: 10),
-                textLabel.trailingAnchor.constraint(equalTo: pageView.trailingAnchor, constant: -10),
+                textLabel.leadingAnchor.constraint(equalTo: pageView.leadingAnchor, constant: 16),
+                textLabel.trailingAnchor.constraint(equalTo: pageView.trailingAnchor, constant: -16),
             ])
         }
 

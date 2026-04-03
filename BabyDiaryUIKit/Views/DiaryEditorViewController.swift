@@ -286,8 +286,9 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         attrTitle.font = DS.font(13)
         attrTitle.foregroundColor = DS.fgPale
         placeholderConfig.attributedTitle = attrTitle
+        placeholderConfig.background.backgroundColor = DS.bgSubtle
+        placeholderConfig.background.cornerRadius = 0
         photoPlaceholderButton.configuration = placeholderConfig
-        photoPlaceholderButton.backgroundColor = DS.bgSubtle
         photoPlaceholderButton.clipsToBounds = true
         photoPlaceholderButton.addTarget(self, action: #selector(showPhotoPicker), for: .touchUpInside)
 

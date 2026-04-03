@@ -455,7 +455,6 @@ class TodayViewController: UIViewController {
             textScroll.topAnchor.constraint(equalTo: topRow.bottomAnchor, constant: 8),
             textScroll.leadingAnchor.constraint(equalTo: bodyView.leadingAnchor),
             textScroll.trailingAnchor.constraint(equalTo: bodyView.trailingAnchor),
-            textScroll.heightAnchor.constraint(equalToConstant: 150),
 
             diaryTextLabel.topAnchor.constraint(equalTo: textScroll.topAnchor),
             diaryTextLabel.leadingAnchor.constraint(equalTo: textScroll.leadingAnchor),
@@ -477,8 +476,9 @@ class TodayViewController: UIViewController {
         bodyView.addSubview(audioCountButton)
 
         NSLayoutConstraint.activate([
-            audioCountButton.topAnchor.constraint(equalTo: textScroll.bottomAnchor, constant: 2),
             audioCountButton.trailingAnchor.constraint(equalTo: bodyView.trailingAnchor),
+            audioCountButton.bottomAnchor.constraint(equalTo: bodyView.bottomAnchor),
+            textScroll.bottomAnchor.constraint(equalTo: audioCountButton.topAnchor, constant: -8),
         ])
     }
 

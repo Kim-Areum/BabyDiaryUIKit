@@ -60,11 +60,26 @@ class SettingsViewController: UIViewController {
         navBar.titleLabel.text = "설정"
         navBar.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(navBar)
+
+        let menuIcon = UIImage(systemName: "line.3.horizontal")?.withConfiguration(
+            UIImage.SymbolConfiguration(pointSize: 16, weight: .medium)
+        )
+        navBar.rightButton.setImage(menuIcon, for: .normal)
+        navBar.rightButton.tintColor = DS.fgNeutral
+        navBar.rightButton.addTarget(self, action: #selector(menuTapped), for: .touchUpInside)
+
         NSLayoutConstraint.activate([
             navBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             navBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
+    }
+
+    @objc private func menuTapped() {
+        let menuVC = SettingsMenuViewController()
+        menuVC.modalPresentationStyle = .overFullScreen
+        menuVC.modalTransitionStyle = .crossDissolve
+        present(menuVC, animated: true)
     }
 
     private func setupScrollView() {

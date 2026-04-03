@@ -574,7 +574,7 @@ class TodayViewController: UIViewController {
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineSpacing = 6
             let attrText = NSAttributedString(
-                string: "오늘 우리 아기와의 하루는 어땠나요?",
+                string: "\(babyObj?.name ?? "아기")에게 오늘 하루가 어땠는지 들려주세요",
                 attributes: [
                     .font: DS.font(13),
                     .foregroundColor: DS.fgPale,

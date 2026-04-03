@@ -29,6 +29,7 @@
 		C93131F6775B563E410F7FBB /* MonthFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42F2635BD56F92B3C3F2E180 /* MonthFeedViewController.swift */; };
 		C9B8BA61797305B52196E641 /* Ownglyph_PDH.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5892850F5061A5FA783BC948 /* Ownglyph_PDH.ttf */; };
 		CF4AEB2CD1615A41C6BF3C92 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3F1D0266F42E5D87DF5865 /* AppDelegate.swift */; };
+		D0C9D2FC89CA6C027BE73F8E /* SettingsMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688B89585353E0A1AAB82E52 /* SettingsMenuViewController.swift */; };
 		D731C57C9A09D7AA40F87D87 /* CDDiaryEntry+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE63B19841AE0587BC8A046 /* CDDiaryEntry+CoreDataClass.swift */; };
 		DBB20BCF06DBEAC364AF2101 /* CDBaby+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4EFC904DA075804E3CF25A /* CDBaby+CoreDataClass.swift */; };
 		E0C88785CD5B45D7D7271FBB /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20B9BFBB0057FE4D6ACB7F2C /* TodayViewController.swift */; };
@@ -53,6 +54,7 @@
 		4E46BBDB251AB6BF6D1C205F /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		5448E132C103033648CFE68E /* DatePickerSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerSheetViewController.swift; sourceTree = "<group>"; };
 		5892850F5061A5FA783BC948 /* Ownglyph_PDH.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ownglyph_PDH.ttf; sourceTree = "<group>"; };
+		688B89585353E0A1AAB82E52 /* SettingsMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMenuViewController.swift; sourceTree = "<group>"; };
 		753F17541EFC24C972B9E18F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		7D93EBC167B4B79F41D6CE56 /* PushTransitionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushTransitionManager.swift; sourceTree = "<group>"; };
 		877DD89F303230395C277B48 /* DiaryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryDetailViewController.swift; sourceTree = "<group>"; };
@@ -61,6 +63,7 @@
 		993E21E9F36B4EC515A57B7A /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		AC7E6095EAF0C68BBECAE007 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		CA4EFC904DA075804E3CF25A /* CDBaby+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDBaby+CoreDataClass.swift"; sourceTree = "<group>"; };
+		CC545CB0C5FA63C17594A34F /* BabyDiaryUIKit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BabyDiaryUIKit.entitlements; sourceTree = "<group>"; };
 		CCEE7B3D4C667DABBB73DE2D /* DiaryEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryEditorViewController.swift; sourceTree = "<group>"; };
 		CD022B6051E860657D64A284 /* CustomAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlertView.swift; sourceTree = "<group>"; };
 		D01EC6EDF39CD40038B3F8EC /* BabyDiaryUIKit.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = BabyDiaryUIKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -77,6 +80,7 @@
 			children = (
 				EE3F1D0266F42E5D87DF5865 /* AppDelegate.swift */,
 				135F09F676EDF2AF4A6C6613 /* Assets.xcassets */,
+				CC545CB0C5FA63C17594A34F /* BabyDiaryUIKit.entitlements */,
 				E18E3026D731000BF5FE5976 /* Localizable.strings */,
 				753F17541EFC24C972B9E18F /* SceneDelegate.swift */,
 				D08C87E19459B6DBB1F16681 /* BabyDiary.xcdatamodeld */,
@@ -132,6 +136,7 @@
 				42F2635BD56F92B3C3F2E180 /* MonthFeedViewController.swift */,
 				032D6601516651401ED85F32 /* PlaybackPopupView.swift */,
 				7D93EBC167B4B79F41D6CE56 /* PushTransitionManager.swift */,
+				688B89585353E0A1AAB82E52 /* SettingsMenuViewController.swift */,
 				1B4D0B191587D3095532228F /* SettingsViewController.swift */,
 				158D00577B989E548E899FC6 /* SplashViewController.swift */,
 				20B9BFBB0057FE4D6ACB7F2C /* TodayViewController.swift */,
@@ -195,8 +200,19 @@
 				LastUpgradeCheck = 2640;
 				TargetAttributes = {
 					82E69C2E9F12801EE89969B4 = {
-						DevelopmentTeam = SU5758PVY2;
+						DevelopmentTeam = 74W3FA8FLB;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							"com.apple.BackgroundModes" = {
+								enabled = 1;
+							};
+							"com.apple.Push" = {
+								enabled = 1;
+							};
+							"com.apple.iCloud" = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -260,6 +276,7 @@
 				92A66B05112D4C3D6B156CB5 /* PlaybackPopupView.swift in Sources */,
 				9DF2060F0B0741E6181721B7 /* PushTransitionManager.swift in Sources */,
 				0BD03DAE66DAB0D9102E1826 /* SceneDelegate.swift in Sources */,
+				D0C9D2FC89CA6C027BE73F8E /* SettingsMenuViewController.swift in Sources */,
 				5755F40E1A4CBE7D10685401 /* SettingsViewController.swift in Sources */,
 				4333BCF3EA1E541AC9CBD886 /* SpeechManager.swift in Sources */,
 				0CF1996852B6F0FDA032302C /* SplashViewController.swift in Sources */,
@@ -306,7 +323,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = SU5758PVY2;
+				DEVELOPMENT_TEAM = 74W3FA8FLB;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -329,7 +346,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.areum.BabyDiaryUIKit;
+				PRODUCT_BUNDLE_IDENTIFIER = io.analoglab.TrunkyDiary;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -342,6 +359,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = BabyDiaryUIKit/BabyDiaryUIKit.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = BabyDiaryUIKit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -389,7 +407,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = SU5758PVY2;
+				DEVELOPMENT_TEAM = 74W3FA8FLB;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -405,7 +423,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.areum.BabyDiaryUIKit;
+				PRODUCT_BUNDLE_IDENTIFIER = io.analoglab.TrunkyDiary;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -418,6 +436,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = BabyDiaryUIKit/BabyDiaryUIKit.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = BabyDiaryUIKit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -381,7 +381,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         textContainer.translatesAutoresizingMaskIntoConstraints = false
         cardBodyView.addSubview(textContainer)
 
-        placeholderLabel.text = "오늘 우리 아기와의 하루는 어땠나요?"
+        placeholderLabel.text = "\(baby.name)에게 오늘 하루가 어땠는지 들려주세요"
         placeholderLabel.font = DS.font(15)
         placeholderLabel.textColor = DS.fgPale
         placeholderLabel.translatesAutoresizingMaskIntoConstraints = false

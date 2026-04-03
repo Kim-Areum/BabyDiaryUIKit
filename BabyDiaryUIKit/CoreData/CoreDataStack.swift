@@ -3,14 +3,29 @@ import CoreData
 final class CoreDataStack {
     static let shared = CoreDataStack()
 
-    lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "BabyDiary")
+    lazy var persistentContainer: NSPersistentCloudKitContainer = {
+        let container = NSPersistentCloudKitContainer(name: "BabyDiary")
+
+        let description = container.persistentStoreDescriptions.first
+        description?.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
+        description?.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
+
+        // iCloud 동기화 설정 (명시적으로 활성화한 경우만)
+        if UserDefaults.standard.bool(forKey: "iCloudSyncEnabled") {
+            description?.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(
+                containerIdentifier: "iCloud.io.analoglab.TrunkyDiary"
+            )
+        } else {
+            description?.cloudKitContainerOptions = nil
+        }
+
         container.loadPersistentStores { _, error in
             if let error = error {
-                fatalError("Core Data 로드 실패: \(error)")
+                print("Core Data 로드 실패: \(error)")
             }
         }
         container.viewContext.automaticallyMergesChangesFromParent = true
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         return container
     }()
 

@@ -6,7 +6,12 @@ class SplashViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = DS.bgBase
 
-        let iconName = DS.currentTheme == .pink ? "PinkAppIcon" : "AppIcon"
+        let iconName: String
+        switch DS.currentTheme {
+        case .pink: iconName = "PinkAppIcon"
+        case .yellow: iconName = "YellowAppIcon"
+        case .blue: iconName = "AppIcon"
+        }
         let imageView = UIImageView(image: UIImage(named: iconName))
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false

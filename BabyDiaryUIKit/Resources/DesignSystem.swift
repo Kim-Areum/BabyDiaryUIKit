@@ -29,11 +29,13 @@ enum DS {
     enum ThemeColor: String, CaseIterable {
         case blue
         case pink
+        case yellow
 
         var color: UIColor {
             switch self {
             case .blue: return UIColor(hex: "B1C3D7")
             case .pink: return UIColor(hex: "F5D0D8")
+            case .yellow: return UIColor(hex: "FCF1D3")
             }
         }
 
@@ -41,6 +43,7 @@ enum DS {
             switch self {
             case .blue: return UIColor(hex: "7A9ABF")
             case .pink: return UIColor(hex: "D4919F")
+            case .yellow: return UIColor(hex: "D4BD7F")
             }
         }
 

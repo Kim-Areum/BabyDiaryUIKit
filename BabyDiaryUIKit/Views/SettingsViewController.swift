@@ -261,7 +261,12 @@ class SettingsViewController: UIViewController {
         let toggleContainer = UIView()
         toggleContainer.translatesAutoresizingMaskIntoConstraints = false
 
-        let elephantName = DS.currentTheme == .pink ? "PinkElephant2" : "Elephant2"
+        let elephantName: String
+        switch DS.currentTheme {
+        case .pink: elephantName = "PinkElephant2"
+        case .yellow: elephantName = "YellowElephant2"
+        case .blue: elephantName = "Elephant2"
+        }
         elephantImageView.image = UIImage(named: elephantName)
         elephantImageView.contentMode = .scaleAspectFit
         elephantImageView.transform = CGAffineTransform(scaleX: -1, y: 1)
@@ -345,7 +350,8 @@ class SettingsViewController: UIViewController {
 
         let dBadge = makeAgeBadge(text: "D+\(baby.dayCount)", color: DS.yellow)
         let mBadge = makeAgeBadge(text: baby.monthAndDays, color: DS.green)
-        let yBadge = makeAgeBadge(text: "만 \(baby.ageYears)세", color: DS.accent)
+        let ageBadgeColor = DS.currentTheme == .yellow ? DS.purple : DS.accent
+        let yBadge = makeAgeBadge(text: "만 \(baby.ageYears)세", color: ageBadgeColor)
         badgesStack.addArrangedSubview(dBadge)
         badgesStack.addArrangedSubview(mBadge)
         badgesStack.addArrangedSubview(yBadge)
@@ -424,7 +430,12 @@ class SettingsViewController: UIViewController {
         elephantToggle.onTintColor = DS.accent
 
         // 코끼리 이미지 교체
-        let newName = next == .pink ? "PinkElephant2" : "Elephant2"
+        let newName: String
+        switch next {
+        case .pink: newName = "PinkElephant2"
+        case .yellow: newName = "YellowElephant2"
+        case .blue: newName = "Elephant2"
+        }
         elephantImageView.image = UIImage(named: newName)
     }
 

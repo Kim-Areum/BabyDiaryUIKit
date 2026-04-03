@@ -21,7 +21,11 @@ class TodayViewController: UIViewController {
     private let cycleDuration: TimeInterval = 20
     private var elephantStartTime: CFTimeInterval = 0
     private var elephantFrameNames: [String] {
-        DS.currentTheme == .pink ? ["PinkElephant2", "PinkElephant3"] : ["Elephant2", "Elephant3"]
+        switch DS.currentTheme {
+        case .pink: return ["PinkElephant2", "PinkElephant3"]
+        case .yellow: return ["YellowElephant2", "YellowElephant3"]
+        case .blue: return ["Elephant2", "Elephant3"]
+        }
     }
     private let elephantFrameInterval: TimeInterval = 0.3
 

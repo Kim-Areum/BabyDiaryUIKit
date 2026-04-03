@@ -877,11 +877,9 @@ class MinibookViewController: UIViewController {
         let babyName = baby?.name ?? "아기"
         let allPages = pages
 
-        // 미리보기와 동일한 크기로 렌더링 후 PDF에 맞춤
-        let renderW = UIScreen.main.bounds.width * 0.8
-        let renderH = renderW * 128.0 / 94.0
-        let pdfW: CGFloat = 94 * 3
-        let pdfH: CGFloat = 128 * 3
+        // PDF 크기 (고해상도 벡터 렌더링)
+        let pdfW: CGFloat = 94 * 4
+        let pdfH: CGFloat = 128 * 4
         let pageRect = CGRect(x: 0, y: 0, width: pdfW, height: pdfH)
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
@@ -891,11 +889,8 @@ class MinibookViewController: UIViewController {
             let data = renderer.pdfData { context in
                 for page in allPages {
                     context.beginPage()
-
-                    // 미리보기 크기로 렌더링
-                    let image = self.renderPageToImage(page: page, size: CGSize(width: renderW, height: renderH))
-                    // PDF 크기에 맞춰 그리기
-                    image?.draw(in: pageRect)
+                    // PDF 컨텍스트에 직접 벡터 드로잉 (비트맵 변환 없이 선명한 텍스트)
+                    self.drawPageDirectly(page: page, size: CGSize(width: pdfW, height: pdfH), context: context.cgContext)
                 }
             }
 
@@ -909,6 +904,219 @@ class MinibookViewController: UIViewController {
 
                 let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
                 self.present(activityVC, animated: true)
+            }
+        }
+    }
+
+    /// PDF 컨텍스트에 직접 벡터로 그리기 (텍스트/뱃지 선명)
+    private func drawPageDirectly(page: PageContent, size: CGSize, context: CGContext) {
+        let rect = CGRect(origin: .zero, size: size)
+
+        // Background
+        context.setFillColor(DS.bgBase.cgColor)
+        context.fill(rect)
+
+        let baby = CoreDataStack.shared.fetchBaby()
+        let margin: CGFloat = size.width * 20.0 / (UIScreen.main.bounds.width * 0.8)
+        let textRect = rect.insetBy(dx: margin, dy: margin)
+
+        // 미리보기 대비 스케일 계산 (폰트 크기 등에 적용)
+        let previewW = UIScreen.main.bounds.width * 0.8
+        let scale = size.width / previewW
+
+        switch page {
+        case .cover:
+            if let data = coverPhotoData, let image = UIImage(data: data) {
+                // aspectFill로 그리기 (찌그러짐 방지)
+                let imgSize = image.size
+                let widthRatio = size.width / imgSize.width
+                let heightRatio = size.height / imgSize.height
+                let fillScale = max(widthRatio, heightRatio)
+                let drawW = imgSize.width * fillScale
+                let drawH = imgSize.height * fillScale
+                let drawRect = CGRect(x: (size.width - drawW) / 2, y: (size.height - drawH) / 2, width: drawW, height: drawH)
+                context.saveGState()
+                context.clip(to: rect)
+                image.draw(in: drawRect)
+                context.restoreGState()
+                // 하단 그라디언트
+                let gradientColors = [UIColor.clear.cgColor, UIColor(hex: "FFFBF0").withAlphaComponent(0.6).cgColor]
+                let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: gradientColors as CFArray, locations: [0.0, 1.0])!
+                context.drawLinearGradient(gradient, start: CGPoint(x: 0, y: size.height * 0.5), end: CGPoint(x: 0, y: size.height), options: [])
+            } else {
+                context.setFillColor(DS.bgSubtle.cgColor)
+                context.fill(rect)
+            }
+            let title = "\(baby?.name ?? "")의 일기"
+            let titleAttrs: [NSAttributedString.Key: Any] = [
+                .font: DS.font(16 * scale),
+                .foregroundColor: DS.fgStrong,
+            ]
+            let titleSize = (title as NSString).size(withAttributes: titleAttrs)
+            let titlePoint = CGPoint(x: (size.width - titleSize.width) / 2, y: size.height - 30 * scale)
+            (title as NSString).draw(at: titlePoint, withAttributes: titleAttrs)
+
+        case .tableOfContents(let items):
+            let tocTitle = "목차"
+            let tocTitleAttrs: [NSAttributedString.Key: Any] = [
+                .font: DS.font(16 * scale),
+                .foregroundColor: DS.fgStrong,
+            ]
+            let tocTitleSize = (tocTitle as NSString).size(withAttributes: tocTitleAttrs)
+            (tocTitle as NSString).draw(at: CGPoint(x: (size.width - tocTitleSize.width) / 2, y: margin + 4 * scale), withAttributes: tocTitleAttrs)
+
+            var tocY: CGFloat = margin + tocTitleSize.height + 16 * scale
+            let itemAttrs: [NSAttributedString.Key: Any] = [
+                .font: DS.font(14 * scale),
+                .foregroundColor: DS.fgStrong,
+            ]
+            let numAttrs: [NSAttributedString.Key: Any] = [
+                .font: DS.font(14 * scale),
+                .foregroundColor: DS.fgPale,
+            ]
+            for item in items {
+                let label = formatMonthAge(item.month)
+                let labelSize = (label as NSString).size(withAttributes: itemAttrs)
+                (label as NSString).draw(at: CGPoint(x: margin + 4 * scale, y: tocY), withAttributes: itemAttrs)
+
+                let numStr = item.firstPage == item.lastPage ? "\(item.firstPage)" : "\(item.firstPage)~\(item.lastPage)"
+                let numSize = (numStr as NSString).size(withAttributes: numAttrs)
+                (numStr as NSString).draw(at: CGPoint(x: size.width - margin - 4 * scale - numSize.width, y: tocY + 2 * scale), withAttributes: numAttrs)
+
+                let dotStartX = margin + 4 * scale + labelSize.width + 4 * scale
+                let dotEndX = size.width - margin - 4 * scale - numSize.width - 4 * scale
+                let dotY = tocY + labelSize.height / 2
+                if dotEndX > dotStartX {
+                    context.saveGState()
+                    context.setStrokeColor(DS.fgPale.cgColor)
+                    context.setLineWidth(0.5 * scale)
+                    context.setLineDash(phase: 0, lengths: [2 * scale, 3 * scale])
+                    context.move(to: CGPoint(x: dotStartX, y: dotY))
+                    context.addLine(to: CGPoint(x: dotEndX, y: dotY))
+                    context.strokePath()
+                    context.restoreGState()
+                }
+
+                tocY += 22 * scale
+            }
+
+        case .entryFirst(let entry, let textSlice, let num):
+            var yOffset: CGFloat = margin
+
+            if let data = entry.photoData, let image = UIImage(data: data) {
+                let photoHeight = (size.width - margin * 2) * 0.65
+                let photoRect = CGRect(x: margin, y: yOffset, width: size.width - margin * 2, height: photoHeight)
+                image.draw(in: photoRect)
+                yOffset += photoHeight + 10 * scale
+            }
+
+            // 날짜 뱃지
+            let dateAttrs: [NSAttributedString.Key: Any] = [
+                .font: DS.font(11 * scale),
+                .foregroundColor: DS.fgNeutral,
+            ]
+            let dateText = entry.formattedDate
+            let dateSize = (dateText as NSString).size(withAttributes: dateAttrs)
+            let badgePadH: CGFloat = 10 * scale
+            let badgePadV: CGFloat = 4 * scale
+            let badgeRect = CGRect(x: margin, y: yOffset, width: dateSize.width + badgePadH * 2, height: dateSize.height + badgePadV * 2)
+            let badgePath = UIBezierPath(roundedRect: badgeRect, cornerRadius: 4 * scale)
+            context.saveGState()
+            DS.yellow.setFill()
+            badgePath.fill()
+            DS.yellowBorder.setStroke()
+            badgePath.lineWidth = 0.5 * scale
+            badgePath.stroke()
+            context.restoreGState()
+            (dateText as NSString).draw(at: CGPoint(x: margin + badgePadH, y: yOffset + badgePadV), withAttributes: dateAttrs)
+
+            let dText = baby?.dayAndMonthAt(date: entry.date) ?? ""
+            let dAttrs: [NSAttributedString.Key: Any] = [
+                .font: DS.font(11 * scale),
+                .foregroundColor: DS.fgPale,
+            ]
+            let dSize = (dText as NSString).size(withAttributes: dAttrs)
+            (dText as NSString).draw(at: CGPoint(x: size.width - margin - dSize.width, y: yOffset + badgePadV), withAttributes: dAttrs)
+            yOffset += badgeRect.height + 10 * scale
+
+            if !textSlice.isEmpty {
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.lineSpacing = 6 * scale
+                let textAttrs: [NSAttributedString.Key: Any] = [
+                    .font: DS.font(14 * scale),
+                    .foregroundColor: DS.fgStrong,
+                    .paragraphStyle: paragraphStyle,
+                ]
+                let textDrawRect = CGRect(x: margin, y: yOffset, width: textRect.width, height: size.height - yOffset - 20 * scale)
+                (textSlice as NSString).draw(in: textDrawRect, withAttributes: textAttrs)
+            }
+
+            let pnAttrs: [NSAttributedString.Key: Any] = [
+                .font: DS.font(11 * scale),
+                .foregroundColor: DS.fgPale,
+            ]
+            let numText = "\(num)"
+            let numSize = (numText as NSString).size(withAttributes: pnAttrs)
+            (numText as NSString).draw(at: CGPoint(x: size.width - margin - numSize.width, y: size.height - margin), withAttributes: pnAttrs)
+
+        case .entryContinuation(_, let textSlice, let num):
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = 6 * scale
+            let textAttrs: [NSAttributedString.Key: Any] = [
+                .font: DS.font(14 * scale),
+                .foregroundColor: DS.fgStrong,
+                .paragraphStyle: paragraphStyle,
+            ]
+            let textDrawRect = CGRect(x: margin, y: margin, width: textRect.width, height: size.height - margin * 2 - 30 * scale)
+            (textSlice as NSString).draw(in: textDrawRect, withAttributes: textAttrs)
+
+            let pnAttrs2: [NSAttributedString.Key: Any] = [
+                .font: DS.font(11 * scale),
+                .foregroundColor: DS.fgPale,
+            ]
+            let numText = "\(num)"
+            let numSize = (numText as NSString).size(withAttributes: pnAttrs2)
+            (numText as NSString).draw(at: CGPoint(x: size.width - margin - numSize.width, y: size.height - margin), withAttributes: pnAttrs2)
+
+        case .empty:
+            let emptyAttrs: [NSAttributedString.Key: Any] = [
+                .font: DS.font(13 * scale),
+                .foregroundColor: DS.fgPale,
+            ]
+            let text1 = "아직 기록이 없어요."
+            let text2 = "오늘부터 시작해보세요!"
+            let text1Size = (text1 as NSString).size(withAttributes: emptyAttrs)
+            let text2Size = (text2 as NSString).size(withAttributes: emptyAttrs)
+            (text1 as NSString).draw(at: CGPoint(x: (size.width - text1Size.width) / 2, y: size.height / 2 - 15 * scale), withAttributes: emptyAttrs)
+            (text2 as NSString).draw(at: CGPoint(x: (size.width - text2Size.width) / 2, y: size.height / 2 + 10 * scale), withAttributes: emptyAttrs)
+
+        case .backCover:
+            if let data = baby?.photoData, let image = UIImage(data: data) {
+                let photoSize: CGFloat = 60 * scale
+                let photoRect = CGRect(x: (size.width - photoSize) / 2, y: size.height / 2 - 50 * scale, width: photoSize, height: photoSize)
+                context.saveGState()
+                let path = UIBezierPath(roundedRect: photoRect, cornerRadius: photoSize / 2)
+                path.addClip()
+                image.draw(in: photoRect)
+                context.restoreGState()
+            }
+            let titleAttrs: [NSAttributedString.Key: Any] = [
+                .font: DS.font(13 * scale),
+                .foregroundColor: DS.fgMuted,
+            ]
+            let title = "\(baby?.name ?? "")의 일기"
+            let titleSize = (title as NSString).size(withAttributes: titleAttrs)
+            (title as NSString).draw(at: CGPoint(x: (size.width - titleSize.width) / 2, y: size.height / 2 + 30 * scale), withAttributes: titleAttrs)
+
+            let innerPages = pages.count - 3
+            if innerPages > 0 {
+                let countAttrs: [NSAttributedString.Key: Any] = [
+                    .font: DS.font(11 * scale),
+                    .foregroundColor: DS.fgPale,
+                ]
+                let countText = "총 \(innerPages)쪽"
+                let countSize = (countText as NSString).size(withAttributes: countAttrs)
+                (countText as NSString).draw(at: CGPoint(x: (size.width - countSize.width) / 2, y: size.height / 2 + 50 * scale), withAttributes: countAttrs)
             }
         }
     }

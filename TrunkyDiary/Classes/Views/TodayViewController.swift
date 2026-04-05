@@ -162,9 +162,13 @@ class TodayViewController: UIViewController {
         let cw = cardWidth
         let cardHeight = cw * (128.0 / 94.0)
 
+        let cardWidthConstraint = cardWrapper.widthAnchor.constraint(equalToConstant: cw)
+        cardWidthConstraint.priority = .defaultHigh
+        let cardHeightConstraint = cardWrapper.heightAnchor.constraint(equalToConstant: cardHeight)
+        cardHeightConstraint.priority = .defaultHigh
         NSLayoutConstraint.activate([
-            cardWrapper.widthAnchor.constraint(equalToConstant: cw),
-            cardWrapper.heightAnchor.constraint(equalToConstant: cardHeight),
+            cardWidthConstraint,
+            cardHeightConstraint,
 
             cardView.topAnchor.constraint(equalTo: cardWrapper.topAnchor),
             cardView.leadingAnchor.constraint(equalTo: cardWrapper.leadingAnchor),
@@ -493,8 +497,10 @@ class TodayViewController: UIViewController {
         voiceButton.layer.shadowOffset = CGSize(width: 0, height: 2)
         voiceButton.addTarget(self, action: #selector(voiceButtonTapped), for: .touchUpInside)
 
+        let voiceWidthConstraint = voiceButton.widthAnchor.constraint(equalToConstant: cardWidth)
+        voiceWidthConstraint.priority = .defaultHigh
         NSLayoutConstraint.activate([
-            voiceButton.widthAnchor.constraint(equalToConstant: cardWidth),
+            voiceWidthConstraint,
             voiceButton.heightAnchor.constraint(equalToConstant: 48),
         ])
 

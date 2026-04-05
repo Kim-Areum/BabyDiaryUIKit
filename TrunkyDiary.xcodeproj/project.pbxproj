@@ -36,7 +36,7 @@
 
 /* Begin PBXFileReference section */
 		C89E4228EB8E7335C0654F3A /* TrunkyDiaryWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = TrunkyDiaryWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		F6FC8B726318803206C23447 /* TrunkyDiary.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TrunkyDiary.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F6FC8B726318803206C23447 /* TrunkyDiary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrunkyDiary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -144,8 +144,6 @@
 				LastUpgradeCheck = 2640;
 				TargetAttributes = {
 					CF3AD219B7CEE628C5287467 = {
-						DevelopmentTeam = 74W3FA8FLB;
-						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -266,6 +264,7 @@
 				DEVELOPMENT_TEAM = 74W3FA8FLB;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				EXCLUDED_SOURCE_FILE_NAMES = Info.plist;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -282,7 +281,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = TrunkyDiary/Info.plist;
-				EXCLUDED_SOURCE_FILE_NAMES = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -335,6 +333,7 @@
 				DEVELOPMENT_TEAM = 74W3FA8FLB;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXCLUDED_SOURCE_FILE_NAMES = Info.plist;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -345,7 +344,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = TrunkyDiary/Info.plist;
-				EXCLUDED_SOURCE_FILE_NAMES = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -364,9 +362,9 @@
 				CODE_SIGN_ENTITLEMENTS = TrunkyDiaryWidget/TrunkyDiaryWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 74W3FA8FLB;
+				EXCLUDED_SOURCE_FILE_NAMES = Info.plist;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = TrunkyDiaryWidget/Info.plist;
-				EXCLUDED_SOURCE_FILE_NAMES = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -384,9 +382,9 @@
 				CODE_SIGN_ENTITLEMENTS = TrunkyDiaryWidget/TrunkyDiaryWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 74W3FA8FLB;
+				EXCLUDED_SOURCE_FILE_NAMES = Info.plist;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = TrunkyDiaryWidget/Info.plist;
-				EXCLUDED_SOURCE_FILE_NAMES = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -403,13 +401,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = TrunkyDiary/TrunkyDiary.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				INFOPLIST_FILE = TrunkyDiary/Info.plist;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 74W3FA8FLB;
 				EXCLUDED_SOURCE_FILE_NAMES = Info.plist;
+				INFOPLIST_FILE = TrunkyDiary/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -420,13 +421,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = TrunkyDiary/TrunkyDiary.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				INFOPLIST_FILE = TrunkyDiary/Info.plist;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 74W3FA8FLB;
 				EXCLUDED_SOURCE_FILE_NAMES = Info.plist;
+				INFOPLIST_FILE = TrunkyDiary/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

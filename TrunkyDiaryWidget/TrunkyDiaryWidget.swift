@@ -100,29 +100,39 @@ struct TrunkyDiaryWidgetView: View {
                     WDS.bgBase
                 }
 
-                VStack(spacing: 3) {
+                VStack {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("D+\(entry.dayCount)")
+                                .font(WDS.font(16))
+                                .foregroundColor(hasPhoto ? .white : WDS.fgStrong)
+                                .shadow(color: hasPhoto ? .black.opacity(0.5) : .clear, radius: 2)
+
+                            if !entry.monthAndDays.isEmpty {
+                                Text(entry.monthAndDays)
+                                    .font(WDS.font(9))
+                                    .foregroundColor(hasPhoto ? .white.opacity(0.85) : WDS.fgNeutral)
+                                    .shadow(color: hasPhoto ? .black.opacity(0.5) : .clear, radius: 1)
+                            }
+                        }
+                        Spacer()
+                    }
+                    .padding(.top, 12)
+                    .padding(.leading, 14)
+
                     Spacer()
 
-                    Text("D+\(entry.dayCount)")
-                        .font(WDS.font(28))
-                        .foregroundColor(hasPhoto ? .white : WDS.fgStrong)
-                        .shadow(color: hasPhoto ? .black.opacity(0.5) : .clear, radius: 2)
-
-                    if !entry.monthAndDays.isEmpty {
-                        Text(entry.monthAndDays)
-                            .font(WDS.font(11))
-                            .foregroundColor(hasPhoto ? .white.opacity(0.9) : WDS.fgNeutral)
-                            .shadow(color: hasPhoto ? .black.opacity(0.5) : .clear, radius: 1)
-                    }
-
                     if !entry.babyName.isEmpty {
-                        Text(entry.babyName)
-                            .font(WDS.font(10))
-                            .foregroundColor(hasPhoto ? .white.opacity(0.8) : WDS.fgPale)
-                            .shadow(color: hasPhoto ? .black.opacity(0.5) : .clear, radius: 1)
+                        HStack {
+                            Spacer()
+                            Text(entry.babyName)
+                                .font(WDS.font(12))
+                                .foregroundColor(hasPhoto ? .white.opacity(0.8) : WDS.fgPale)
+                                .shadow(color: hasPhoto ? .black.opacity(0.5) : .clear, radius: 1)
+                                .padding(.trailing, 14)
+                                .padding(.bottom, 10)
+                        }
                     }
-
-                    Spacer().frame(height: 10)
                 }
             }
         }

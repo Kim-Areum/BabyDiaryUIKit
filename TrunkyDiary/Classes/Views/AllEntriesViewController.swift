@@ -299,14 +299,14 @@ extension AllEntriesViewController: UICollectionViewDataSource {
             let day = index - firstWeekday + 1
             let entry = monthEntries[day]
             let date = makeDate(day: day)
-            let isFuture = date > Date()
-
             let cal = Calendar.current
+            let baby = CoreDataStack.shared.fetchBaby()
+            let minDate = baby.flatMap { cal.date(byAdding: .year, value: -1, to: $0.birthDate) }
+            let isTooEarly = minDate != nil && date < cal.startOfDay(for: minDate!)
+            let isFuture = date > Date() || isTooEarly
+
             let isToday = cal.isDateInToday(date)
             let weekdayIndex = index % 7
-
-            // 생일 체크
-            let baby = CoreDataStack.shared.fetchBaby()
             var isBirthday = false
             if let bd = baby?.birthDate {
                 let bdMonth = cal.component(.month, from: bd)
@@ -336,6 +336,12 @@ extension AllEntriesViewController: UICollectionViewDelegateFlowLayout {
         let day = index - firstWeekday + 1
         let date = makeDate(day: day)
         guard date <= Date() else { return }
+
+        // 아기 생일 1년 전부터만 작성 가능
+        if let baby = CoreDataStack.shared.fetchBaby() {
+            let minDate = Calendar.current.date(byAdding: .year, value: -1, to: baby.birthDate) ?? baby.birthDate
+            guard date >= Calendar.current.startOfDay(for: minDate) else { return }
+        }
 
         let entry = monthEntries[day]
         let hasContent = entry != nil && (!entry!.text.isEmpty || entry!.photoData != nil)

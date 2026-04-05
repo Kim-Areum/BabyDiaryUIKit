@@ -20,7 +20,7 @@ class DatePickerSheetViewController: UIViewController, UIPickerViewDelegate, UIP
         self.selectedDate = selectedDate
         self.maxDate = maxDate
         let currentYear = Calendar.current.component(.year, from: Date())
-        self.years = Array((currentYear - 30)...currentYear)
+        self.years = Array(1980...currentYear)
         super.init(nibName: nil, bundle: nil)
 
         if let sheet = sheetPresentationController {

@@ -105,7 +105,7 @@
 		CC545CB0C5FA63C17594A34F /* BabyDiaryUIKit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BabyDiaryUIKit.entitlements; sourceTree = "<group>"; };
 		CCEE7B3D4C667DABBB73DE2D /* DiaryEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryEditorViewController.swift; sourceTree = "<group>"; };
 		CD022B6051E860657D64A284 /* CustomAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlertView.swift; sourceTree = "<group>"; };
-		D01EC6EDF39CD40038B3F8EC /* BabyDiaryUIKit.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = BabyDiaryUIKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D01EC6EDF39CD40038B3F8EC /* BabyDiaryUIKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BabyDiaryUIKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D31E61BE233E80877FE3EE9D /* SpeechManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechManager.swift; sourceTree = "<group>"; };
 		E18E3026D731000BF5FE5976 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E8E28970F778C5743F8AD1FE /* CustomPhotoPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPhotoPickerViewController.swift; sourceTree = "<group>"; };
@@ -276,20 +276,16 @@
 						DevelopmentTeam = 74W3FA8FLB;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
-							"com.apple.BackgroundModes" = {
+							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
-							"com.apple.Push" = {
+							com.apple.Push = {
 								enabled = 1;
 							};
-							"com.apple.iCloud" = {
+							com.apple.iCloud = {
 								enabled = 1;
 							};
 						};
-					};
-					82E69C2E9F12801EE89969B4 = {
-						DevelopmentTeam = 74W3FA8FLB;
-						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -469,11 +465,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = BabyDiaryUIKit/BabyDiaryUIKit.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = BabyDiaryUIKit/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.analoglab.trunkydiary;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -548,7 +549,11 @@
 				DEVELOPMENT_TEAM = 74W3FA8FLB;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = BabyDiaryWidget/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.analoglab.TrunkyDiary.widget;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -561,11 +566,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = BabyDiaryUIKit/BabyDiaryUIKit.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = BabyDiaryUIKit/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.analoglab.trunkydiary;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -579,7 +589,11 @@
 				DEVELOPMENT_TEAM = 74W3FA8FLB;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = BabyDiaryWidget/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.analoglab.TrunkyDiary.widget;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";

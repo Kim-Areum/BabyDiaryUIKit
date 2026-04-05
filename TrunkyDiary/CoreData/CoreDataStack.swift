@@ -98,6 +98,11 @@ final class CoreDataStack {
     }
 
     /// 최신 사진을 App Group에 위젯용으로 저장
+    func exportWidgetPhoto() {
+        updateWidgetPhoto()
+        WidgetCenter.shared.reloadAllTimelines()
+    }
+
     private func updateWidgetPhoto() {
         guard let groupURL = FileManager.default.containerURL(
             forSecurityApplicationGroupIdentifier: Self.appGroupID

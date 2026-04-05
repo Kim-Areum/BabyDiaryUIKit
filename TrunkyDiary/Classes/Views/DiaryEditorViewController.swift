@@ -562,16 +562,14 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
             config.cornerStyle = .capsule
             config.baseBackgroundColor = DS.bgSubtle
             config.baseForegroundColor = DS.fgMuted
+            config.contentInsets = NSDirectionalEdgeInsets(top: 3, leading: 8, bottom: 3, trailing: 8)
             config.image = UIImage(systemName: "waveform")?.withConfiguration(
                 UIImage.SymbolConfiguration(pointSize: 12)
             )
             config.imagePadding = 4
-            config.title = "\(audioFileNames.count)"
-            config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
-                var attrs = incoming
-                attrs.font = DS.font(11)
-                return attrs
-            }
+            var countTitle = AttributedString("\(audioFileNames.count)")
+            countTitle.font = DS.font(11)
+            config.attributedTitle = countTitle
             audioCountButton.configuration = config
         }
     }

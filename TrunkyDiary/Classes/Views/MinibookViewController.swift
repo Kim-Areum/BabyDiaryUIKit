@@ -142,21 +142,22 @@ class MinibookViewController: UIViewController {
 
         for period in allPeriods {
             let btn = UIButton(type: .system)
-            btn.setTitle(period.title, for: .normal)
-            btn.titleLabel?.font = DS.font(12)
-            btn.tag = period.rawValue + 100
-            btn.layer.cornerRadius = 14
-            var periodBtnConfig = btn.configuration ?? UIButton.Configuration.plain()
+            var periodBtnConfig = UIButton.Configuration.plain()
+            var periodTitle = AttributedString(period.title)
+            periodTitle.font = DS.font(12)
+            periodBtnConfig.attributedTitle = periodTitle
             periodBtnConfig.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 14, bottom: 6, trailing: 14)
             btn.configuration = periodBtnConfig
+            btn.tag = period.rawValue + 100
+            btn.layer.cornerRadius = 14
             btn.addTarget(self, action: #selector(periodTapped(_:)), for: .touchUpInside)
 
             if period == selectedPeriod {
                 btn.backgroundColor = DS.accent
-                btn.setTitleColor(.white, for: .normal)
+                btn.configuration?.baseForegroundColor = .white
             } else {
                 btn.backgroundColor = DS.bgSubtle
-                btn.setTitleColor(DS.fgNeutral, for: .normal)
+                btn.configuration?.baseForegroundColor = DS.fgNeutral
             }
 
             periodStack.addArrangedSubview(btn)
@@ -1499,12 +1500,22 @@ class MinibookViewController: UIViewController {
 
 extension MinibookViewController: CustomPhotoPickerDelegate {
     func photoPicker(_ picker: CustomPhotoPickerViewController, didSelect image: UIImage) {
-        let data = image.jpegData(compressionQuality: 0.8)
+        // orientation 정규화 후 저장
+        let normalized = Self.normalizeOrientation(image)
+        let data = normalized.jpegData(compressionQuality: 0.8)
         coverPhotoData = data
         if let data = data {
             UserDefaults.standard.set(data, forKey: coverKey)
         }
         renderCurrentPage()
+    }
+
+    private static func normalizeOrientation(_ image: UIImage) -> UIImage {
+        guard image.imageOrientation != .up else { return image }
+        let renderer = UIGraphicsImageRenderer(size: image.size)
+        return renderer.image { _ in
+            image.draw(at: .zero)
+        }
     }
 }
 

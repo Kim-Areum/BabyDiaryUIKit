@@ -465,14 +465,13 @@ class TodayViewController: UIViewController {
 
         // Audio count button
         audioCountButton.translatesAutoresizingMaskIntoConstraints = false
-        audioCountButton.titleLabel?.font = DS.font(11)
-        audioCountButton.setTitleColor(DS.fgMuted, for: .normal)
+        var audioBtnConfig = UIButton.Configuration.plain()
+        audioBtnConfig.contentInsets = NSDirectionalEdgeInsets(top: 3, leading: 8, bottom: 3, trailing: 8)
+        audioBtnConfig.baseForegroundColor = DS.fgMuted
+        audioCountButton.configuration = audioBtnConfig
         audioCountButton.tintColor = DS.fgMuted
         audioCountButton.backgroundColor = DS.bgSubtle
         audioCountButton.layer.cornerRadius = 12
-        var audioBtnConfig = audioCountButton.configuration ?? UIButton.Configuration.plain()
-        audioBtnConfig.contentInsets = NSDirectionalEdgeInsets(top: 3, leading: 8, bottom: 3, trailing: 8)
-        audioCountButton.configuration = audioBtnConfig
         audioCountButton.isHidden = true
         audioCountButton.addTarget(self, action: #selector(audioCountTapped), for: .touchUpInside)
         bodyView.addSubview(audioCountButton)
@@ -594,7 +593,9 @@ class TodayViewController: UIViewController {
             let waveIcon = UIImage(systemName: "waveform", withConfiguration: config)?
                 .withTintColor(DS.fgMuted, renderingMode: .alwaysOriginal)
             audioCountButton.setImage(waveIcon, for: .normal)
-            audioCountButton.setTitle(" \(audioNames.count)", for: .normal)
+            var countTitle = AttributedString(" \(audioNames.count)")
+            countTitle.font = DS.font(11)
+            audioCountButton.configuration?.attributedTitle = countTitle
         } else {
             audioCountButton.isHidden = true
         }

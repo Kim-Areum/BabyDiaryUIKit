@@ -328,8 +328,9 @@ private class FeedEntryCell: UITableViewCell {
         audioButton.tintColor = DS.fgMuted
         audioButton.backgroundColor = DS.bgSubtle
         audioButton.layer.cornerRadius = 12
-        var audioBtnConfig = audioButton.configuration ?? UIButton.Configuration.plain()
+        var audioBtnConfig = UIButton.Configuration.plain()
         audioBtnConfig.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 10, bottom: 6, trailing: 10)
+        audioBtnConfig.baseForegroundColor = DS.fgMuted
         audioButton.configuration = audioBtnConfig
         audioButton.isHidden = true
         audioButton.addTarget(self, action: #selector(audioTapped), for: .touchUpInside)
@@ -401,9 +402,9 @@ private class FeedEntryCell: UITableViewCell {
         let audioNames = entry.audioFileNamesArray
         audioButton.isHidden = audioNames.isEmpty
         if !audioNames.isEmpty {
-            audioButton.setTitle(" \(audioNames.count)", for: .normal)
-            audioButton.setTitleColor(DS.fgMuted, for: .normal)
-            audioButton.titleLabel?.font = DS.font(11)
+            var countTitle = AttributedString(" \(audioNames.count)")
+            countTitle.font = DS.font(11)
+            audioButton.configuration?.attributedTitle = countTitle
         }
     }
 

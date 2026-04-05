@@ -274,7 +274,7 @@ class CustomPhotoPickerViewController: UIViewController, UICollectionViewDelegat
         // 완료 버튼 상태 업데이트
         if let navBar = view.viewWithTag(100), let doneBtn = navBar.viewWithTag(999) as? UIButton {
             let hasSelection = selectedAsset != nil
-            doneBtn.setTitleColor(hasSelection ? DS.fgStrong : DS.fgPale, for: .normal)
+            doneBtn.configuration?.baseForegroundColor = hasSelection ? DS.fgStrong : DS.fgPale
             doneBtn.backgroundColor = hasSelection ? DS.accent : DS.bgNeutral
         }
     }

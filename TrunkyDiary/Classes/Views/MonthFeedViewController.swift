@@ -9,7 +9,7 @@ class MonthFeedViewController: UIViewController {
     private let selectedDate: Date
     var onDismiss: (() -> Void)?
 
-    private let tableView = UITableView(frame: .zero, style: .plain)
+    private let tableView = UITableView(frame: .zero, style: .grouped)
 
     // MARK: - Init
 
@@ -274,7 +274,7 @@ private class FeedEntryCell: UITableViewCell {
         backgroundColor = .clear
         selectionStyle = .none
 
-        let cardWidth = UIScreen.main.bounds.width - 40
+        let cardWidth = UIScreen.main.bounds.width * 0.85
 
         cardView.backgroundColor = DS.bgBase
         cardView.layer.cornerRadius = 12
@@ -356,9 +356,9 @@ private class FeedEntryCell: UITableViewCell {
             photoImageView.leadingAnchor.constraint(equalTo: innerClip.leadingAnchor),
             photoImageView.trailingAnchor.constraint(equalTo: innerClip.trailingAnchor),
 
-            bodyView.leadingAnchor.constraint(equalTo: innerClip.leadingAnchor, constant: 14),
-            bodyView.trailingAnchor.constraint(equalTo: innerClip.trailingAnchor, constant: -14),
-            bodyView.bottomAnchor.constraint(equalTo: innerClip.bottomAnchor, constant: -14),
+            bodyView.leadingAnchor.constraint(equalTo: innerClip.leadingAnchor, constant: 12),
+            bodyView.trailingAnchor.constraint(equalTo: innerClip.trailingAnchor, constant: -12),
+            bodyView.bottomAnchor.constraint(equalTo: innerClip.bottomAnchor, constant: -12),
 
             topRow.topAnchor.constraint(equalTo: bodyView.topAnchor),
             topRow.leadingAnchor.constraint(equalTo: bodyView.leadingAnchor),

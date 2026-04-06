@@ -919,7 +919,7 @@ class MinibookViewController: UIViewController {
         titleLabel.textColor = DS.fgMuted
         vStack.addArrangedSubview(titleLabel)
 
-        let innerPages = pages.count - 2
+        let innerPages = pages.count - 3 // 겉표지, 목차, 뒷표지 제외
         if innerPages > 0 {
             let countLabel = UILabel()
             countLabel.text = "총 \(innerPages)쪽"

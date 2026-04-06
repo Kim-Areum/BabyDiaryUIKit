@@ -270,6 +270,14 @@ private class FeedEntryCell: UITableViewCell {
 
     required init?(coder: NSCoder) { fatalError() }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        let bodyWidth = cardView.bounds.width - 24 // 12pt 패딩 좌우
+        if bodyWidth > 0 {
+            bodyTextLabel.preferredMaxLayoutWidth = bodyWidth
+        }
+    }
+
     private func setupViews() {
         backgroundColor = .clear
         selectionStyle = .none

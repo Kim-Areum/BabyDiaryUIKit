@@ -115,7 +115,7 @@ struct TrunkyDiaryWidgetView: View {
 
                             if !entry.monthAndDays.isEmpty {
                                 Text(entry.monthAndDays)
-                                    .font(WDS.font(9))
+                                    .font(WDS.font(12))
                                     .foregroundColor(hasPhoto ? .white.opacity(0.85) : WDS.fgNeutral)
                                     .shadow(color: hasPhoto ? .black.opacity(0.5) : .clear, radius: 1)
                             }

@@ -121,7 +121,7 @@ final class VideoTrimViewController: UIViewController {
     // MARK: - Player
 
     private func setupPlayerView() {
-        playerView.playerLayer.videoGravity = .resizeAspect
+        playerView.playerLayer.videoGravity = .resizeAspectFill
         playerView.backgroundColor = .black
         playerView.layer.cornerRadius = 8
         playerView.clipsToBounds = true
@@ -201,20 +201,20 @@ final class VideoTrimViewController: UIViewController {
         playheadView.isUserInteractionEnabled = true
         view.addSubview(playheadView)
 
-        // 실제 흰색 바 (중앙, 가는 선)
+        // 실제 흰색 바 (중앙, 굵은 선)
         let playheadLine = UIView()
         playheadLine.backgroundColor = .white
-        playheadLine.layer.cornerRadius = 1
+        playheadLine.layer.cornerRadius = 2
         playheadLine.layer.shadowColor = UIColor.black.cgColor
-        playheadLine.layer.shadowOpacity = 0.3
-        playheadLine.layer.shadowRadius = 1
+        playheadLine.layer.shadowOpacity = 0.4
+        playheadLine.layer.shadowRadius = 2
         playheadLine.translatesAutoresizingMaskIntoConstraints = false
         playheadView.addSubview(playheadLine)
         NSLayoutConstraint.activate([
             playheadLine.centerXAnchor.constraint(equalTo: playheadView.centerXAnchor),
             playheadLine.topAnchor.constraint(equalTo: playheadView.topAnchor),
             playheadLine.bottomAnchor.constraint(equalTo: playheadView.bottomAnchor),
-            playheadLine.widthAnchor.constraint(equalToConstant: 2),
+            playheadLine.widthAnchor.constraint(equalToConstant: 4),
         ])
 
         let playheadPan = UIPanGestureRecognizer(target: self, action: #selector(playheadDragged(_:)))

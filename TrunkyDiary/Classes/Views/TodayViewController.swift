@@ -68,6 +68,8 @@ class TodayViewController: UIViewController {
 
     // MARK: - Lifecycle
 
+    private var didInitialLoad = false
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = DS.bgBase
@@ -75,7 +77,6 @@ class TodayViewController: UIViewController {
         setupCard()
         setupGrassOverlay()
         setupVoiceButton()
-        reloadData()
 
         NotificationCenter.default.addObserver(self, selector: #selector(themeChanged), name: .themeColorChanged, object: nil)
     }

@@ -21,43 +21,45 @@ final class PlayerView: UIView {
     func play(data: Data) {
         cleanup()
 
-        // 무음 모드에서도 볼륨 키로 소리 재생 가능하도록
         let session = AVAudioSession.sharedInstance()
         try? session.setCategory(.playback, mode: .default, options: [])
         try? session.setActive(true)
 
-        // 파일 쓰기를 백그라운드에서 처리
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             let url = VideoCompressor.tempFileURL(from: data)
 
-            DispatchQueue.main.async {
-                guard let self = self else { return }
-                self.tempURL = url
+            // 백그라운드에서 asset 로드
+            let asset = AVURLAsset(url: url)
+            asset.loadValuesAsynchronously(forKeys: ["playable"]) {
+                DispatchQueue.main.async {
+                    guard let self = self else { return }
+                    self.tempURL = url
 
-                let asset = AVURLAsset(url: url)
-                let item = AVPlayerItem(asset: asset)
-                let player = AVPlayer(playerItem: item)
-                player.isMuted = self.isMuted
-                player.automaticallyWaitsToMinimizeStalling = false
-                self.playerLayer.player = player
-                self.playerLayer.videoGravity = .resizeAspectFill
-                self.player = player
+                    let item = AVPlayerItem(asset: asset)
+                    let player = AVPlayer(playerItem: item)
+                    player.isMuted = self.isMuted
+                    player.automaticallyWaitsToMinimizeStalling = false
+                    self.player = player
+                    self.playerLayer.videoGravity = .resizeAspectFill
 
-                // Loop
-                self.loopObserver = NotificationCenter.default.addObserver(
-                    forName: .AVPlayerItemDidPlayToEndTime,
-                    object: item,
-                    queue: .main
-                ) { [weak player] _ in
-                    player?.seek(to: .zero)
-                    player?.play()
-                }
+                    // Loop
+                    self.loopObserver = NotificationCenter.default.addObserver(
+                        forName: .AVPlayerItemDidPlayToEndTime,
+                        object: item,
+                        queue: .main
+                    ) { [weak player] _ in
+                        player?.seek(to: .zero)
+                        player?.play()
+                    }
 
-                // readyToPlay 상태가 되면 재생 시작
-                self.statusObserver = item.observe(\.status, options: [.new]) { [weak self] item, _ in
-                    if item.status == .readyToPlay {
-                        self?.player?.play()
-                        self?.statusObserver = nil
+                    // readyToPlay 후에 playerLayer 연결 + 첫 프레임 seek + 재생
+                    self.statusObserver = item.observe(\.status, options: [.new]) { [weak self] item, _ in
+                        guard item.status == .readyToPlay, let self = self else { return }
+                        self.statusObserver = nil
+                        self.playerLayer.player = self.player
+                        self.player?.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero) { _ in
+                            self.player?.play()
+                        }
                     }
                 }
             }

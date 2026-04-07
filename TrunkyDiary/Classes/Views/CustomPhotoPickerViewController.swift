@@ -1,13 +1,14 @@
 import UIKit
 import Photos
+import AVFoundation
 
 protocol CustomPhotoPickerDelegate: AnyObject {
     func photoPicker(_ picker: CustomPhotoPickerViewController, didSelect image: UIImage)
-    func photoPicker(_ picker: CustomPhotoPickerViewController, didSelectVideo asset: PHAsset)
+    func photoPicker(_ picker: CustomPhotoPickerViewController, didSelectVideo asset: PHAsset, timeRange: CMTimeRange)
 }
 
 extension CustomPhotoPickerDelegate {
-    func photoPicker(_ picker: CustomPhotoPickerViewController, didSelectVideo asset: PHAsset) {}
+    func photoPicker(_ picker: CustomPhotoPickerViewController, didSelectVideo asset: PHAsset, timeRange: CMTimeRange) {}
 }
 
 class CustomPhotoPickerViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
@@ -308,8 +309,12 @@ class CustomPhotoPickerViewController: UIViewController, UICollectionViewDelegat
         guard let asset = selectedAsset else { return }
 
         if asset.mediaType == .video {
-            delegate?.photoPicker(self, didSelectVideo: asset)
-            dismiss(animated: true)
+            let trimVC = VideoTrimViewController(asset: asset)
+            trimVC.onConfirm = { [weak self] asset, timeRange in
+                guard let self = self else { return }
+                self.delegate?.photoPicker(self, didSelectVideo: asset, timeRange: timeRange)
+            }
+            present(trimVC, animated: true)
             return
         }
 

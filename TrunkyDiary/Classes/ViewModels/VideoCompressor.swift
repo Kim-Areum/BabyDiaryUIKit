@@ -9,6 +9,10 @@ final class VideoCompressor {
     // MARK: - Compress from PHAsset
 
     static func compress(asset: PHAsset, completion: @escaping (Data?) -> Void) {
+        compress(asset: asset, timeRange: nil, completion: completion)
+    }
+
+    static func compress(asset: PHAsset, timeRange: CMTimeRange?, completion: @escaping (Data?) -> Void) {
         let options = PHVideoRequestOptions()
         options.isNetworkAccessAllowed = true
         options.deliveryMode = .highQualityFormat
@@ -18,13 +22,13 @@ final class VideoCompressor {
                 DispatchQueue.main.async { completion(nil) }
                 return
             }
-            compressFromURL(url: urlAsset.url, completion: completion)
+            compressFromURL(url: urlAsset.url, timeRange: timeRange, completion: completion)
         }
     }
 
     // MARK: - Compress from URL
 
-    static func compressFromURL(url: URL, completion: @escaping (Data?) -> Void) {
+    static func compressFromURL(url: URL, timeRange: CMTimeRange? = nil, completion: @escaping (Data?) -> Void) {
         let asset = AVURLAsset(url: url)
         let duration = CMTimeGetSeconds(asset.duration)
 
@@ -33,8 +37,10 @@ final class VideoCompressor {
             return
         }
 
-        // 30초 제한
-        if duration > maxDuration {
+        // 지정된 구간 또는 30초 제한
+        if let range = timeRange {
+            exportSession.timeRange = range
+        } else if duration > maxDuration {
             let start = CMTime.zero
             let end = CMTime(seconds: maxDuration, preferredTimescale: 600)
             exportSession.timeRange = CMTimeRange(start: start, end: end)

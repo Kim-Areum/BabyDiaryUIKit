@@ -1,5 +1,6 @@
 import UIKit
 import Photos
+import AVFoundation
 import FoundationModels
 
 // MARK: - DiaryEditorViewController
@@ -798,16 +799,14 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         updateDeleteButtonVisibility()
     }
 
-    func photoPicker(_ picker: CustomPhotoPickerViewController, didSelectVideo asset: PHAsset) {
-        let isTrimmed = asset.duration > VideoCompressor.maxDuration
-
+    func photoPicker(_ picker: CustomPhotoPickerViewController, didSelectVideo asset: PHAsset, timeRange: CMTimeRange) {
         // 압축 중 로딩 표시
         let spinner = UIActivityIndicatorView(style: .large)
         spinner.center = view.center
         spinner.startAnimating()
         view.addSubview(spinner)
 
-        VideoCompressor.compress(asset: asset) { [weak self] data in
+        VideoCompressor.compress(asset: asset, timeRange: timeRange) { [weak self] data in
             guard let self = self else { return }
 
             VideoCompressor.thumbnail(from: asset) { thumb in
@@ -819,10 +818,6 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
                 self.photoData = nil
                 self.updatePhotoArea()
                 self.updateDeleteButtonVisibility()
-
-                if isTrimmed {
-                    self.showVideoTrimToast()
-                }
             }
         }
     }

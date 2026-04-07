@@ -294,7 +294,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         placeholderConfig.imagePlacement = .top
         placeholderConfig.imagePadding = 8
         placeholderConfig.baseForegroundColor = DS.fgPale
-        var attrTitle = AttributedString("사진 추가")
+        var attrTitle = AttributedString("사진/동영상 추가")
         attrTitle.font = DS.font(13)
         attrTitle.foregroundColor = DS.fgPale
         placeholderConfig.attributedTitle = attrTitle
@@ -527,22 +527,24 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
                 ])
                 videoPlayerView = pv
 
-                // 음소거 버튼 (20% 축소, 우하단)
+                // 음소거 버튼 (삭제/사진첩 아이콘과 동일 사이즈, 좌하단)
                 let muteIcon = UIImage(systemName: "speaker.slash.fill")?.withConfiguration(
-                    UIImage.SymbolConfiguration(pointSize: 11)
+                    UIImage.SymbolConfiguration(pointSize: 12)
                 )
                 videoMuteButton.setImage(muteIcon, for: .normal)
-                videoMuteButton.tintColor = .white
-                videoMuteButton.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-                videoMuteButton.layer.cornerRadius = 11
+                videoMuteButton.tintColor = DS.fgMuted
+                videoMuteButton.backgroundColor = DS.bgBase.withAlphaComponent(0.8)
+                videoMuteButton.layer.cornerRadius = 14
+                videoMuteButton.layer.borderWidth = 0.5
+                videoMuteButton.layer.borderColor = DS.line.cgColor
                 videoMuteButton.translatesAutoresizingMaskIntoConstraints = false
                 videoMuteButton.addTarget(self, action: #selector(toggleVideoMute), for: .touchUpInside)
                 photoContainer.addSubview(videoMuteButton)
                 NSLayoutConstraint.activate([
-                    videoMuteButton.leadingAnchor.constraint(equalTo: photoContainer.leadingAnchor, constant: 8),
+                    videoMuteButton.leadingAnchor.constraint(equalTo: photoContainer.leadingAnchor, constant: 10),
                     videoMuteButton.bottomAnchor.constraint(equalTo: photoContainer.bottomAnchor, constant: -8),
-                    videoMuteButton.widthAnchor.constraint(equalToConstant: 22),
-                    videoMuteButton.heightAnchor.constraint(equalToConstant: 22),
+                    videoMuteButton.widthAnchor.constraint(equalToConstant: 28),
+                    videoMuteButton.heightAnchor.constraint(equalToConstant: 28),
                 ])
             }
             videoPlayerView?.isHidden = false
@@ -567,7 +569,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         pv.isMuted.toggle()
         let iconName = pv.isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill"
         let icon = UIImage(systemName: iconName)?.withConfiguration(
-            UIImage.SymbolConfiguration(pointSize: 14)
+            UIImage.SymbolConfiguration(pointSize: 12)
         )
         videoMuteButton.setImage(icon, for: .normal)
     }

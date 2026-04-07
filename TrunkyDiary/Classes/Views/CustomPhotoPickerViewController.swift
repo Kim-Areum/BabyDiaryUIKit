@@ -49,7 +49,7 @@ class CustomPhotoPickerViewController: UIViewController, UICollectionViewDelegat
 
     private func setupNavBar() {
         let navBar = NavBarView()
-        navBar.titleLabel.text = "사진 선택"
+        navBar.titleLabel.text = "사진/동영상 선택"
         navBar.leftButton.setImage(UIImage(systemName: "xmark"), for: .normal)
         navBar.leftButton.tintColor = DS.fgStrong
         navBar.leftButton.addTarget(self, action: #selector(closeTapped), for: .touchUpInside)

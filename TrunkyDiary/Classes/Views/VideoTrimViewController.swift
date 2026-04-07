@@ -217,22 +217,6 @@ final class VideoTrimViewController: UIViewController {
             playheadLine.widthAnchor.constraint(equalToConstant: 2),
         ])
 
-        // 상단 동그라미 손잡이
-        let knob = UIView()
-        knob.backgroundColor = .white
-        knob.layer.cornerRadius = 5
-        knob.layer.shadowColor = UIColor.black.cgColor
-        knob.layer.shadowOpacity = 0.3
-        knob.layer.shadowRadius = 2
-        knob.translatesAutoresizingMaskIntoConstraints = false
-        playheadView.addSubview(knob)
-        NSLayoutConstraint.activate([
-            knob.centerXAnchor.constraint(equalTo: playheadView.centerXAnchor),
-            knob.topAnchor.constraint(equalTo: playheadView.topAnchor, constant: -3),
-            knob.widthAnchor.constraint(equalToConstant: 10),
-            knob.heightAnchor.constraint(equalToConstant: 10),
-        ])
-
         let playheadPan = UIPanGestureRecognizer(target: self, action: #selector(playheadDragged(_:)))
         playheadView.addGestureRecognizer(playheadPan)
 

@@ -110,15 +110,15 @@ final class CoreDataStack {
 
         let photoURL = groupURL.appendingPathComponent("widget_photo.jpg")
 
-        // 최신 사진이 있는 일기 찾기
+        // 최신 사진/동영상 썸네일이 있는 일기 찾기
         let req: NSFetchRequest<CDDiaryEntry> = CDDiaryEntry.fetchRequest()
-        req.predicate = NSPredicate(format: "photoData != nil")
+        req.predicate = NSPredicate(format: "photoData != nil OR videoThumbnailData != nil")
         req.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
         req.fetchLimit = 1
 
-        if let entry = try? viewContext.fetch(req).first,
-           let data = entry.photoData {
-            try? data.write(to: photoURL)
+        if let entry = try? viewContext.fetch(req).first {
+            let data = entry.photoData ?? entry.videoThumbnailData
+            try? data?.write(to: photoURL)
         }
     }
 
@@ -158,11 +158,13 @@ final class CoreDataStack {
         return try? viewContext.fetch(request).first
     }
 
-    func createEntry(date: Date, text: String, photoData: Data?, audioFileNames: [String], audioTimestamps: [Date]) -> CDDiaryEntry {
+    func createEntry(date: Date, text: String, photoData: Data?, videoData: Data? = nil, videoThumbnailData: Data? = nil, audioFileNames: [String], audioTimestamps: [Date]) -> CDDiaryEntry {
         let entry = CDDiaryEntry(context: viewContext)
         entry.date = date
         entry.text = text
         entry.photoData = photoData
+        entry.videoData = videoData
+        entry.videoThumbnailData = videoThumbnailData
         entry.audioFileNames = audioFileNames as NSArray
         entry.audioTimestamps = audioTimestamps as NSArray
         entry.stickerDataList = [] as NSArray

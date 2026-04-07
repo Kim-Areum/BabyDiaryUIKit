@@ -3,6 +3,11 @@ import Photos
 
 protocol CustomPhotoPickerDelegate: AnyObject {
     func photoPicker(_ picker: CustomPhotoPickerViewController, didSelect image: UIImage)
+    func photoPicker(_ picker: CustomPhotoPickerViewController, didSelectVideo asset: PHAsset)
+}
+
+extension CustomPhotoPickerDelegate {
+    func photoPicker(_ picker: CustomPhotoPickerViewController, didSelectVideo asset: PHAsset) {}
 }
 
 class CustomPhotoPickerViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
@@ -10,6 +15,8 @@ class CustomPhotoPickerViewController: UIViewController, UICollectionViewDelegat
     weak var delegate: CustomPhotoPickerDelegate?
     private var targetDate: Date?
     var cropAspectRatio: CGFloat = 1.0 / 0.65 // 기본값: 카드 사진 비율
+    var includeVideo: Bool = false
+
 
     private var categories: [PhotoCategory] = []
     private var selectedCategory: PhotoCategory?
@@ -85,9 +92,8 @@ class CustomPhotoPickerViewController: UIViewController, UICollectionViewDelegat
         categoryScrollView.backgroundColor = DS.bgBase
         view.addSubview(categoryScrollView)
 
-        let navBar = view.viewWithTag(100)!
         NSLayoutConstraint.activate([
-            categoryScrollView.topAnchor.constraint(equalTo: navBar.bottomAnchor),
+            categoryScrollView.topAnchor.constraint(equalTo: view.viewWithTag(100)!.bottomAnchor),
             categoryScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             categoryScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             categoryScrollView.heightAnchor.constraint(equalToConstant: 40),
@@ -153,8 +159,15 @@ class CustomPhotoPickerViewController: UIViewController, UICollectionViewDelegat
         let start = cal.startOfDay(for: date)
         let end = cal.date(byAdding: .day, value: 1, to: start)!
         let opts = PHFetchOptions()
-        opts.predicate = NSPredicate(format: "creationDate >= %@ AND creationDate < %@", start as NSDate, end as NSDate)
+        if includeVideo {
+            opts.predicate = NSPredicate(format: "creationDate >= %@ AND creationDate < %@ AND (mediaType = %d OR mediaType = %d)", start as NSDate, end as NSDate, PHAssetMediaType.image.rawValue, PHAssetMediaType.video.rawValue)
+        } else {
+            opts.predicate = NSPredicate(format: "creationDate >= %@ AND creationDate < %@", start as NSDate, end as NSDate)
+        }
         opts.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        if includeVideo {
+            return PHAsset.fetchAssets(with: opts)
+        }
         return PHAsset.fetchAssets(with: .image, options: opts)
     }
 
@@ -227,12 +240,15 @@ class CustomPhotoPickerViewController: UIViewController, UICollectionViewDelegat
 
         let opts = PHFetchOptions()
         opts.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        if includeVideo {
+            opts.predicate = NSPredicate(format: "mediaType = %d OR mediaType = %d", PHAssetMediaType.image.rawValue, PHAssetMediaType.video.rawValue)
+        }
 
         switch cat {
         case .dateMemory(let date):
             fetchResult = fetchAssetsForDate(date)
         case .album(let collection):
-            fetchResult = PHAsset.fetchAssets(in: collection, options: opts)
+            fetchResult = PHAsset.fetchAssets(in: collection, options: includeVideo ? opts : nil)
         }
 
         loadMore()
@@ -290,6 +306,21 @@ class CustomPhotoPickerViewController: UIViewController, UICollectionViewDelegat
 
     @objc private func doneTapped() {
         guard let asset = selectedAsset else { return }
+
+        if asset.mediaType == .video {
+            if asset.duration > VideoCompressor.maxDuration {
+                let alert = CustomAlertView(
+                    title: "동영상은 최대 30초까지 첨부할 수 있어요",
+                    message: "30초로 잘라서 첨부합니다.",
+                    buttonText: "확인"
+                )
+                alert.show(in: self.view)
+            }
+            delegate?.photoPicker(self, didSelectVideo: asset)
+            dismiss(animated: true)
+            return
+        }
+
         let opts = PHImageRequestOptions()
         opts.deliveryMode = .highQualityFormat
         opts.isNetworkAccessAllowed = true
@@ -343,6 +374,7 @@ class PhotoCell: UICollectionViewCell {
     private let imageView = UIImageView()
     private let checkmark = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
     private let overlay = UIView()
+    private let durationLabel = UILabel()
     private var requestID: PHImageRequestID?
 
     override init(frame: CGRect) {
@@ -362,11 +394,21 @@ class PhotoCell: UICollectionViewCell {
         checkmark.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(checkmark)
 
+        durationLabel.font = DS.font(11)
+        durationLabel.textColor = .white
+        durationLabel.textAlignment = .right
+        durationLabel.isHidden = true
+        durationLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(durationLabel)
+
         NSLayoutConstraint.activate([
             checkmark.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
             checkmark.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -6),
             checkmark.widthAnchor.constraint(equalToConstant: 22),
             checkmark.heightAnchor.constraint(equalToConstant: 22),
+
+            durationLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -6),
+            durationLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6),
         ])
     }
 
@@ -386,6 +428,7 @@ class PhotoCell: UICollectionViewCell {
         imageView.image = nil
         overlay.isHidden = true
         checkmark.isHidden = true
+        durationLabel.isHidden = true
     }
 
     func configure(with asset: PHAsset, isSelected: Bool) {
@@ -402,5 +445,15 @@ class PhotoCell: UICollectionViewCell {
 
         overlay.isHidden = !isSelected
         checkmark.isHidden = !isSelected
+
+        if asset.mediaType == .video {
+            durationLabel.isHidden = false
+            let totalSeconds = Int(asset.duration)
+            let minutes = totalSeconds / 60
+            let seconds = totalSeconds % 60
+            durationLabel.text = String(format: "%d:%02d", minutes, seconds)
+        } else {
+            durationLabel.isHidden = true
+        }
     }
 }

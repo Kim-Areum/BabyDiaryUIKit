@@ -18,7 +18,7 @@ class MonthFeedViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         // 전체 컨텐츠 있는 엔트리를 날짜 내림차순으로
         self.allEntries = CoreDataStack.shared.fetchEntries(sortAscending: false)
-            .filter { !$0.text.isEmpty || $0.photoData != nil }
+            .filter { !$0.text.isEmpty || $0.photoData != nil || $0.videoData != nil }
         groupByMonth()
     }
 
@@ -105,7 +105,7 @@ class MonthFeedViewController: UIViewController {
 
     private func reloadAllEntries() {
         allEntries = CoreDataStack.shared.fetchEntries(sortAscending: false)
-            .filter { !$0.text.isEmpty || $0.photoData != nil }
+            .filter { !$0.text.isEmpty || $0.photoData != nil || $0.videoData != nil }
         groupByMonth()
         tableView.reloadData()
     }
@@ -256,6 +256,7 @@ private class FeedEntryCell: UITableViewCell {
     private let dayCountLabel = UILabel()
     private let bodyTextLabel = UILabel()
     private let audioButton = UIButton(type: .system)
+    private let videoPlayIcon = UIImageView()
     var onAudioTapped: ((CDDiaryEntry) -> Void)?
     private var currentEntry: CDDiaryEntry?
 
@@ -380,10 +381,30 @@ private class FeedEntryCell: UITableViewCell {
             audioButton.trailingAnchor.constraint(equalTo: bodyView.trailingAnchor),
             audioButton.bottomAnchor.constraint(lessThanOrEqualTo: bodyView.bottomAnchor),
         ])
+
+        // Video play icon overlay
+        let playConfig = UIImage.SymbolConfiguration(pointSize: 40)
+        videoPlayIcon.image = UIImage(systemName: "play.circle.fill", withConfiguration: playConfig)
+        videoPlayIcon.tintColor = .white
+        videoPlayIcon.alpha = 0.7
+        videoPlayIcon.isHidden = true
+        videoPlayIcon.translatesAutoresizingMaskIntoConstraints = false
+        innerClip.addSubview(videoPlayIcon)
+
+        NSLayoutConstraint.activate([
+            videoPlayIcon.centerXAnchor.constraint(equalTo: photoImageView.centerXAnchor),
+            videoPlayIcon.centerYAnchor.constraint(equalTo: photoImageView.centerYAnchor),
+        ])
     }
 
     func configure(entry: CDDiaryEntry, baby: CDBaby?) {
         if let data = entry.photoData, let image = UIImage(data: data) {
+            photoImageView.image = image
+            photoImageView.isHidden = false
+            photoHeightConstraint?.isActive = true
+            bodyTopToPhoto?.isActive = true
+            bodyTopToCard?.isActive = false
+        } else if let data = entry.videoThumbnailData, let image = UIImage(data: data) {
             photoImageView.image = image
             photoImageView.isHidden = false
             photoHeightConstraint?.isActive = true
@@ -396,6 +417,9 @@ private class FeedEntryCell: UITableViewCell {
             bodyTopToPhoto?.isActive = false
             bodyTopToCard?.isActive = true
         }
+
+        // Video play icon
+        videoPlayIcon.isHidden = !entry.hasVideo
 
         dateBadge.update(text: entry.formattedDate)
 
@@ -425,6 +449,7 @@ private class FeedEntryCell: UITableViewCell {
         super.prepareForReuse()
         photoImageView.image = nil
         photoImageView.isHidden = true
+        videoPlayIcon.isHidden = true
         bodyTextLabel.text = nil
         audioButton.isHidden = true
         currentEntry = nil

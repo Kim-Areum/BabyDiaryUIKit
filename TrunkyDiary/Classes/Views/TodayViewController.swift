@@ -51,6 +51,9 @@ class TodayViewController: UIViewController {
     private let audioCountButton = UIButton(type: .system)
     private let moreButton = UIButton(type: .system)
 
+    // Video play icon overlay
+    private let videoPlayIcon = UIImageView()
+
     // Voice record button
     private let voiceButton = UIButton(type: .custom)
     private var isRecording = false
@@ -481,6 +484,20 @@ class TodayViewController: UIViewController {
             audioCountButton.bottomAnchor.constraint(equalTo: bodyView.bottomAnchor),
             textScroll.bottomAnchor.constraint(equalTo: audioCountButton.topAnchor, constant: -8),
         ])
+
+        // Video play icon overlay
+        let playConfig = UIImage.SymbolConfiguration(pointSize: 40)
+        videoPlayIcon.image = UIImage(systemName: "play.circle.fill", withConfiguration: playConfig)
+        videoPlayIcon.tintColor = .white
+        videoPlayIcon.alpha = 0.7
+        videoPlayIcon.isHidden = true
+        videoPlayIcon.translatesAutoresizingMaskIntoConstraints = false
+        innerClip.addSubview(videoPlayIcon)
+
+        NSLayoutConstraint.activate([
+            videoPlayIcon.centerXAnchor.constraint(equalTo: photoImageView.centerXAnchor),
+            videoPlayIcon.centerYAnchor.constraint(equalTo: photoImageView.centerYAnchor),
+        ])
     }
 
     // MARK: - Voice Button
@@ -544,8 +561,12 @@ class TodayViewController: UIViewController {
             dayCountLabel.text = ""
         }
 
-        // Photo
+        // Photo / Video thumbnail
         if let data = entry?.photoData, let image = UIImage(data: data) {
+            photoImageView.image = image
+            photoImageView.isHidden = false
+            photoPlaceholder.isHidden = true
+        } else if let data = entry?.videoThumbnailData, let image = UIImage(data: data) {
             photoImageView.image = image
             photoImageView.isHidden = false
             photoPlaceholder.isHidden = true
@@ -553,6 +574,9 @@ class TodayViewController: UIViewController {
             photoImageView.isHidden = true
             photoPlaceholder.isHidden = false
         }
+
+        // Video play icon
+        videoPlayIcon.isHidden = !(entry?.hasVideo ?? false)
 
         // Diary text
         if let entry = entry, !entry.text.isEmpty {

@@ -6,10 +6,15 @@ public class CDDiaryEntry: NSManagedObject {
     @NSManaged public var date: Date
     @NSManaged public var text: String
     @NSManaged public var photoData: Data?
+    @NSManaged public var videoData: Data?
+    @NSManaged public var videoThumbnailData: Data?
     @NSManaged public var audioFileNames: NSArray  // [String]
     @NSManaged public var audioTimestamps: NSArray // [Date]
     @NSManaged public var stickerDataList: NSArray // [Data]
     @NSManaged public var createdAt: Date
+
+    var hasVideo: Bool { videoData != nil }
+    var hasMedia: Bool { photoData != nil || videoData != nil }
 
     var audioFileNamesArray: [String] {
         get { (audioFileNames as? [String]) ?? [] }

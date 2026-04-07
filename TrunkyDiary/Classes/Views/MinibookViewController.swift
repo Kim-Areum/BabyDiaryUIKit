@@ -134,7 +134,7 @@ class MinibookViewController: UIViewController {
         for period in Period.allCases where period != .all {
             let hasData = allEntries.contains { entry in
                 let monthAge = baby.map { monthsBetween(from: $0.birthDate, to: entry.date) } ?? 0
-                return period.contains(monthAge: monthAge) && (!entry.text.isEmpty || entry.photoData != nil)
+                return period.contains(monthAge: monthAge) && (!entry.text.isEmpty || entry.photoData != nil || entry.videoData != nil)
             }
             if hasData { availablePeriods.append(period) }
         }
@@ -184,7 +184,7 @@ class MinibookViewController: UIViewController {
     private func buildPages() {
         pages = [.cover]
 
-        let validEntries = entries.filter { !$0.text.isEmpty || $0.photoData != nil }
+        let validEntries = entries.filter { !$0.text.isEmpty || $0.photoData != nil || $0.videoData != nil }
 
         if validEntries.isEmpty {
             pages.append(.empty)
@@ -205,7 +205,7 @@ class MinibookViewController: UIViewController {
                 }
 
                 let text = entry.text
-                let hasPhoto = entry.photoData != nil
+                let hasPhoto = entry.photoData != nil || entry.videoThumbnailData != nil
                 let pageWidth = UIScreen.main.bounds.width * 0.8
                 let textWidth = pageWidth - 40 // 좌우 패딩 24씩
 
@@ -747,8 +747,9 @@ class MinibookViewController: UIViewController {
         var topAnchor = pageView.topAnchor
         var topConstant: CGFloat = 16
 
-        // Photo
-        if let data = entry.photoData, let image = UIImage(data: data) {
+        // Photo / Video thumbnail
+        let photoData = entry.photoData ?? entry.videoThumbnailData
+        if let data = photoData, let image = UIImage(data: data) {
             let imageView = UIImageView(image: image)
             imageView.contentMode = .scaleAspectFill
             imageView.clipsToBounds = true
@@ -1001,7 +1002,7 @@ class MinibookViewController: UIViewController {
     @objc private func exportTapped() {
         guard !isExporting else { return }
 
-        let hasContent = entries.contains { !$0.text.isEmpty || $0.photoData != nil }
+        let hasContent = entries.contains { !$0.text.isEmpty || $0.photoData != nil || $0.videoData != nil }
         if !hasContent {
             let alert = CustomAlertView(title: "내보낼 기록이 없어요", message: "일기를 작성하면 미니북을 내보낼 수 있어요.", buttonText: "확인")
             alert.show(in: view)
@@ -1143,7 +1144,8 @@ class MinibookViewController: UIViewController {
         case .entryFirst(let entry, let textSlice, let num):
             var yOffset: CGFloat = margin
 
-            if let data = entry.photoData, let image = UIImage(data: data) {
+            let entryPhotoData = entry.photoData ?? entry.videoThumbnailData
+            if let data = entryPhotoData, let image = UIImage(data: data) {
                 let photoHeight = (size.width - margin * 2) * 0.65
                 let photoRect = CGRect(x: margin, y: yOffset, width: size.width - margin * 2, height: photoHeight)
                 image.draw(in: photoRect)
@@ -1346,7 +1348,8 @@ class MinibookViewController: UIViewController {
             case .entryFirst(let entry, let textSlice, let num):
                 var yOffset: CGFloat = margin
 
-                if let data = entry.photoData, let image = UIImage(data: data) {
+                let entryPhotoData = entry.photoData ?? entry.videoThumbnailData
+                if let data = entryPhotoData, let image = UIImage(data: data) {
                     let photoHeight = (size.width - margin * 2) * 0.65
                     let photoRect = CGRect(x: margin, y: yOffset, width: size.width - margin * 2, height: photoHeight)
                     image.draw(in: photoRect)

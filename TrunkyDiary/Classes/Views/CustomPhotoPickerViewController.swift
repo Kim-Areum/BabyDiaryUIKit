@@ -308,14 +308,6 @@ class CustomPhotoPickerViewController: UIViewController, UICollectionViewDelegat
         guard let asset = selectedAsset else { return }
 
         if asset.mediaType == .video {
-            if asset.duration > VideoCompressor.maxDuration {
-                let alert = CustomAlertView(
-                    title: "동영상은 최대 30초까지 첨부할 수 있어요",
-                    message: "30초로 잘라서 첨부합니다.",
-                    buttonText: "확인"
-                )
-                alert.show(in: self.view)
-            }
             delegate?.photoPicker(self, didSelectVideo: asset)
             dismiss(animated: true)
             return

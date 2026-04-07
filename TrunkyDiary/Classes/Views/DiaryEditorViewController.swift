@@ -799,6 +799,8 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
     }
 
     func photoPicker(_ picker: CustomPhotoPickerViewController, didSelectVideo asset: PHAsset) {
+        let isTrimmed = asset.duration > VideoCompressor.maxDuration
+
         // 압축 중 로딩 표시
         let spinner = UIActivityIndicatorView(style: .large)
         spinner.center = view.center
@@ -817,6 +819,10 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
                 self.photoData = nil
                 self.updatePhotoArea()
                 self.updateDeleteButtonVisibility()
+
+                if isTrimmed {
+                    self.showVideoTrimToast()
+                }
             }
         }
     }
@@ -974,6 +980,43 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
     }
 
     // MARK: - Helpers
+
+    private func showVideoTrimToast() {
+        let toast = UILabel()
+        toast.text = "동영상은 최대 30초만 첨부돼요"
+        toast.font = DS.font(12)
+        toast.textColor = DS.fgStrong
+        toast.backgroundColor = DS.bgNeutral
+        toast.textAlignment = .center
+        toast.layer.cornerRadius = 12
+        toast.clipsToBounds = true
+        toast.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(toast)
+
+        NSLayoutConstraint.activate([
+            toast.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            toast.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 54),
+            toast.widthAnchor.constraint(greaterThanOrEqualToConstant: 100),
+            toast.heightAnchor.constraint(equalToConstant: 36),
+        ])
+        toast.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        toast.frame.size.width += 32
+
+        toast.alpha = 0
+        toast.transform = CGAffineTransform(translationX: 0, y: -10)
+        UIView.animate(withDuration: 0.3) {
+            toast.alpha = 1
+            toast.transform = .identity
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            UIView.animate(withDuration: 0.25, animations: {
+                toast.alpha = 0
+                toast.transform = CGAffineTransform(translationX: 0, y: -10)
+            }) { _ in
+                toast.removeFromSuperview()
+            }
+        }
+    }
 
     private func formattedDate(_ date: Date) -> String {
         let f = DateFormatter()

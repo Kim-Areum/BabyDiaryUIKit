@@ -462,8 +462,10 @@ private class FeedEntryCell: UITableViewCell {
                 videoPlayerView = pv
             }
             videoPlayerView?.isHidden = false
+            videoPlayerView?.isMuted = true
             videoPlayerView?.play(data: videoData)
             videoMuteButton.isHidden = false
+            videoMuteButton.setImage(UIImage(systemName: "speaker.slash.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 12)), for: .normal)
             innerClip.bringSubviewToFront(videoMuteButton)
             videoPlayIcon.isHidden = true
         } else {

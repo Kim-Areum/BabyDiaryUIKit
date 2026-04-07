@@ -613,9 +613,11 @@ class TodayViewController: UIViewController {
                 ])
             }
             playerView?.isHidden = false
+            playerView?.isMuted = true
             playerView?.play(data: videoData)
             videoPlayIcon.isHidden = true
             videoMuteButton.isHidden = false
+            videoMuteButton.setImage(UIImage(systemName: "speaker.slash.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 12)), for: .normal)
         } else {
             playerView?.cleanup()
             playerView?.isHidden = true

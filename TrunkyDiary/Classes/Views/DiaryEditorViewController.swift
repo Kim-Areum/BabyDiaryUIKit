@@ -549,7 +549,9 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
                 ])
             }
             videoPlayerView?.isHidden = false
+            videoPlayerView?.isMuted = true
             videoMuteButton.isHidden = false
+            videoMuteButton.setImage(UIImage(systemName: "speaker.slash.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 12)), for: .normal)
             videoPlayerView?.play(data: videoData!)
             photoContainer.bringSubviewToFront(overlayStack)
             photoContainer.bringSubviewToFront(videoMuteButton)

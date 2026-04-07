@@ -38,6 +38,44 @@ class MonthFeedViewController: UIViewController {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             self?.scrollToSelectedDate()
+            self?.playTopVisibleVideo()
+        }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        pauseAllVideos()
+    }
+
+    // MARK: - Video Playback Control
+
+    private func pauseAllVideos() {
+        tableView.visibleCells.compactMap { $0 as? FeedEntryCell }.forEach { $0.muteAndPause() }
+    }
+
+    private func playTopVisibleVideo() {
+        let viewBounds = view.bounds
+        var bestCell: FeedEntryCell?
+        var bestVisibleArea: CGFloat = 0
+
+        for cell in tableView.visibleCells {
+            guard let feedCell = cell as? FeedEntryCell, feedCell.hasVideo else { continue }
+            let cellFrame = cell.convert(cell.bounds, to: view)
+            let intersection = cellFrame.intersection(viewBounds)
+            let visibleArea = intersection.isNull ? 0 : intersection.height
+            if visibleArea > bestVisibleArea {
+                bestVisibleArea = visibleArea
+                bestCell = feedCell
+            }
+        }
+
+        for cell in tableView.visibleCells {
+            guard let feedCell = cell as? FeedEntryCell, feedCell.hasVideo else { continue }
+            if feedCell === bestCell {
+                feedCell.resumeVideo()
+            } else {
+                feedCell.pauseVideo()
+            }
         }
     }
 
@@ -206,6 +244,10 @@ extension MonthFeedViewController: UITableViewDelegate {
         if let feedCell = cell as? FeedEntryCell {
             feedCell.cleanupVideo()
         }
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        playTopVisibleVideo()
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -464,6 +506,7 @@ private class FeedEntryCell: UITableViewCell {
             videoPlayerView?.isHidden = false
             videoPlayerView?.isMuted = true
             videoPlayerView?.play(data: videoData)
+            videoPlayerView?.pause() // 준비만, 재생은 playTopVisibleVideo에서
             videoMuteButton.isHidden = false
             videoMuteButton.setImage(UIImage(systemName: "speaker.slash.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 12)), for: .normal)
             innerClip.bringSubviewToFront(videoMuteButton)
@@ -497,6 +540,22 @@ private class FeedEntryCell: UITableViewCell {
     @objc private func audioTapped() {
         guard let entry = currentEntry else { return }
         onAudioTapped?(entry)
+    }
+
+    var hasVideo: Bool { currentEntry?.hasVideo ?? false }
+
+    func pauseVideo() {
+        videoPlayerView?.pause()
+    }
+
+    func resumeVideo() {
+        videoPlayerView?.resume()
+    }
+
+    func muteAndPause() {
+        videoPlayerView?.pause()
+        videoPlayerView?.isMuted = true
+        videoMuteButton.setImage(UIImage(systemName: "speaker.slash.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 12)), for: .normal)
     }
 
     func cleanupVideo() {

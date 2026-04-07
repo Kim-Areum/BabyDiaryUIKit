@@ -37,7 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 
-    /// iCloud 동기화 완료를 기다림 (최대 10초)
+    /// iCloud 동기화 완료를 기다림 (최대 15초)
     private func waitForSync() {
         // viewContext에 데이터가 머지되는 것을 감지
         syncObservation = NotificationCenter.default.addObserver(
@@ -45,18 +45,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             object: CoreDataStack.shared.viewContext,
             queue: .main
         ) { [weak self] _ in
-            // 데이터가 실제로 들어왔는지 확인
             if CoreDataStack.shared.fetchBaby() != nil {
                 self?.finishWaiting()
             }
         }
 
-        // 타임아웃 10초
+        // 타임아웃 15초
         let timeout = DispatchWorkItem { [weak self] in
             self?.finishWaiting()
         }
         syncTimeout = timeout
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: timeout)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 15, execute: timeout)
     }
 
     private func finishWaiting() {
@@ -68,6 +67,34 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             syncObservation = nil
         }
         routeToMain()
+
+        // 아기 등록 화면으로 갔어도 동기화 완료되면 자동 전환
+        if CoreDataStack.shared.fetchBaby() == nil {
+            startLateSync()
+        }
+    }
+
+    /// 아기 등록 화면에서도 iCloud 데이터 도착 시 자동 전환
+    private var lateSyncObservation: Any?
+
+    private func startLateSync() {
+        lateSyncObservation = NotificationCenter.default.addObserver(
+            forName: .NSManagedObjectContextObjectsDidChange,
+            object: CoreDataStack.shared.viewContext,
+            queue: .main
+        ) { [weak self] _ in
+            if CoreDataStack.shared.fetchBaby() != nil {
+                self?.stopLateSync()
+                self?.handleBabyCreated()
+            }
+        }
+    }
+
+    private func stopLateSync() {
+        if let obs = lateSyncObservation {
+            NotificationCenter.default.removeObserver(obs)
+            lateSyncObservation = nil
+        }
     }
 
     @objc private func handleBabyCreated() {

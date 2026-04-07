@@ -800,38 +800,22 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
     }
 
     func photoPicker(_ picker: CustomPhotoPickerViewController, didSelectVideo asset: PHAsset, timeRange: CMTimeRange) {
-        // 1) 썸네일 먼저 생성해서 즉시 표시
-        VideoCompressor.thumbnail(from: asset) { [weak self] thumb in
+        // 압축 중 로딩 표시
+        let spinner = UIActivityIndicatorView(style: .large)
+        spinner.center = view.center
+        spinner.startAnimating()
+        view.addSubview(spinner)
+
+        VideoCompressor.compress(asset: asset, timeRange: timeRange) { [weak self] data in
             guard let self = self else { return }
 
-            self.videoThumbnailData = thumb?.jpegData(compressionQuality: 0.8)
-            self.photoData = nil
-
-            // 썸네일을 photoImageView에 먼저 표시
-            if let thumb = thumb {
-                self.photoImageView.image = thumb
-                self.photoZoomScrollView.isHidden = false
-                self.photoPlaceholderButton.isHidden = true
-                self.photoDeleteButton.isHidden = false
-                self.photoPickerButton.isHidden = false
-            }
-
-            // 2) 백그라운드에서 압축 (작은 스피너 표시)
-            let spinner = UIActivityIndicatorView(style: .medium)
-            spinner.color = .white
-            spinner.translatesAutoresizingMaskIntoConstraints = false
-            self.photoContainer.addSubview(spinner)
-            NSLayoutConstraint.activate([
-                spinner.centerXAnchor.constraint(equalTo: self.photoContainer.centerXAnchor),
-                spinner.centerYAnchor.constraint(equalTo: self.photoContainer.centerYAnchor),
-            ])
-            spinner.startAnimating()
-
-            VideoCompressor.compress(asset: asset, timeRange: timeRange) { [weak self] data in
+            VideoCompressor.thumbnail(from: asset) { thumb in
                 spinner.removeFromSuperview()
-                guard let self = self, let data = data else { return }
+                guard let data = data else { return }
 
                 self.videoData = data
+                self.videoThumbnailData = thumb?.jpegData(compressionQuality: 0.8)
+                self.photoData = nil
                 self.updatePhotoArea()
                 self.updateDeleteButtonVisibility()
             }

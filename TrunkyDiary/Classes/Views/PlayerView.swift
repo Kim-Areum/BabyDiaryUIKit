@@ -9,6 +9,7 @@ final class PlayerView: UIView {
 
     private var player: AVPlayer?
     private var loopObserver: Any?
+    private var statusObserver: NSKeyValueObservation?
     private var tempURL: URL?
 
     var isMuted: Bool = true {
@@ -37,12 +38,10 @@ final class PlayerView: UIView {
                 let item = AVPlayerItem(asset: asset)
                 let player = AVPlayer(playerItem: item)
                 player.isMuted = self.isMuted
+                player.automaticallyWaitsToMinimizeStalling = false
                 self.playerLayer.player = player
                 self.playerLayer.videoGravity = .resizeAspectFill
                 self.player = player
-
-                // 준비되면 재생
-                player.automaticallyWaitsToMinimizeStalling = false
 
                 // Loop
                 self.loopObserver = NotificationCenter.default.addObserver(
@@ -54,7 +53,13 @@ final class PlayerView: UIView {
                     player?.play()
                 }
 
-                player.play()
+                // readyToPlay 상태가 되면 재생 시작
+                self.statusObserver = item.observe(\.status, options: [.new]) { [weak self] item, _ in
+                    if item.status == .readyToPlay {
+                        self?.player?.play()
+                        self?.statusObserver = nil
+                    }
+                }
             }
         }
     }
@@ -70,6 +75,8 @@ final class PlayerView: UIView {
     func cleanup() {
         player?.pause()
         playerLayer.player = nil
+        statusObserver?.invalidate()
+        statusObserver = nil
         if let observer = loopObserver {
             NotificationCenter.default.removeObserver(observer)
             loopObserver = nil

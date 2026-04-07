@@ -489,7 +489,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
 
     private func updateDeleteButtonVisibility() {
         let entry = CoreDataStack.shared.fetchEntry(for: date)
-        let hasContent = entry != nil && (!entry!.text.isEmpty || entry!.photoData != nil)
+        let hasContent = entry != nil && (!entry!.text.isEmpty || entry!.photoData != nil || entry!.videoData != nil)
         deleteEntryButton.isHidden = !hasContent
     }
 

@@ -128,11 +128,12 @@ final class VideoTrimViewController: UIViewController {
         playerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(playerView)
 
+        let cardWidth = UIScreen.main.bounds.width * 0.85
         NSLayoutConstraint.activate([
             playerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 56),
-            playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            playerView.heightAnchor.constraint(equalTo: playerView.widthAnchor, multiplier: 9.0 / 16.0),
+            playerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            playerView.widthAnchor.constraint(equalToConstant: cardWidth),
+            playerView.heightAnchor.constraint(equalToConstant: cardWidth * 0.65),
         ])
     }
 

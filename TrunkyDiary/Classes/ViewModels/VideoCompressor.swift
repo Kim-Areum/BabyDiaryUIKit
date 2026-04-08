@@ -85,10 +85,22 @@ final class VideoCompressor {
             generator.appliesPreferredTrackTransform = true
             generator.maximumSize = CGSize(width: 1080, height: 1080)
 
-            let time = CMTime(seconds: 0.5, preferredTimescale: 600)
-            if let cgImage = try? generator.copyCGImage(at: time, actualTime: nil) {
-                let image = UIImage(cgImage: cgImage)
-                DispatchQueue.main.async { completion(image) }
+            let duration = CMTimeGetSeconds(avAsset.duration)
+            // 여러 시점에서 시도, 검은 프레임 건너뛰기
+            let times: [Double] = [0.5, 1.0, 2.0, duration * 0.1, duration * 0.25]
+            for t in times {
+                guard t < duration else { continue }
+                if let cgImage = try? generator.copyCGImage(at: CMTime(seconds: t, preferredTimescale: 600), actualTime: nil) {
+                    let image = UIImage(cgImage: cgImage)
+                    if !isBlackFrame(image) {
+                        DispatchQueue.main.async { completion(image) }
+                        return
+                    }
+                }
+            }
+            // 모두 검은 프레임이면 첫 번째라도 반환
+            if let cgImage = try? generator.copyCGImage(at: .zero, actualTime: nil) {
+                DispatchQueue.main.async { completion(UIImage(cgImage: cgImage)) }
             } else {
                 DispatchQueue.main.async { completion(nil) }
             }
@@ -109,9 +121,16 @@ final class VideoCompressor {
         generator.appliesPreferredTrackTransform = true
         generator.maximumSize = CGSize(width: 1080, height: 1080)
 
-        guard let cgImage = try? generator.copyCGImage(at: CMTime(seconds: 0.5, preferredTimescale: 600), actualTime: nil) else {
-            return nil
+        let duration = CMTimeGetSeconds(asset.duration)
+        let times: [Double] = [0.5, 1.0, 2.0, duration * 0.1, duration * 0.25]
+        for t in times {
+            guard t < duration else { continue }
+            if let cgImage = try? generator.copyCGImage(at: CMTime(seconds: t, preferredTimescale: 600), actualTime: nil) {
+                let image = UIImage(cgImage: cgImage)
+                if !isBlackFrame(image) { return image }
+            }
         }
+        guard let cgImage = try? generator.copyCGImage(at: .zero, actualTime: nil) else { return nil }
         return UIImage(cgImage: cgImage)
     }
 
@@ -142,6 +161,23 @@ final class VideoCompressor {
     }
 
     // MARK: - Duration Check
+
+    /// 이미지가 거의 검은색인지 판단 (평균 밝기 기준)
+    private static func isBlackFrame(_ image: UIImage) -> Bool {
+        guard let cgImage = image.cgImage else { return true }
+        let size = CGSize(width: 1, height: 1)
+        UIGraphicsBeginImageContext(size)
+        UIImage(cgImage: cgImage).draw(in: CGRect(origin: .zero, size: size))
+        let pixel = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        guard let data = pixel?.cgImage?.dataProvider?.data,
+              let ptr = CFDataGetBytePtr(data) else { return true }
+        let r = CGFloat(ptr[0])
+        let g = CGFloat(ptr[1])
+        let b = CGFloat(ptr[2])
+        let brightness = (r + g + b) / (3.0 * 255.0)
+        return brightness < 0.05
+    }
 
     static func duration(of asset: PHAsset) -> TimeInterval {
         asset.duration

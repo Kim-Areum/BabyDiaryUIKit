@@ -24,6 +24,37 @@ final class PlayerView: UIView {
 
     // MARK: - Play
 
+    /// 준비만 (재생 안 함), resumeVideo에서 재생
+    func prepare(data: Data) {
+        let hash = data.hashValue
+        if hash == currentDataHash, player != nil { return }
+
+        cleanup()
+        currentDataHash = hash
+
+        let session = AVAudioSession.sharedInstance()
+        try? session.setCategory(.playback, mode: .default, options: [])
+        try? session.setActive(true)
+
+        let url = VideoCompressor.cachedTempFileURL(from: data)
+        let player = AVPlayer(url: url)
+        player.isMuted = isMuted
+        self.player = player
+        playerLayer.player = player
+        playerLayer.videoGravity = .resizeAspectFill
+
+        loopObserver = NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemDidPlayToEndTime,
+            object: player.currentItem,
+            queue: .main
+        ) { [weak player] _ in
+            player?.seek(to: .zero)
+            player?.play()
+        }
+
+        player.pause()
+    }
+
     func play(data: Data) {
         let hash = data.hashValue
 

@@ -38,7 +38,9 @@ class MonthFeedViewController: UIViewController {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             self?.scrollToSelectedDate()
-            self?.playTopVisibleVideo()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                self?.playTopVisibleVideo()
+            }
         }
     }
 
@@ -55,25 +57,40 @@ class MonthFeedViewController: UIViewController {
 
     private func playTopVisibleVideo() {
         let viewBounds = view.bounds
-        var bestCell: FeedEntryCell?
-        var bestVisibleArea: CGFloat = 0
 
+        // 동영상 셀을 화면 위치 순서로 정렬 (위→아래)
+        var videoCells: [(cell: FeedEntryCell, visibleArea: CGFloat)] = []
         for cell in tableView.visibleCells {
             guard let feedCell = cell as? FeedEntryCell, feedCell.hasVideo else { continue }
-            let cellFrame = cell.convert(cell.bounds, to: view)
-            let intersection = cellFrame.intersection(viewBounds)
-            let visibleArea = intersection.isNull ? 0 : intersection.height
-            if visibleArea > bestVisibleArea {
-                bestVisibleArea = visibleArea
-                bestCell = feedCell
+            let videoFrame = feedCell.videoAreaFrame(in: view)
+            let intersection = videoFrame.intersection(viewBounds)
+            let visibleArea = intersection.isNull ? 0 : intersection.height * intersection.width
+            if visibleArea > 0 {
+                videoCells.append((feedCell, visibleArea))
             }
         }
 
+        // 보이는 영역이 큰 것 우선, 같으면 위에 있는 것 우선
+        videoCells.sort {
+            if $0.visibleArea != $1.visibleArea {
+                return $0.visibleArea > $1.visibleArea
+            }
+            return $0.cell.frame.minY < $1.cell.frame.minY
+        }
+        let bestCell = videoCells.first?.cell
+
+        for (cell, _) in videoCells {
+            if cell === bestCell {
+                cell.resumeVideo()
+            } else {
+                cell.pauseVideo()
+            }
+        }
+
+        // 화면에서 벗어난 셀도 pause
         for cell in tableView.visibleCells {
             guard let feedCell = cell as? FeedEntryCell, feedCell.hasVideo else { continue }
-            if feedCell === bestCell {
-                feedCell.resumeVideo()
-            } else {
+            if !videoCells.contains(where: { $0.cell === feedCell }) {
                 feedCell.pauseVideo()
             }
         }
@@ -505,8 +522,7 @@ private class FeedEntryCell: UITableViewCell {
             }
             videoPlayerView?.isHidden = false
             videoPlayerView?.isMuted = true
-            videoPlayerView?.play(data: videoData)
-            videoPlayerView?.pause() // 준비만, 재생은 playTopVisibleVideo에서
+            videoPlayerView?.prepare(data: videoData) // 준비만, 재생은 playTopVisibleVideo에서
             videoMuteButton.isHidden = false
             videoMuteButton.setImage(UIImage(systemName: "speaker.slash.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 12)), for: .normal)
             innerClip.bringSubviewToFront(videoMuteButton)
@@ -544,12 +560,17 @@ private class FeedEntryCell: UITableViewCell {
 
     var hasVideo: Bool { currentEntry?.hasVideo ?? false }
 
+    func videoAreaFrame(in targetView: UIView) -> CGRect {
+        photoImageView.convert(photoImageView.bounds, to: targetView)
+    }
+
     func pauseVideo() {
         videoPlayerView?.pause()
     }
 
     func resumeVideo() {
-        videoPlayerView?.resume()
+        videoPlayerView?.playerLayer.player?.seek(to: .zero)
+        videoPlayerView?.playerLayer.player?.play()
     }
 
     func muteAndPause() {

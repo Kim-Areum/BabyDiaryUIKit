@@ -1206,9 +1206,28 @@ class MinibookViewController: UIViewController {
 
             let entryPhotoData = entry.photoData ?? entry.videoThumbnailData
             if let data = entryPhotoData, let image = UIImage(data: data) {
-                let photoHeight = (size.width - margin * 2) * 0.65
-                let photoRect = CGRect(x: margin, y: yOffset, width: size.width - margin * 2, height: photoHeight)
-                image.draw(in: photoRect)
+                let photoWidth = size.width - margin * 2
+                let photoHeight = photoWidth * 0.65
+                let photoRect = CGRect(x: margin, y: yOffset, width: photoWidth, height: photoHeight)
+
+                // aspectFill로 그리기 (찌그러짐 방지)
+                let imgSize = image.size
+                let widthRatio = photoWidth / imgSize.width
+                let heightRatio = photoHeight / imgSize.height
+                let fillScale = max(widthRatio, heightRatio)
+                let drawW = imgSize.width * fillScale
+                let drawH = imgSize.height * fillScale
+                let drawRect = CGRect(
+                    x: margin + (photoWidth - drawW) / 2,
+                    y: yOffset + (photoHeight - drawH) / 2,
+                    width: drawW,
+                    height: drawH
+                )
+                context.saveGState()
+                context.clip(to: photoRect)
+                image.draw(in: drawRect)
+                context.restoreGState()
+
                 yOffset += photoHeight + 10 * scale
             }
 
@@ -1410,9 +1429,23 @@ class MinibookViewController: UIViewController {
 
                 let entryPhotoData = entry.photoData ?? entry.videoThumbnailData
                 if let data = entryPhotoData, let image = UIImage(data: data) {
-                    let photoHeight = (size.width - margin * 2) * 0.65
-                    let photoRect = CGRect(x: margin, y: yOffset, width: size.width - margin * 2, height: photoHeight)
-                    image.draw(in: photoRect)
+                    let photoWidth = size.width - margin * 2
+                    let photoHeight = photoWidth * 0.65
+                    let photoRect = CGRect(x: margin, y: yOffset, width: photoWidth, height: photoHeight)
+
+                    // aspectFill
+                    let imgSize = image.size
+                    let wR = photoWidth / imgSize.width
+                    let hR = photoHeight / imgSize.height
+                    let s = max(wR, hR)
+                    let dW = imgSize.width * s
+                    let dH = imgSize.height * s
+                    let drawRect = CGRect(x: margin + (photoWidth - dW) / 2, y: yOffset + (photoHeight - dH) / 2, width: dW, height: dH)
+                    context.saveGState()
+                    context.clip(to: photoRect)
+                    image.draw(in: drawRect)
+                    context.restoreGState()
+
                     yOffset += photoHeight + 10
                 }
 

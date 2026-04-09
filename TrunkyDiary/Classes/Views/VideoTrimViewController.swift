@@ -198,31 +198,35 @@ final class VideoTrimViewController: UIViewController {
             ])
         }
 
-        playheadView.backgroundColor = .clear
-        playheadView.isUserInteractionEnabled = true
+        playheadView.backgroundColor = .white
+        playheadView.layer.cornerRadius = 1
+        playheadView.layer.shadowColor = UIColor.black.cgColor
+        playheadView.layer.shadowOpacity = 0.3
+        playheadView.layer.shadowRadius = 1
+        playheadView.isUserInteractionEnabled = false
         view.addSubview(playheadView)
 
-        // 실제 흰색 바 (중앙, 굵은 선)
-        let playheadLine = UIView()
-        playheadLine.backgroundColor = .white
-        playheadLine.layer.cornerRadius = 2
-        playheadLine.layer.shadowColor = UIColor.black.cgColor
-        playheadLine.layer.shadowOpacity = 0.4
-        playheadLine.layer.shadowRadius = 2
-        playheadLine.translatesAutoresizingMaskIntoConstraints = false
-        playheadView.addSubview(playheadLine)
+        // 스크럽 영역 (스트립 위아래 20pt 확장, pan/tap으로 플레이헤드 이동)
+        let scrubArea = UIView()
+        scrubArea.backgroundColor = .clear
+        scrubArea.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrubArea)
         NSLayoutConstraint.activate([
-            playheadLine.centerXAnchor.constraint(equalTo: playheadView.centerXAnchor),
-            playheadLine.topAnchor.constraint(equalTo: playheadView.topAnchor),
-            playheadLine.bottomAnchor.constraint(equalTo: playheadView.bottomAnchor),
-            playheadLine.widthAnchor.constraint(equalToConstant: 4),
+            scrubArea.leadingAnchor.constraint(equalTo: thumbnailStrip.leadingAnchor),
+            scrubArea.trailingAnchor.constraint(equalTo: thumbnailStrip.trailingAnchor),
+            scrubArea.topAnchor.constraint(equalTo: thumbnailStrip.topAnchor, constant: -20),
+            scrubArea.bottomAnchor.constraint(equalTo: thumbnailStrip.bottomAnchor, constant: 20),
         ])
 
-        let playheadPan = UIPanGestureRecognizer(target: self, action: #selector(playheadDragged(_:)))
-        playheadView.addGestureRecognizer(playheadPan)
+        // 핸들이 스크럽 영역보다 위에
+        view.bringSubviewToFront(leftHandle)
+        view.bringSubviewToFront(rightHandle)
 
-        let stripTap = UITapGestureRecognizer(target: self, action: #selector(stripTapped(_:)))
-        thumbnailStrip.addGestureRecognizer(stripTap)
+        let scrubPan = UIPanGestureRecognizer(target: self, action: #selector(scrubPanned(_:)))
+        scrubArea.addGestureRecognizer(scrubPan)
+
+        let scrubTap = UITapGestureRecognizer(target: self, action: #selector(scrubTapped(_:)))
+        scrubArea.addGestureRecognizer(scrubTap)
     }
 
     private let muteButton = UIButton(type: .system)
@@ -377,17 +381,17 @@ final class VideoTrimViewController: UIViewController {
         let currentTime = CMTimeGetSeconds(player?.currentTime() ?? .zero)
         let playheadTime = (currentTime >= trimStart && currentTime <= trimEnd) ? currentTime : trimStart
         playheadView.frame = CGRect(
-            x: xForTime(playheadTime) - 22,
-            y: thumbnailStrip.frame.minY - 8,
-            width: 44,
-            height: stripHeight + 16
+            x: xForTime(playheadTime) - 1,
+            y: thumbnailStrip.frame.minY - 6,
+            width: 2,
+            height: stripHeight + 12
         )
 
         updateDurationLabel()
     }
 
     private func updatePlayhead(currentTime: TimeInterval) {
-        playheadView.frame.origin.x = xForTime(currentTime) - 22
+        playheadView.frame.origin.x = xForTime(currentTime) - 1
     }
 
     private func updateDurationLabel() {
@@ -397,22 +401,18 @@ final class VideoTrimViewController: UIViewController {
         durationLabel.text = String(format: "%d:%02d", mins, secs)
     }
 
-    // MARK: - Playhead Drag & Strip Tap
+    // MARK: - Scrub (위치 기반, 하루앱 방식)
 
-    @objc private func playheadDragged(_ g: UIPanGestureRecognizer) {
+    @objc private func scrubPanned(_ g: UIPanGestureRecognizer) {
         if isPlaying { player?.pause(); isPlaying = false; updatePlayButtonIcon() }
 
-        let delta = Double(g.translation(in: view).x / stripW) * duration
-        let current = CMTimeGetSeconds(player?.currentTime() ?? .zero)
-        var newTime = current + delta
-        newTime = max(trimStart, min(newTime, trimEnd))
-
-        player?.seek(to: CMTime(seconds: newTime, preferredTimescale: 600))
-        updatePlayhead(currentTime: newTime)
-        g.setTranslation(.zero, in: view)
+        let x = g.location(in: thumbnailStrip).x
+        let time = max(trimStart, min(Double(x / stripW) * duration, trimEnd))
+        player?.seek(to: CMTime(seconds: time, preferredTimescale: 600))
+        updatePlayhead(currentTime: time)
     }
 
-    @objc private func stripTapped(_ g: UITapGestureRecognizer) {
+    @objc private func scrubTapped(_ g: UITapGestureRecognizer) {
         if isPlaying { player?.pause(); isPlaying = false; updatePlayButtonIcon() }
 
         let x = g.location(in: thumbnailStrip).x

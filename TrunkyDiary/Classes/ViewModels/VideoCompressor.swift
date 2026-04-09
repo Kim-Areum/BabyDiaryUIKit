@@ -84,21 +84,9 @@ final class VideoCompressor {
             let generator = AVAssetImageGenerator(asset: avAsset)
             generator.appliesPreferredTrackTransform = true
             generator.maximumSize = CGSize(width: 1080, height: 1080)
+            generator.requestedTimeToleranceBefore = .zero
+            generator.requestedTimeToleranceAfter = .zero
 
-            let duration = CMTimeGetSeconds(avAsset.duration)
-            // 여러 시점에서 시도, 검은 프레임 건너뛰기
-            let times: [Double] = [0.5, 1.0, 2.0, duration * 0.1, duration * 0.25]
-            for t in times {
-                guard t < duration else { continue }
-                if let cgImage = try? generator.copyCGImage(at: CMTime(seconds: t, preferredTimescale: 600), actualTime: nil) {
-                    let image = UIImage(cgImage: cgImage)
-                    if !isBlackFrame(image) {
-                        DispatchQueue.main.async { completion(image) }
-                        return
-                    }
-                }
-            }
-            // 모두 검은 프레임이면 첫 번째라도 반환
             if let cgImage = try? generator.copyCGImage(at: .zero, actualTime: nil) {
                 DispatchQueue.main.async { completion(UIImage(cgImage: cgImage)) }
             } else {
@@ -120,16 +108,9 @@ final class VideoCompressor {
         let generator = AVAssetImageGenerator(asset: asset)
         generator.appliesPreferredTrackTransform = true
         generator.maximumSize = CGSize(width: 1080, height: 1080)
+        generator.requestedTimeToleranceBefore = .zero
+        generator.requestedTimeToleranceAfter = .zero
 
-        let duration = CMTimeGetSeconds(asset.duration)
-        let times: [Double] = [0.5, 1.0, 2.0, duration * 0.1, duration * 0.25]
-        for t in times {
-            guard t < duration else { continue }
-            if let cgImage = try? generator.copyCGImage(at: CMTime(seconds: t, preferredTimescale: 600), actualTime: nil) {
-                let image = UIImage(cgImage: cgImage)
-                if !isBlackFrame(image) { return image }
-            }
-        }
         guard let cgImage = try? generator.copyCGImage(at: .zero, actualTime: nil) else { return nil }
         return UIImage(cgImage: cgImage)
     }

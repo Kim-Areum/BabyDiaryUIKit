@@ -199,7 +199,7 @@ final class VideoTrimViewController: UIViewController {
         }
 
         playheadView.backgroundColor = .white
-        playheadView.layer.cornerRadius = 1
+        playheadView.layer.cornerRadius = 2
         playheadView.layer.shadowColor = UIColor.black.cgColor
         playheadView.layer.shadowOpacity = 0.3
         playheadView.layer.shadowRadius = 1
@@ -381,9 +381,9 @@ final class VideoTrimViewController: UIViewController {
         let currentTime = CMTimeGetSeconds(player?.currentTime() ?? .zero)
         let playheadTime = (currentTime >= trimStart && currentTime <= trimEnd) ? currentTime : trimStart
         playheadView.frame = CGRect(
-            x: xForTime(playheadTime) - 1,
+            x: xForTime(playheadTime) - 2,
             y: thumbnailStrip.frame.minY - 6,
-            width: 2,
+            width: 4,
             height: stripHeight + 12
         )
 
@@ -391,7 +391,7 @@ final class VideoTrimViewController: UIViewController {
     }
 
     private func updatePlayhead(currentTime: TimeInterval) {
-        playheadView.frame.origin.x = xForTime(currentTime) - 1
+        playheadView.frame.origin.x = xForTime(currentTime) - 2
     }
 
     private func updateDurationLabel() {

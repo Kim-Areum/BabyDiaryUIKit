@@ -1021,13 +1021,21 @@ class MinibookViewController: UIViewController {
         let babyName = baby?.name ?? "아기"
         let allPages = pages
 
-        // 미리보기와 동일한 크기로 렌더링 → 고해상도 비트맵 → PDF
+        // B7 인쇄 규격 (mm → pt 변환: 1mm = 72/25.4 pt)
+        let mmToPt: CGFloat = 72.0 / 25.4
+        let bleed: CGFloat = 5 // 재단 여백 5mm
+        let finishW: CGFloat = 94  // 완성 사이즈 mm
+        let finishH: CGFloat = 128
+        let workW = (finishW + bleed * 2) * mmToPt  // 104mm
+        let workH = (finishH + bleed * 2) * mmToPt  // 138mm
+        let bleedPt = bleed * mmToPt
+        let contentRect = CGRect(x: bleedPt, y: bleedPt, width: finishW * mmToPt, height: finishH * mmToPt)
+        let pageRect = CGRect(x: 0, y: 0, width: workW, height: workH)
+
+        // 미리보기 렌더링 크기 (완성 사이즈 비율)
         let renderW = UIScreen.main.bounds.width * 0.8
-        let renderH = renderW * 128.0 / 94.0
+        let renderH = renderW * finishH / finishW
         let renderSize = CGSize(width: renderW, height: renderH)
-        let pdfW: CGFloat = 94 * 4
-        let pdfH: CGFloat = 128 * 4
-        let pageRect = CGRect(x: 0, y: 0, width: pdfW, height: pdfH)
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
@@ -1036,9 +1044,12 @@ class MinibookViewController: UIViewController {
             let data = renderer.pdfData { context in
                 for page in allPages {
                     context.beginPage()
-                    // 미리보기 크기로 4x 해상도 렌더링 (레이아웃 완벽 일치)
+                    // 배경색으로 전체 채우기 (재단 영역 포함)
+                    UIColor(red: 255/255, green: 251/255, blue: 240/255, alpha: 1).setFill()
+                    UIRectFill(pageRect)
+                    // 미리보기를 완성 사이즈 영역에 그리기 (재단 여백 안쪽)
                     if let image = self.renderPageToImage(page: page, size: renderSize, renderScale: 4.0) {
-                        image.draw(in: pageRect)
+                        image.draw(in: contentRect)
                     }
                 }
             }

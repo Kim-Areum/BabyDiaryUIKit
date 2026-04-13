@@ -1044,12 +1044,45 @@ class MinibookViewController: UIViewController {
             let data = renderer.pdfData { context in
                 for page in allPages {
                     context.beginPage()
+                    let cgContext = context.cgContext
+
                     // 재단 영역 포함 전체 배경색 채우기
-                    context.cgContext.setFillColor(DS.bgBase.cgColor)
-                    context.cgContext.fill(pageRect)
-                    // 콘텐츠는 완성 사이즈 영역에 그리기
-                    if let image = self.renderPageToImage(page: page, size: renderSize, renderScale: 4.0) {
-                        image.draw(in: contentRect)
+                    cgContext.setFillColor(DS.bgBase.cgColor)
+                    cgContext.fill(pageRect)
+
+                    switch page {
+                    case .cover:
+                        // 커버: 사진은 재단 영역까지, 제목은 완성 영역 안
+                        if let data = self.coverPhotoData, let photo = UIImage(data: data) {
+                            Self.drawFill(photo, in: pageRect)
+                            // 하단 그라디언트
+                            let gradColors = [UIColor.clear.cgColor, UIColor(hex: "FFFBF0").withAlphaComponent(0.6).cgColor]
+                            let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: gradColors as CFArray, locations: [0.0, 1.0])!
+                            cgContext.drawLinearGradient(gradient, start: CGPoint(x: 0, y: pageRect.height * 0.5), end: CGPoint(x: 0, y: pageRect.height), options: [])
+                        } else {
+                            cgContext.setFillColor(DS.bgSubtle.cgColor)
+                            cgContext.fill(pageRect)
+                        }
+                        // 제목은 완성 영역 기준
+                        let baby = CoreDataStack.shared.fetchBaby()
+                        let title = "\(baby?.name ?? "")의 일기"
+                        let scale = contentRect.width / renderSize.width
+                        let titleAttrs: [NSAttributedString.Key: Any] = [
+                            .font: DS.font(16 * scale),
+                            .foregroundColor: DS.fgStrong,
+                        ]
+                        let titleSize = (title as NSString).size(withAttributes: titleAttrs)
+                        let titlePoint = CGPoint(
+                            x: contentRect.midX - titleSize.width / 2,
+                            y: contentRect.maxY - 30 * scale
+                        )
+                        (title as NSString).draw(at: titlePoint, withAttributes: titleAttrs)
+
+                    default:
+                        // 나머지 페이지는 콘텐츠 영역에 그리기
+                        if let image = self.renderPageToImage(page: page, size: renderSize, renderScale: 4.0) {
+                            image.draw(in: contentRect)
+                        }
                     }
                 }
             }
@@ -1058,14 +1091,128 @@ class MinibookViewController: UIViewController {
             let url = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
             try? data.write(to: url)
 
+            // 소프트커버 PDF (앞표지 + 책등 + 뒤표지 펼침)
+            let coverURL = self.exportSoftCoverPDF(babyName: babyName, contentRect: contentRect)
+
             DispatchQueue.main.async {
                 self.isExporting = false
                 self.hideExportOverlay()
 
-                let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                var items: [Any] = [url]
+                if let coverURL = coverURL { items.append(coverURL) }
+                let activityVC = UIActivityViewController(activityItems: items, applicationActivities: nil)
                 self.present(activityVC, animated: true)
             }
         }
+    }
+
+    // MARK: - Soft Cover PDF (펼침)
+
+    private func exportSoftCoverPDF(babyName: String, contentRect: CGRect) -> URL? {
+        let mmToPt: CGFloat = 72.0 / 25.4
+        let bleed: CGFloat = 5 // mm
+        let finishW: CGFloat = 94 // mm
+        let finishH: CGFloat = 128 // mm
+        let spine: CGFloat = 3.7 // 책등 mm (가이드 기준)
+        let bleedPt = bleed * mmToPt
+
+        // 펼침 사이즈: (뒤표지 + 재단) + 책등 + (앞표지 + 재단)
+        let totalW = (finishW + bleed) * mmToPt + spine * mmToPt + (finishW + bleed) * mmToPt
+        let totalH = (finishH + bleed * 2) * mmToPt
+        let pageRect = CGRect(x: 0, y: 0, width: totalW, height: totalH)
+
+        // 앞표지 영역 (오른쪽)
+        let frontX = (finishW + bleed) * mmToPt + spine * mmToPt
+        let frontRect = CGRect(x: frontX, y: 0, width: (finishW + bleed) * mmToPt, height: totalH)
+        // 앞표지 완성 영역 (재단 안쪽)
+        let frontContentRect = CGRect(x: frontX + bleedPt, y: bleedPt, width: finishW * mmToPt - bleedPt, height: finishH * mmToPt)
+
+        // 뒤표지 영역 (왼쪽)
+        let backRect = CGRect(x: 0, y: 0, width: (finishW + bleed) * mmToPt, height: totalH)
+        let backContentRect = CGRect(x: bleedPt, y: bleedPt, width: finishW * mmToPt - bleedPt, height: finishH * mmToPt)
+
+        // 책등 영역
+        let spineRect = CGRect(x: (finishW + bleed) * mmToPt, y: 0, width: spine * mmToPt, height: totalH)
+
+        let renderer = UIGraphicsPDFRenderer(bounds: pageRect)
+        let data = renderer.pdfData { context in
+            context.beginPage()
+            let cgContext = context.cgContext
+
+            // 전체 배경색
+            cgContext.setFillColor(DS.bgBase.cgColor)
+            cgContext.fill(pageRect)
+
+            // 앞표지 — 커버 사진 + 제목
+            if let data = coverPhotoData, let photo = UIImage(data: data) {
+                Self.drawFill(photo, in: frontRect)
+
+                // 하단 그라디언트
+                cgContext.saveGState()
+                cgContext.clip(to: frontRect)
+                let gradColors = [UIColor.clear.cgColor, UIColor(hex: "FFFBF0").withAlphaComponent(0.6).cgColor]
+                let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: gradColors as CFArray, locations: [0.0, 1.0])!
+                cgContext.drawLinearGradient(gradient, start: CGPoint(x: 0, y: frontRect.height * 0.5), end: CGPoint(x: 0, y: frontRect.height), options: [])
+                cgContext.restoreGState()
+            }
+
+            // 앞표지 제목 (완성 영역 기준)
+            let baby = CoreDataStack.shared.fetchBaby()
+            let title = "\(baby?.name ?? "")의 일기"
+            let scale = frontContentRect.width / (UIScreen.main.bounds.width * 0.8)
+            let titleAttrs: [NSAttributedString.Key: Any] = [
+                .font: DS.font(16 * scale),
+                .foregroundColor: DS.fgStrong,
+            ]
+            let titleSize = (title as NSString).size(withAttributes: titleAttrs)
+            let titlePoint = CGPoint(
+                x: frontContentRect.midX - titleSize.width / 2,
+                y: frontContentRect.maxY - 30 * scale
+            )
+            (title as NSString).draw(at: titlePoint, withAttributes: titleAttrs)
+
+            // 뒤표지 — 아기 사진 + 이름
+            if let photoData = baby?.photoData, let photo = UIImage(data: photoData) {
+                let photoSize: CGFloat = 60 * scale
+                let photoRect = CGRect(
+                    x: backContentRect.midX - photoSize / 2,
+                    y: backContentRect.midY - photoSize / 2 - 10 * scale,
+                    width: photoSize, height: photoSize
+                )
+                cgContext.saveGState()
+                let circlePath = UIBezierPath(roundedRect: photoRect, cornerRadius: photoSize / 2)
+                circlePath.addClip()
+                photo.draw(in: photoRect)
+                cgContext.restoreGState()
+            }
+            let backTitleAttrs: [NSAttributedString.Key: Any] = [
+                .font: DS.font(13 * scale),
+                .foregroundColor: DS.fgMuted,
+            ]
+            let backTitle = "\(baby?.name ?? "")의 일기"
+            let backTitleSize = (backTitle as NSString).size(withAttributes: backTitleAttrs)
+            (backTitle as NSString).draw(
+                at: CGPoint(x: backContentRect.midX - backTitleSize.width / 2, y: backContentRect.midY + 30 * scale),
+                withAttributes: backTitleAttrs
+            )
+
+            // 책등 — 세로 텍스트
+            let spineAttrs: [NSAttributedString.Key: Any] = [
+                .font: DS.font(7 * scale),
+                .foregroundColor: DS.fgMuted,
+            ]
+            let spineText = "\(baby?.name ?? "")의 일기"
+            let spineSize = (spineText as NSString).size(withAttributes: spineAttrs)
+            cgContext.saveGState()
+            cgContext.translateBy(x: spineRect.midX + spineSize.height / 2, y: spineRect.midY - spineSize.width / 2)
+            cgContext.rotate(by: .pi / 2)
+            (spineText as NSString).draw(at: .zero, withAttributes: spineAttrs)
+            cgContext.restoreGState()
+        }
+
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("\(babyName)의 일기_표지.pdf")
+        try? data.write(to: url)
+        return url
     }
 
     /// PDF 컨텍스트에 직접 벡터로 그리기 (텍스트/뱃지 선명)
@@ -1509,6 +1656,24 @@ class MinibookViewController: UIViewController {
                 }
             }
         }
+    }
+
+    /// PDF 컨텍스트에서 aspectFill로 이미지 그리기 (하루앱 방식)
+    private static func drawFill(_ image: UIImage, in rect: CGRect) {
+        let imgA = image.size.width / image.size.height
+        let rectA = rect.width / rect.height
+        let drawRect: CGRect
+        if imgA > rectA {
+            let h = rect.height; let w = h * imgA
+            drawRect = CGRect(x: rect.minX + (rect.width - w) / 2, y: rect.minY, width: w, height: h)
+        } else {
+            let w = rect.width; let h = w / imgA
+            drawRect = CGRect(x: rect.minX, y: rect.minY + (rect.height - h) / 2, width: w, height: h)
+        }
+        UIGraphicsGetCurrentContext()?.saveGState()
+        UIBezierPath(rect: rect).addClip()
+        image.draw(in: drawRect)
+        UIGraphicsGetCurrentContext()?.restoreGState()
     }
 
     private static func aspectFillImage(_ image: UIImage, targetSize: CGSize) -> UIImage {

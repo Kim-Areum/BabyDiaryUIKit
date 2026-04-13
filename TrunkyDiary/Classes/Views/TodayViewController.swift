@@ -5,7 +5,7 @@ class TodayViewController: UIViewController {
 
     // MARK: - Properties
 
-    private let selectedDate = Date()
+    private var selectedDate = Date()
     private var baby: CDBaby? { CoreDataStack.shared.fetchBaby() }
     private var selectedEntry: CDDiaryEntry? { CoreDataStack.shared.fetchEntry(for: selectedDate) }
 
@@ -83,6 +83,7 @@ class TodayViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        selectedDate = Date() // 항상 오늘 날짜로 갱신
         reloadData()
         startElephantAnimation()
     }

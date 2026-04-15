@@ -148,7 +148,231 @@ class MonthFeedViewController: UIViewController {
         }
     }
 
+    private var lastPopupEntry: CDDiaryEntry?
+
+    // MARK: - Correction
+
+    private let speechManagerForCorrection = SpeechManager()
+
+    private func showCorrectionResultPopup(original: String, corrected: String, entry: CDDiaryEntry) {
+        guard let window = view.window else { return }
+
+        let overlay = UIView(frame: window.bounds)
+        overlay.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        overlay.alpha = 0
+        window.addSubview(overlay)
+
+        let popup = UIView()
+        popup.backgroundColor = DS.bgBase
+        popup.layer.cornerRadius = 16
+        popup.translatesAutoresizingMaskIntoConstraints = false
+        overlay.addSubview(popup)
+
+        let titleLabel = UILabel()
+        titleLabel.text = "문장 교정 결과"
+        titleLabel.font = DS.font(16)
+        titleLabel.textColor = DS.fgStrong
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        popup.addSubview(titleLabel)
+
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        popup.addSubview(scrollView)
+
+        let contentStack = UIStackView()
+        contentStack.axis = .vertical
+        contentStack.spacing = 16
+        contentStack.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(contentStack)
+
+        // 원본 텍스트
+        let origHeader = UILabel()
+        origHeader.text = "원본"
+        origHeader.font = DS.font(12)
+        origHeader.textColor = DS.fgMuted
+        contentStack.addArrangedSubview(origHeader)
+
+        let origLabel = UILabel()
+        origLabel.numberOfLines = 0
+        origLabel.attributedText = buildDiffAttributedString(original: original, corrected: corrected, showOriginal: true)
+        contentStack.addArrangedSubview(origLabel)
+
+        let divider = UIView()
+        divider.backgroundColor = DS.fgPale.withAlphaComponent(0.3)
+        divider.translatesAutoresizingMaskIntoConstraints = false
+        contentStack.addArrangedSubview(divider)
+
+        // 교정 텍스트
+        let corrHeader = UILabel()
+        corrHeader.text = "교정"
+        corrHeader.font = DS.font(12)
+        corrHeader.textColor = DS.fgMuted
+        contentStack.addArrangedSubview(corrHeader)
+
+        let corrLabel = UILabel()
+        corrLabel.numberOfLines = 0
+        corrLabel.attributedText = buildDiffAttributedString(original: original, corrected: corrected, showOriginal: false)
+        contentStack.addArrangedSubview(corrLabel)
+
+        // 버튼 영역
+        let buttonStack = UIStackView()
+        buttonStack.axis = .horizontal
+        buttonStack.spacing = 12
+        buttonStack.distribution = .fillEqually
+        buttonStack.translatesAutoresizingMaskIntoConstraints = false
+        popup.addSubview(buttonStack)
+
+        let cancelBtn = UIButton(type: .system)
+        cancelBtn.setTitle("취소", for: .normal)
+        cancelBtn.titleLabel?.font = DS.font(14)
+        cancelBtn.setTitleColor(DS.fgMuted, for: .normal)
+        cancelBtn.backgroundColor = DS.bgSubtle
+        cancelBtn.layer.cornerRadius = 10
+        buttonStack.addArrangedSubview(cancelBtn)
+
+        let applyBtn = UIButton(type: .system)
+        applyBtn.setTitle("적용", for: .normal)
+        applyBtn.titleLabel?.font = DS.font(14)
+        applyBtn.setTitleColor(.white, for: .normal)
+        applyBtn.backgroundColor = DS.accent
+        applyBtn.layer.cornerRadius = 10
+        buttonStack.addArrangedSubview(applyBtn)
+
+        NSLayoutConstraint.activate([
+            popup.centerXAnchor.constraint(equalTo: overlay.centerXAnchor),
+            popup.centerYAnchor.constraint(equalTo: overlay.centerYAnchor),
+            popup.widthAnchor.constraint(equalTo: overlay.widthAnchor, multiplier: 0.85),
+            popup.heightAnchor.constraint(lessThanOrEqualTo: overlay.heightAnchor, multiplier: 0.6),
+
+            titleLabel.topAnchor.constraint(equalTo: popup.topAnchor, constant: 20),
+            titleLabel.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 20),
+            titleLabel.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: -20),
+
+            scrollView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
+            scrollView.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 20),
+            scrollView.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: -20),
+            scrollView.bottomAnchor.constraint(equalTo: buttonStack.topAnchor, constant: -16),
+
+            contentStack.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentStack.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentStack.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentStack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentStack.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+
+            divider.heightAnchor.constraint(equalToConstant: 1),
+
+            buttonStack.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 20),
+            buttonStack.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: -20),
+            buttonStack.bottomAnchor.constraint(equalTo: popup.bottomAnchor, constant: -20),
+            buttonStack.heightAnchor.constraint(equalToConstant: 44),
+        ])
+
+        // Actions
+        cancelBtn.addAction(UIAction { _ in
+            UIView.animate(withDuration: 0.2) { overlay.alpha = 0 } completion: { _ in overlay.removeFromSuperview() }
+        }, for: .touchUpInside)
+
+        applyBtn.addAction(UIAction { [weak self] _ in
+            entry.text = corrected
+            CoreDataStack.shared.save()
+            self?.reloadAllEntries()
+            UIView.animate(withDuration: 0.2) { overlay.alpha = 0 } completion: { _ in overlay.removeFromSuperview() }
+        }, for: .touchUpInside)
+
+        UIView.animate(withDuration: 0.25) { overlay.alpha = 1 }
+    }
+
+    /// 단어 단위 diff를 NSAttributedString으로 생성
+    private func buildDiffAttributedString(original: String, corrected: String, showOriginal: Bool) -> NSAttributedString {
+        let origWords = original.components(separatedBy: " ")
+        let corrWords = corrected.components(separatedBy: " ")
+        let result = NSMutableAttributedString()
+
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 4
+
+        if showOriginal {
+            // 원본: 변경/삭제된 단어에 빨간 취소선
+            let lcs = longestCommonSubsequence(origWords, corrWords)
+            var lcsIdx = 0
+            for word in origWords {
+                let isKept = lcsIdx < lcs.count && word == lcs[lcsIdx]
+                if isKept {
+                    lcsIdx += 1
+                    let attrs: [NSAttributedString.Key: Any] = [
+                        .font: DS.font(14), .foregroundColor: DS.fgStrong, .paragraphStyle: paragraphStyle
+                    ]
+                    result.append(NSAttributedString(string: word + " ", attributes: attrs))
+                } else {
+                    let attrs: [NSAttributedString.Key: Any] = [
+                        .font: DS.font(14),
+                        .foregroundColor: UIColor.systemRed.withAlphaComponent(0.7),
+                        .strikethroughStyle: NSUnderlineStyle.single.rawValue,
+                        .strikethroughColor: UIColor.systemRed.withAlphaComponent(0.7),
+                        .paragraphStyle: paragraphStyle
+                    ]
+                    result.append(NSAttributedString(string: word + " ", attributes: attrs))
+                }
+            }
+        } else {
+            // 교정: 새로 추가/변경된 단어를 accent 색으로 표시
+            let lcs = longestCommonSubsequence(origWords, corrWords)
+            var lcsIdx = 0
+            for word in corrWords {
+                let isKept = lcsIdx < lcs.count && word == lcs[lcsIdx]
+                if isKept {
+                    lcsIdx += 1
+                    let attrs: [NSAttributedString.Key: Any] = [
+                        .font: DS.font(14), .foregroundColor: DS.fgStrong, .paragraphStyle: paragraphStyle
+                    ]
+                    result.append(NSAttributedString(string: word + " ", attributes: attrs))
+                } else {
+                    let attrs: [NSAttributedString.Key: Any] = [
+                        .font: DS.font(14),
+                        .foregroundColor: DS.accent,
+                        .backgroundColor: DS.accent.withAlphaComponent(0.1),
+                        .paragraphStyle: paragraphStyle
+                    ]
+                    result.append(NSAttributedString(string: word + " ", attributes: attrs))
+                }
+            }
+        }
+
+        return result
+    }
+
+    /// 단어 배열의 최장 공통 부분 수열 (LCS)
+    private func longestCommonSubsequence(_ a: [String], _ b: [String]) -> [String] {
+        let m = a.count, n = b.count
+        guard m > 0, n > 0 else { return [] }
+        var dp = Array(repeating: Array(repeating: 0, count: n + 1), count: m + 1)
+        for i in 1...m {
+            for j in 1...n {
+                if a[i - 1] == b[j - 1] {
+                    dp[i][j] = dp[i - 1][j - 1] + 1
+                } else {
+                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+                }
+            }
+        }
+        var result: [String] = []
+        var i = m, j = n
+        while i > 0 && j > 0 {
+            if a[i - 1] == b[j - 1] {
+                result.append(a[i - 1])
+                i -= 1; j -= 1
+            } else if dp[i - 1][j] > dp[i][j - 1] {
+                i -= 1
+            } else {
+                j -= 1
+            }
+        }
+        return result.reversed()
+    }
+
     private func showPlaybackPopup(entry: CDDiaryEntry) {
+        lastPopupEntry = entry
         guard let window = view.window else { return }
         let popup = PlaybackPopupView(fileNames: entry.audioFileNamesArray, timestamps: entry.audioTimestampsArray)
         popup.delegate = self
@@ -160,6 +384,27 @@ class MonthFeedViewController: UIViewController {
 
 extension MonthFeedViewController: PlaybackPopupDelegate {
     func playbackPopupDidDelete(at index: Int) {
+        // 현재 재생 중인 엔트리 찾기 — 가장 최근에 팝업을 연 엔트리
+        guard let entry = lastPopupEntry else {
+            reloadAllEntries()
+            return
+        }
+
+        var names = entry.audioFileNamesArray
+        var stamps = entry.audioTimestampsArray
+
+        if index < names.count {
+            let fileName = names[index]
+            let url = SpeechManager.recordingsDirectory().appendingPathComponent(fileName)
+            try? FileManager.default.removeItem(at: url)
+            names.remove(at: index)
+        }
+        if index < stamps.count {
+            stamps.remove(at: index)
+        }
+        entry.audioFileNamesArray = names
+        entry.audioTimestampsArray = stamps
+        CoreDataStack.shared.save()
         reloadAllEntries()
     }
 
@@ -184,6 +429,19 @@ extension MonthFeedViewController: UITableViewDataSource {
         cell.configure(entry: entry, baby: baby)
         cell.onAudioTapped = { [weak self] entry in
             self?.showPlaybackPopup(entry: entry)
+        }
+        cell.onCorrectTapped = { [weak self] entry in
+            guard let self else { return }
+            cell.correctionState = .processing
+            self.speechManagerForCorrection.correctTextAsync(entry.text) { corrected in
+                cell.correctedText = corrected
+                cell.originalText = entry.text
+                cell.correctionState = .done
+            }
+        }
+        cell.onCorrectionResultTapped = { [weak self] original, corrected in
+            guard let self else { return }
+            self.showCorrectionResultPopup(original: original, corrected: corrected, entry: entry)
         }
         return cell
     }
@@ -256,8 +514,19 @@ private class FeedEntryCell: UITableViewCell {
     private let dayCountLabel = UILabel()
     private let bodyTextLabel = UILabel()
     private let audioButton = UIButton(type: .system)
+    private let correctButton = UIButton(type: .system)
+    private let correctSpinner = UIActivityIndicatorView(style: .medium)
     var onAudioTapped: ((CDDiaryEntry) -> Void)?
+    var onCorrectTapped: ((CDDiaryEntry) -> Void)?
+    var onCorrectionResultTapped: ((String, String) -> Void)?
     private var currentEntry: CDDiaryEntry?
+    var originalText: String?
+    var correctedText: String?
+
+    enum CorrectionState { case idle, processing, done }
+    var correctionState: CorrectionState = .idle {
+        didSet { updateCorrectButton() }
+    }
 
     private var photoHeightConstraint: NSLayoutConstraint?
     private var bodyTopToPhoto: NSLayoutConstraint?
@@ -343,6 +612,20 @@ private class FeedEntryCell: UITableViewCell {
         audioButton.translatesAutoresizingMaskIntoConstraints = false
         bodyView.addSubview(audioButton)
 
+        correctButton.setTitle("문장 교정", for: .normal)
+        correctButton.titleLabel?.font = DS.font(11)
+        correctButton.setTitleColor(DS.fgPale, for: .normal)
+        correctButton.isHidden = true
+        correctButton.addTarget(self, action: #selector(correctTapped), for: .touchUpInside)
+        correctButton.translatesAutoresizingMaskIntoConstraints = false
+        bodyView.addSubview(correctButton)
+
+        correctSpinner.color = DS.fgPale
+        correctSpinner.hidesWhenStopped = true
+        correctSpinner.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+        correctSpinner.translatesAutoresizingMaskIntoConstraints = false
+        bodyView.addSubview(correctSpinner)
+
         photoHeightConstraint = photoImageView.heightAnchor.constraint(equalToConstant: cardWidth * 0.65)
         bodyTopToPhoto = bodyView.topAnchor.constraint(equalTo: photoImageView.bottomAnchor, constant: 10)
         bodyTopToCard = bodyView.topAnchor.constraint(equalTo: innerClip.topAnchor, constant: 14)
@@ -377,6 +660,13 @@ private class FeedEntryCell: UITableViewCell {
             audioButton.topAnchor.constraint(equalTo: bodyTextLabel.bottomAnchor, constant: 6),
             audioButton.trailingAnchor.constraint(equalTo: bodyView.trailingAnchor),
             audioButton.bottomAnchor.constraint(lessThanOrEqualTo: bodyView.bottomAnchor),
+
+            correctButton.topAnchor.constraint(equalTo: bodyTextLabel.bottomAnchor, constant: 6),
+            correctButton.leadingAnchor.constraint(equalTo: bodyView.leadingAnchor),
+            correctButton.bottomAnchor.constraint(lessThanOrEqualTo: bodyView.bottomAnchor),
+
+            correctSpinner.centerYAnchor.constraint(equalTo: correctButton.centerYAnchor),
+            correctSpinner.leadingAnchor.constraint(equalTo: correctButton.trailingAnchor, constant: 4),
         ])
 
     }
@@ -420,6 +710,11 @@ private class FeedEntryCell: UITableViewCell {
         bodyTextLabel.isHidden = entry.text.isEmpty
 
         currentEntry = entry
+        correctionState = .idle
+        originalText = nil
+        correctedText = nil
+        correctButton.isHidden = entry.text.isEmpty
+
         let audioNames = entry.audioFileNamesArray
         audioButton.isHidden = audioNames.isEmpty
         if !audioNames.isEmpty {
@@ -434,12 +729,49 @@ private class FeedEntryCell: UITableViewCell {
         onAudioTapped?(entry)
     }
 
+    @objc private func correctTapped() {
+        guard let entry = currentEntry else { return }
+        switch correctionState {
+        case .idle:
+            onCorrectTapped?(entry)
+        case .processing:
+            break
+        case .done:
+            if let orig = originalText, let corr = correctedText {
+                onCorrectionResultTapped?(orig, corr)
+            }
+        }
+    }
+
+    private func updateCorrectButton() {
+        switch correctionState {
+        case .idle:
+            correctButton.setTitle("문장 교정", for: .normal)
+            correctButton.setTitleColor(DS.fgPale, for: .normal)
+            correctSpinner.stopAnimating()
+        case .processing:
+            correctButton.setTitle("교정 중...", for: .normal)
+            correctButton.setTitleColor(DS.fgPale, for: .normal)
+            correctSpinner.startAnimating()
+        case .done:
+            correctButton.setTitle("교정 완료", for: .normal)
+            correctButton.setTitleColor(DS.accent, for: .normal)
+            correctSpinner.stopAnimating()
+        }
+    }
+
     override func prepareForReuse() {
         super.prepareForReuse()
         photoImageView.image = nil
         photoImageView.isHidden = true
         bodyTextLabel.text = nil
         audioButton.isHidden = true
+        correctButton.isHidden = true
+        correctionState = .idle
+        originalText = nil
+        correctedText = nil
+        onCorrectTapped = nil
+        onCorrectionResultTapped = nil
         currentEntry = nil
         photoHeightConstraint?.isActive = false
         bodyTopToPhoto?.isActive = false

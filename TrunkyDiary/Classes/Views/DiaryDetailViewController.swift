@@ -479,7 +479,7 @@ class DiaryDetailViewController: UIViewController {
         deleteBtn.setTitle("삭제", for: .normal)
         deleteBtn.titleLabel?.font = DS.font(13)
         deleteBtn.setTitleColor(.white, for: .normal)
-        deleteBtn.backgroundColor = UIColor(hex: "E8A0A0")
+        deleteBtn.backgroundColor = UIColor(hex: "D05050")
         deleteBtn.layer.cornerRadius = 10
         deleteBtn.addTarget(self, action: #selector(confirmDelete), for: .touchUpInside)
         deleteBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true

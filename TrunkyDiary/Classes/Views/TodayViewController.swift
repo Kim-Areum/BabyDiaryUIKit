@@ -752,7 +752,7 @@ class TodayViewController: UIViewController {
         confirmBtn.setTitle("삭제", for: .normal)
         confirmBtn.titleLabel?.font = DS.font(13)
         confirmBtn.setTitleColor(.white, for: .normal)
-        confirmBtn.backgroundColor = UIColor(hex: "E8A0A0")
+        confirmBtn.backgroundColor = UIColor(hex: "D05050")
         confirmBtn.layer.cornerRadius = 10
         confirmBtn.addTarget(self, action: #selector(confirmDelete), for: .touchUpInside)
         confirmBtn.translatesAutoresizingMaskIntoConstraints = false

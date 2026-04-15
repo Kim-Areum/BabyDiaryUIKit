@@ -580,7 +580,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         config.cornerStyle = .capsule
 
         if isRecording {
-            config.baseBackgroundColor = UIColor(hex: "E8A0A0")
+            config.baseBackgroundColor = UIColor(hex: "D05050")
             config.baseForegroundColor = .white
             config.image = UIImage(systemName: "stop.circle.fill")?.withConfiguration(
                 UIImage.SymbolConfiguration(pointSize: 16)
@@ -655,7 +655,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
         confirmBtn.setTitle("삭제", for: .normal)
         confirmBtn.titleLabel?.font = DS.font(13)
         confirmBtn.setTitleColor(.white, for: .normal)
-        confirmBtn.backgroundColor = UIColor(hex: "E8A0A0")
+        confirmBtn.backgroundColor = UIColor(hex: "D05050")
         confirmBtn.layer.cornerRadius = 10
         confirmBtn.addTarget(self, action: #selector(confirmDeleteEntry), for: .touchUpInside)
         confirmBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -989,7 +989,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
 
         let deleteButton = UIButton(type: .system)
         var deleteConfig = UIButton.Configuration.filled()
-        deleteConfig.baseBackgroundColor = UIColor(hex: "E8A0A0")
+        deleteConfig.baseBackgroundColor = UIColor(hex: "D05050")
         deleteConfig.baseForegroundColor = .white
         deleteConfig.cornerStyle = .medium
         deleteConfig.title = "삭제"
@@ -1368,7 +1368,7 @@ final class DiaryEditorViewController: UIViewController, CustomPhotoPickerDelega
 
         let deleteButton = UIButton(type: .system)
         var deleteConfig = UIButton.Configuration.filled()
-        deleteConfig.baseBackgroundColor = UIColor(hex: "E8A0A0")
+        deleteConfig.baseBackgroundColor = UIColor(hex: "D05050")
         deleteConfig.baseForegroundColor = .white
         deleteConfig.cornerStyle = .medium
         deleteConfig.title = "삭제"

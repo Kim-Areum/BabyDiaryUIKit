@@ -315,8 +315,82 @@ class PlaybackPopupView: UIView {
         playingIndex = nil
         isPlayingAll = false
         stopTimer()
-        delegate?.playbackPopupDidDelete(at: index)
-        dismiss()
+        showDeleteConfirm(index: index)
+    }
+
+    private func showDeleteConfirm(index: Int) {
+        guard let window = window else { return }
+
+        let dim = UIView()
+        dim.frame = window.bounds
+        dim.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        dim.tag = 9900
+        window.addSubview(dim)
+
+        let popup = UIView()
+        popup.backgroundColor = DS.bgBase
+        popup.layer.cornerRadius = 20
+        popup.layer.shadowColor = UIColor.black.cgColor
+        popup.layer.shadowOpacity = 0.15
+        popup.layer.shadowRadius = 12
+        popup.layer.shadowOffset = CGSize(width: 0, height: 4)
+        popup.translatesAutoresizingMaskIntoConstraints = false
+        dim.addSubview(popup)
+
+        let titleLabel = UILabel()
+        titleLabel.text = "녹음 \(index + 1)을 삭제할까요?"
+        titleLabel.font = DS.font(14)
+        titleLabel.textColor = DS.fgStrong
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        popup.addSubview(titleLabel)
+
+        let btnStack = UIStackView()
+        btnStack.axis = .horizontal
+        btnStack.spacing = 10
+        btnStack.distribution = .fillEqually
+        btnStack.translatesAutoresizingMaskIntoConstraints = false
+        popup.addSubview(btnStack)
+
+        let cancelBtn = UIButton(type: .system)
+        cancelBtn.setTitle("취소", for: .normal)
+        cancelBtn.titleLabel?.font = DS.font(13)
+        cancelBtn.setTitleColor(DS.fgMuted, for: .normal)
+        cancelBtn.backgroundColor = DS.bgSubtle
+        cancelBtn.layer.cornerRadius = 12
+        cancelBtn.addAction(UIAction { _ in
+            dim.removeFromSuperview()
+        }, for: .touchUpInside)
+        btnStack.addArrangedSubview(cancelBtn)
+
+        let deleteBtn = UIButton(type: .system)
+        deleteBtn.setTitle("삭제", for: .normal)
+        deleteBtn.titleLabel?.font = DS.font(13)
+        deleteBtn.setTitleColor(.white, for: .normal)
+        deleteBtn.backgroundColor = UIColor(hex: "D05050")
+        deleteBtn.layer.cornerRadius = 12
+        deleteBtn.addAction(UIAction { [weak self] _ in
+            dim.removeFromSuperview()
+            self?.delegate?.playbackPopupDidDelete(at: index)
+            self?.dismiss()
+        }, for: .touchUpInside)
+        btnStack.addArrangedSubview(deleteBtn)
+
+        NSLayoutConstraint.activate([
+            popup.centerXAnchor.constraint(equalTo: dim.centerXAnchor),
+            popup.centerYAnchor.constraint(equalTo: dim.centerYAnchor),
+            popup.widthAnchor.constraint(equalToConstant: 260),
+
+            titleLabel.topAnchor.constraint(equalTo: popup.topAnchor, constant: 24),
+            titleLabel.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 20),
+            titleLabel.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: -20),
+
+            btnStack.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+            btnStack.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 20),
+            btnStack.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: -20),
+            btnStack.heightAnchor.constraint(equalToConstant: 44),
+            btnStack.bottomAnchor.constraint(equalTo: popup.bottomAnchor, constant: -20),
+        ])
     }
 
     private func findViewController() -> UIViewController? {

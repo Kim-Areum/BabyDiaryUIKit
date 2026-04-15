@@ -201,6 +201,14 @@ class SpeechManager {
 
     // MARK: - On-Device AI Correction
 
+    /// 외부에서 호출 가능한 교정 메서드
+    func correctTextAsync(_ text: String, completion: @escaping (String) -> Void) {
+        Task {
+            let corrected = await correctWithOnDeviceAI(text)
+            DispatchQueue.main.async { completion(corrected) }
+        }
+    }
+
     private func correctWithOnDeviceAI(_ text: String) async -> String {
         if #available(iOS 26.0, *) {
             do {
